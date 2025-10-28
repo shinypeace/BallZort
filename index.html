@@ -96,10 +96,11 @@
             border-radius: 0 0 25px 25px;
             margin: var(--tube-margin, 10px); cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            display: flex; flex-direction: column-reverse; /* This is key for stacking balls */
-            justify-content: flex-start; /* Start stacking from the bottom */
-            overflow: visible; /* Allow selected ball to fly out */
-            padding: 5%; /* Padding inside the tube */
+            display: flex; flex-direction: column-reverse; /* Складываем шары снизу вверх */
+            justify-content: flex-start; /* Начинаем укладку с нижнего края */
+            overflow: visible; /* Позволяет шару "выпрыгивать" */
+            padding: 4%; /* Небольшой отступ внутри колбы */
+            box-sizing: border-box;
         }
         .tube-container::before {
             content: '';
@@ -113,10 +114,10 @@
         }
         
         .ball {
-            width: 100%;
-            aspect-ratio: 1 / 1;
+            width: 100%; /* Шар занимает всю доступную ширину (с учетом padding) */
+            aspect-ratio: 1 / 1; /* Делает шар идеально круглым */
             border-radius: 50%;
-            margin-top: 5%; /* Space between balls */
+            margin-top: 4%; /* Отступ между шарами */
             flex-shrink: 0;
             box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1);
             transition: transform 0.2s ease-out, background-color 0.3s;
@@ -126,17 +127,24 @@
             font-weight: 900;
             font-size: calc(var(--tube-width) * 0.4);
             color: var(--mystery-ball-text-color);
+            box-sizing: border-box;
+        }
+        
+        /* Самый нижний шар в стопке не имеет верхнего отступа */
+        .ball:first-of-type {
+            margin-top: 0;
         }
         
         .ball.mystery {
-            background-color: var(--mystery-ball-bg-color);
+            background-color: var(--mystery-ball-bg-color) !important; /* !important, чтобы перебить inline-стиль */
             color: var(--mystery-ball-text-color);
             box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
         
-        /* This class is now added to the ball, not the tube */
+        /* Этот класс добавляется шару, а не колбе */
         .ball.selected-ball {
-            transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1);
+            /* "Выпрыгивает" на 25% высоты колбы */
+            transform: translateY(calc(var(--tube-height) * -0.25)) scale(1.1);
             box-shadow: 0 10px 25px var(--shadow-color);
             z-index: 100;
         }
@@ -169,6 +177,35 @@
             font-size: 0.6rem; font-weight: bold;
             background-color: var(--primary-color); color: white;
             padding: 1px 4px; border-radius: 4px;
+        }
+        
+        /* Стили для табов статистики */
+        .stats-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--tube-border-color);
+            margin-bottom: 1rem;
+        }
+        .stats-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--locked-text-color);
+            border-bottom: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .stats-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .stats-table-container {
+            display: none;
+        }
+        .stats-table-container.active {
+            display: block;
         }
         .stats-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         .stats-table th, .stats-table td {
@@ -262,24 +299,50 @@
         </div>
     </div>
 
-    <!-- Модальные окна (без изменений) -->
+    <!-- Модальные окна -->
     <div id="stats-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg text-center">
             <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-color);">Статистика</h2>
-            <table class="stats-table">
-                <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
-                <tbody>
-                    <tr><td>Легко</td><td id="games-played-easy">0</td><td id="best-time-easy">--:--</td></tr>
-                    <tr><td>Средне</td><td id="games-played-medium">0</td><td id="best-time-medium">--:--</td></tr>
-                    <tr><td>Сложно</td><td id="games-played-hard">0</td><td id="best-time-hard">--:--</td></tr>
-                    <tr><td>Эксперт</td><td id="games-played-expert">0</td><td id="best-time-expert">--:--</td></tr>
-                    <tr><td>Безумие</td><td id="games-played-insane">0</td><td id="best-time-insane">--:--</td></tr>
-                    <tr><td>Невозможно</td><td id="games-played-impossible">0</td><td id="best-time-impossible">--:--</td></tr>
-                </tbody>
-            </table>
+            
+            <div class="stats-tabs">
+                <button class="stats-tab active" data-tab="classic">Классика</button>
+                <button class="stats-tab" data-tab="mystery">Тайный шар</button>
+            </div>
+
+            <!-- Таблица "Классика" -->
+            <div id="stats-table-classic" class="stats-table-container active">
+                <table class="stats-table">
+                    <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
+                    <tbody>
+                        <tr><td>Легко</td><td id="games-played-classic-easy">0</td><td id="best-time-classic-easy">--:--</td></tr>
+                        <tr><td>Средне</td><td id="games-played-classic-medium">0</td><td id="best-time-classic-medium">--:--</td></tr>
+                        <tr><td>Сложно</td><td id="games-played-classic-hard">0</td><td id="best-time-classic-hard">--:--</td></tr>
+                        <tr><td>Эксперт</td><td id="games-played-classic-expert">0</td><td id="best-time-classic-expert">--:--</td></tr>
+                        <tr><td>Безумие</td><td id="games-played-classic-insane">0</td><td id="best-time-classic-insane">--:--</td></tr>
+                        <tr><td>Невозможно</td><td id="games-played-classic-impossible">0</td><td id="best-time-classic-impossible">--:--</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Таблица "Тайный шар" -->
+            <div id="stats-table-mystery" class="stats-table-container">
+                 <table class="stats-table">
+                    <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
+                    <tbody>
+                        <tr><td>Легко</td><td id="games-played-mystery-easy">0</td><td id="best-time-mystery-easy">--:--</td></tr>
+                        <tr><td>Средне</td><td id="games-played-mystery-medium">0</td><td id="best-time-mystery-medium">--:--</td></tr>
+                        <tr><td>Сложно</td><td id="games-played-mystery-hard">0</td><td id="best-time-mystery-hard">--:--</td></tr>
+                        <tr><td>Эксперт</td><td id="games-played-mystery-expert">0</td><td id="best-time-mystery-expert">--:--</td></tr>
+                        <tr><td>Безумие</td><td id="games-played-mystery-insane">0</td><td id="best-time-mystery-insane">--:--</td></tr>
+                        <tr><td>Невозможно</td><td id="games-played-mystery-impossible">0</td><td id="best-time-mystery-impossible">--:--</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
             <button onclick="closeModal('stats-modal')" class="main-menu-button mt-6 w-full">Закрыть</button>
         </div>
     </div>
+    
     <div id="pause-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center">
         <div class="modal-content w-11/12 max-w-sm p-6 rounded-2xl shadow-lg text-center">
             <h2 class="text-3xl font-bold mb-6" style="color: var(--primary-color);">Пауза</h2>
@@ -329,14 +392,23 @@
         let vkUserId = null;
         let wasMusicPlaying = false;
 
+        // --- New Stats Structure ---
+        const defaultStats = () => ({
+            classic: {
+                gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
+                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
+            },
+            mystery: {
+                gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
+                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
+            }
+        });
+
         let gameData = {
             theme: 'light',
             isMuted: false,
             levelsCompletedSinceAd: 0,
-            stats: { 
-                gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
-                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity } 
-            }
+            stats: defaultStats()
         };
 
         // --- Config ---
@@ -422,7 +494,10 @@
             // Main Menu listeners
             document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
             document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
-            document.getElementById('stats-button').addEventListener('click', () => openModal('stats-modal'));
+            document.getElementById('stats-button').addEventListener('click', () => {
+                updateStatsDisplay(); // Update stats right before opening
+                openModal('stats-modal');
+            });
             document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
             document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
 
@@ -443,6 +518,18 @@
             document.getElementById('other-games-container').addEventListener('click', e => {
                 const gameEl = e.target.closest('[data-app-id]');
                 if (gameEl) vkBridge.send('VKWebAppOpenApp', { app_id: parseInt(gameEl.dataset.appId) });
+            });
+            
+            // Stats modal tab listener
+            document.querySelector('.stats-tabs').addEventListener('click', e => {
+                if (e.target.classList.contains('stats-tab')) {
+                    const tabName = e.target.dataset.tab;
+                    document.querySelectorAll('.stats-tab').forEach(tab => tab.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    document.querySelectorAll('.stats-table-container').forEach(container => container.classList.remove('active'));
+                    document.getElementById(`stats-table-${tabName}`).classList.add('active');
+                }
             });
             
             document.body.addEventListener('click', async () => {
@@ -483,8 +570,7 @@
             }
             await loadGameData();
             setTheme(gameData.theme);
-            // renderMenu() is now called by showLevelSelection
-            renderOtherGames();
+            renderOtherGames(); // Render the (correct) other games list
             audioManager.toggleMute(gameData.isMuted);
             showScreen('mainMenu');
         }
@@ -558,7 +644,6 @@
             closeModal('pause-modal');
             closeModal('win-modal');
             stopTimer();
-            // No need to renderMenu() here, main menu is static
             showScreen('mainMenu');
         }
 
@@ -566,6 +651,7 @@
         function renderMenu() {
             levelSelectionContainer.innerHTML = '';
             const difficulties = Object.keys(LEVEL_CONFIG);
+            const statsForCurrentMode = gameData.stats[currentGameMode] || defaultStats()[currentGameMode];
 
             for (let i = 0; i < difficulties.length; i++) {
                 const difficulty = difficulties[i];
@@ -575,7 +661,8 @@
                 let isUnlocked = (difficulty === 'easy');
                 let winsOnPrev = 0;
                 if (prevDifficulty) {
-                    winsOnPrev = gameData.stats.gamesPlayed[prevDifficulty] || 0;
+                    // Check wins for the *previous* difficulty *in the current mode*
+                    winsOnPrev = statsForCurrentMode.gamesPlayed[prevDifficulty] || 0;
                     if (winsOnPrev >= WINS_TO_UNLOCK) {
                         isUnlocked = true;
                     }
@@ -645,18 +732,26 @@
             if(!boardHeight || !boardWidth) return;
             let bestLayout = { cols: 0, tubeHeight: 0 };
             
-            const maxCols = Math.min(tubeCount, 6); // Max 6 cols
+            const maxCols = Math.min(Math.ceil(tubeCount / 2), 6); // Max 6 cols
             const minCols = Math.max(3, Math.floor(tubeCount / 5)); // Min 3 cols
 
             for (let cols = maxCols; cols >= minCols; cols--) {
                 const rows = Math.ceil(tubeCount / cols);
                 const cellWidth = boardWidth / cols;
                 const cellHeight = boardHeight / rows;
-                // Tube height is based on width, 4 balls + padding
-                const prospectiveTubeWidth = cellWidth * 0.7; // 70% width
-                const prospectiveTubeHeight = prospectiveTubeWidth * (BALL_LAYERS * 1.2); // Aspect ratio for balls
                 
-                if (prospectiveTubeHeight < cellHeight * 0.9) {
+                const prospectiveTubeWidth = cellWidth * 0.7; // 70% width
+                // Расчет высоты колбы:
+                // 4% padding (L/R) -> 92% width for ball
+                // 4% margin-top
+                // 4% padding (T/B)
+                // H = (ball_height * 4) + (margin * 4) + (padding * 2)
+                // H = (W*0.92 * 4) + (W*0.04 * 4) + (W*0.04 * 2) = 3.68W + 0.16W + 0.08W = 3.92W
+                // Округлим до 4W для простоты
+                const prospectiveTubeHeight = prospectiveTubeWidth * (BALL_LAYERS * 1.0); 
+                
+                // Оставляем 20% свободного места в ячейке для "прыжка" шара
+                if (prospectiveTubeHeight < cellHeight * 0.8) { 
                     if (prospectiveTubeHeight > bestLayout.tubeHeight) {
                         bestLayout = { cols: cols, tubeHeight: prospectiveTubeHeight };
                     }
@@ -665,7 +760,8 @@
             if(bestLayout.cols === 0) bestLayout.cols = tubeCount <= 12 ? 4 : 5;
             
             const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
-            const finalTubeHeight = finalTubeWidth * (BALL_LAYERS * 1.2); // ~4.8
+            // Итоговая высота = 4 шара + 4 отступа + 2 padding = 4 * (W*0.92) + 4 * (W*0.04) + 2 * (W*0.04) = 3.92W
+            const finalTubeHeight = finalTubeWidth * (BALL_LAYERS * 0.92 + (BALL_LAYERS) * 0.04 + 0.08);
             const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; // 15% margin
 
             document.documentElement.style.setProperty('--tube-width', `${finalTubeWidth}px`);
@@ -703,23 +799,24 @@
             });
         }
         
+        // --- Эта функция скопирована из оригинального файла ---
         function renderOtherGames() {
-            // Используем SVG-плейсхолдеры вместо PNG
             const container = document.getElementById('other-games-container');
             container.innerHTML = '';
             const games = [
-                { name: 'Bubble Shooter', appId: 54051411, icon: 'M12 2a10 10 0 110 20 10 10 0 010-20zm0 18a8 8 0 100-16 8 8 0 000 16z' }, 
-                { name: 'Тетрис', appId: 54051413, icon: 'M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 6h4v4h-4v-4zM10 16h4v4h-4v-4z' },
-                { name: 'Tower Blocks', appId: 53962513, icon: 'M4 20h16v-4H4v4zm2-6h12v-4H6v4zm2-6h8V4H8v4z' }
-                //... и так далее
+                { name: 'Bubble Shooter', appId: 54051411, icon: 'icon1.png' }, { name: 'Тетрис', appId: 54051413, icon: 'icon2.png' },
+                { name: 'Tower Blocks', appId: 53962513, icon: 'icon3.png' }, { name: 'Блок Про', appId: 53936296, icon: 'icon4.png' },
+                { name: 'Филворды', appId: 53867134, icon: 'icon5.png' }, { name: 'Словли', appId: 53861990, icon: 'icon6.png' },
+                { name: 'Brick Balls', appId: 54023580, icon: 'icon7.png' }, { name: '2048', appId: 53965380, icon: 'icon8.png' },
+                { name: 'Math Matrix', appId: 53970659, icon: 'icon9.png' }
             ];
-            games.slice(0, 9).forEach(game => {
+            games.forEach(game => {
                 const gameEl = document.createElement('div');
                 gameEl.className = "flex flex-col items-center cursor-pointer group";
                 gameEl.dataset.appId = game.appId;
                 gameEl.innerHTML = `
-                    <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-3xl mb-2 flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden p-3">
-                       <svg viewBox="0 0 24 24" class="w-full h-full" fill="var(--primary-color)"><path d="${game.icon}"></path></svg>
+                    <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-3xl mb-2 flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden">
+                       <img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'text-xs text-gray-400\\'>${game.name}</span>'">
                     </div>
                     <span class="text-xs font-medium text-center">${game.name}</span>`;
                 container.appendChild(gameEl);
@@ -736,12 +833,18 @@
             const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
 
             if (selectedTube === null) {
+                // Выбор колбы ИСТОЧНИКА
                 if (clickedTubeData.balls.length > 0) {
+                    const topBall = clickedTubeData.balls[clickedTubeData.balls.length - 1];
+                    // Нельзя выбрать колбу, если верхний шар - тайный
+                    if (!topBall.isVisible) return; 
+                    
                     selectedTube = clickedTubeData;
                     const topBallEl = tubeEl.querySelector('.ball:last-child');
                     if (topBallEl) topBallEl.classList.add('selected-ball');
                 }
             } else {
+                // Выбор колбы НАЗНАЧЕНИЯ
                 const currentSelectedTube = selectedTube;
                 const selectedBallEl = document.querySelector('.selected-ball');
                 
@@ -749,7 +852,7 @@
                 if (selectedBallEl) selectedBallEl.classList.remove('selected-ball');
 
                 if (currentSelectedTube.id === clickedTubeData.id) {
-                   return; // Deselected
+                   return; // Отмена выбора
                 }
                 
                 if (canMove(currentSelectedTube, clickedTubeData)) {
@@ -764,10 +867,11 @@
             if (from.balls.length === 0 || to.balls.length === BALL_LAYERS) return false;
             
             const topBall = from.balls[from.balls.length - 1];
-            if (!topBall.isVisible) return false; // Cannot move mystery balls
+            if (!topBall.isVisible) return false; // Нельзя переместить невидимый шар (на всякий случай)
 
-            if (to.balls.length === 0) return true;
+            if (to.balls.length === 0) return true; // Можно переместить в пустую колбу
             
+            // Можно переместить, если цвета совпадают
             return topBall.color === to.balls[to.balls.length - 1].color;
         }
 
@@ -777,33 +881,35 @@
             
             const topColor = fromTube.balls[fromTube.balls.length - 1].color;
             
-            // Find how many balls of the same color are stacked
+            // Ищем, сколько шаров одного цвета лежит сверху
             let amountToMove = 0;
             for (let i = fromTube.balls.length - 1; i >= 0; i--) {
                 const ball = fromTube.balls[i];
                 if (ball.isVisible && ball.color === topColor) {
                     amountToMove++;
                 } else {
-                    break;
+                    break; // Наткнулись на другой цвет или тайный шар
                 }
             }
             
-            // Limit by space in destination tube
+            // Ограничиваем количество местом в колбе назначения
             amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
             
+            // Извлекаем шары из колбы-источника
             const ballsToMove = fromTube.balls.splice(fromTube.balls.length - amountToMove);
             
-            // Reveal next ball in 'from' tube if in mystery mode
+            // Открываем следующий шар в режиме "Тайный шар"
             if (currentGameMode === 'mystery' && fromTube.balls.length > 0) {
                 fromTube.balls[fromTube.balls.length - 1].isVisible = true;
             }
             
+            // Добавляем шары в колбу назначения
             toTube.balls.push(...ballsToMove);
 
-            animateMove(fromTube, toTube, ballsToMove.length);
+            animateMove(fromTube, toTube, ballsToMove);
         }
         
-        async function animateMove(fromTube, toTube, numBallsMoved) {
+        async function animateMove(fromTube, toTube, ballsMoved) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
             updateUndoButtonUI();
@@ -811,61 +917,74 @@
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             
-            // Get the ball elements to animate
-            const ballElsToAnimate = Array.from(fromEl.querySelectorAll('.ball')).slice(-numBallsMoved);
+            // Находим DOM-элементы шаров, которые нужно анимировать
+            const ballElsToAnimate = Array.from(fromEl.querySelectorAll('.ball')).slice(-ballsMoved.length);
             
-            // Remove any "selected" class as we start the auto-animation
+            // Защита от сбоя, если шары не найдены
+            if (ballElsToAnimate.length === 0) {
+                console.error("animateMove: не найдены шары для анимации.");
+                // Просто ре-рендерим состояние
+                renderTubes();
+                fromTube.isAnimating = false;
+                toTube.isAnimating = false;
+                updateUndoButtonUI();
+                return;
+            }
+
+            // Убираем класс 'selected-ball'
             const selectedEl = document.querySelector('.selected-ball');
             if(selectedEl) selectedEl.classList.remove('selected-ball');
 
             const toRect = toEl.getBoundingClientRect();
-            // Calculate target X
-            const xTarget = toRect.left + (toRect.width / 2) - (ballElsToAnimate[0].offsetWidth / 2);
-            // Calculate target Y (just above the tube)
-            const yTarget = toRect.top - (ballElsToAnimate[0].offsetHeight * 0.2);
+            const ballWidth = ballElsToAnimate[0].offsetWidth;
+            
+            // Целевая X-координата (центр колбы назначения)
+            const xTarget = toRect.left + (toRect.width / 2) - (ballWidth / 2);
+            // Целевая Y-координата (на полшара выше колбы назначения)
+            const yTarget = toRect.top - (ballWidth * 0.5);
 
-            // Detach, position, and animate balls
             const animatedBalls = [];
             for (let i = 0; i < ballElsToAnimate.length; i++) {
                 const ballEl = ballElsToAnimate[i];
                 const rect = ballEl.getBoundingClientRect();
                 
+                // Переносим шар в body, чтобы он мог лететь "над" всеми
                 document.body.appendChild(ballEl);
                 ballEl.style.position = 'absolute';
                 ballEl.style.left = `${rect.left}px`;
                 ballEl.style.top = `${rect.top}px`;
                 ballEl.style.zIndex = 100 + i;
-                ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)'; // Smooth curve
+                ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)'; // Плавная кривая
                 
-                // Animate
+                // Анимируем
                 requestAnimationFrame(() => {
                     ballEl.style.transform = 'scale(1.05)';
                     ballEl.style.left = `${xTarget}px`;
-                    // Stack them above the target tube
-                    ballEl.style.top = `${yTarget - (i * ballEl.offsetHeight)}px`;
+                    // Складываем их стопкой над целевой колбой
+                    ballEl.style.top = `${yTarget - (i * (ballWidth * 1.04))}px`; // 1.04 = 100% высоты + 4% margin
                 });
                 animatedBalls.push(ballEl);
             }
             
             audioManager.playSound('move');
             
-            // Wait for move-over animation
+            // Ждем завершения анимации "перелета"
             await wait(350); 
             
-            // Clean up animated balls
+            // Удаляем анимированные шары из body
             animatedBalls.forEach(el => el.remove());
             
-            // Re-render the tubes based on the new data state
-            // This is the most robust way to show the new state
+            // Полностью перерисовываем игровое поле
+            // Это самый надежный способ отобразить новое состояние
             renderTubes();
             
-            // Wait for render to settle
-            await wait(50);
+            await wait(50); // Даем браузеру "продохнуть"
 
             fromTube.isAnimating = false;
             toTube.isAnimating = false;
             updateUndoButtonUI();
             
+            // Проверяем победу
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
             if (!isAnyTubeAnimating && isLevelSolved(tubes.filter(t => !t.isPlaceholder))) {
                 winGame();
@@ -888,23 +1007,27 @@
         function winGame() {
             stopTimer();
             audioManager.playSound('win');
-            gameData.stats.gamesPlayed[currentDifficulty] = (gameData.stats.gamesPlayed[currentDifficulty] || 0) + 1;
-            if (seconds < gameData.stats.bestTime[currentDifficulty]) {
-                gameData.stats.bestTime[currentDifficulty] = seconds;
+            
+            // Сохраняем статистику в правильный режим
+            const stats = gameData.stats[currentGameMode];
+            stats.gamesPlayed[currentDifficulty] = (stats.gamesPlayed[currentDifficulty] || 0) + 1;
+            if (seconds < stats.bestTime[currentDifficulty]) {
+                stats.bestTime[currentDifficulty] = seconds;
             }
-            showInterstitialAd();
-            saveGameData();
-            updateStatsDisplay();
+            
+            showInterstitialAd(); // Показывает рекламу (если пора)
+            saveGameData(); // Сохраняет все данные, включая новую статистику
+            
             document.getElementById('win-time').textContent = formatTime(seconds);
             document.getElementById('win-moves').textContent = moveCount;
             openModal('win-modal');
         }
         
         function saveState() {
-            // Must perform a deep copy of the balls array
+            // Глубокое копирование, чтобы история не менялась
             const stateToSave = tubes.map(t => ({
                 id: t.id,
-                balls: t.balls.map(b => ({ ...b })), // Deep copy
+                balls: t.balls.map(b => ({ ...b })), // Копируем каждый объект шара
                 isPlaceholder: t.isPlaceholder
             }));
             history.push(stateToSave);
@@ -921,16 +1044,16 @@
                 tubes.forEach(tube => {
                     const prevTube = prevState.find(pt => pt.id === tube.id);
                     if (prevTube) {
-                        // Deep copy back
+                        // Восстанавливаем состояние (тоже с глубоким копированием)
                         tube.balls = prevTube.balls.map(b => ({ ...b }));
                         tube.isPlaceholder = prevTube.isPlaceholder;
                     }
                 });
                 
-                selectedTube = null; // Clear selection
+                selectedTube = null; // Сбрасываем выбор
                 moveCount--;
                 updateMoveCount();
-                renderTubes();
+                renderTubes(); // Перерисовываем поле
                 updateUndoButtonUI();
             }
         }
@@ -970,6 +1093,7 @@
             }
         }
 
+        // Загрузка с новой структурой
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
@@ -981,30 +1105,67 @@
                 const localData = localStorage.getItem(storageKey);
                 if (localData) loadedData = JSON.parse(localData);
             }
+            
+            const newStats = defaultStats();
+            
             if (loadedData) {
-                if (loadedData.stats && loadedData.stats.bestTime) {
-                    for (const diff in loadedData.stats.bestTime) {
-                        if (loadedData.stats.bestTime[diff] === null) {
-                            loadedData.stats.bestTime[diff] = Infinity;
-                        }
-                    }
-                }
-                gameData.stats.bestTime = {...gameData.stats.bestTime, ...loadedData.stats?.bestTime };
-                gameData.stats.gamesPlayed = {...gameData.stats.gamesPlayed, ...loadedData.stats?.gamesPlayed };
                 gameData.theme = loadedData.theme || 'light';
                 gameData.isMuted = loadedData.isMuted || false;
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
+                
+                // --- Миграция старых данных / Загрузка новых ---
+                if (loadedData.stats) {
+                    // Если это новая структура
+                    if (loadedData.stats.classic || loadedData.stats.mystery) {
+                        // Слияние статистики (на случай, если мы добавили новые уровни сложности)
+                        if (loadedData.stats.classic) {
+                            newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.classic.bestTime};
+                            newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.classic.gamesPlayed};
+                        }
+                         if (loadedData.stats.mystery) {
+                            newStats.mystery.bestTime = {...newStats.mystery.bestTime, ...loadedData.stats.mystery.bestTime};
+                            newStats.mystery.gamesPlayed = {...newStats.mystery.gamesPlayed, ...loadedData.stats.mystery.gamesPlayed};
+                        }
+                    } else {
+                        // Если это старая структура, переносим ее в "classic"
+                        newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.bestTime};
+                        newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.gamesPlayed};
+                    }
+                }
+                
+                // Очистка null/Infinity
+                ['classic', 'mystery'].forEach(mode => {
+                    Object.keys(newStats[mode].bestTime).forEach(diff => {
+                        if (newStats[mode].bestTime[diff] === null) {
+                            newStats[mode].bestTime[diff] = Infinity;
+                        }
+                    });
+                });
+                
+                gameData.stats = newStats;
             }
-            updateStatsDisplay();
+            // Не вызываем updateStatsDisplay() здесь, он вызывается при открытии модалки
         }
 
+        // Обновление статистики с учетом табов
         function updateStatsDisplay() {
             if (!gameData.stats) return;
-            Object.keys(gameData.stats.bestTime).forEach(diff => {
-                const bestTimeEl = document.getElementById(`best-time-${diff}`);
-                const gamesPlayedEl = document.getElementById(`games-played-${diff}`);
-                if (bestTimeEl) bestTimeEl.textContent = gameData.stats.bestTime[diff] === Infinity ? '--:--' : formatTime(gameData.stats.bestTime[diff]);
-                if(gamesPlayedEl) gamesPlayedEl.textContent = (gameData.stats.gamesPlayed && gameData.stats.gamesPlayed[diff]) || 0;
+            
+            ['classic', 'mystery'].forEach(mode => {
+                const stats = gameData.stats[mode];
+                Object.keys(stats.bestTime).forEach(diff => {
+                    const bestTimeEl = document.getElementById(`best-time-${mode}-${diff}`);
+                    const gamesPlayedEl = document.getElementById(`games-played-${mode}-${diff}`);
+                    
+                    if (bestTimeEl) {
+                        bestTimeEl.textContent = (stats.bestTime[diff] === Infinity || stats.bestTime[diff] === null) 
+                            ? '--:--' 
+                            : formatTime(stats.bestTime[diff]);
+                    }
+                    if(gamesPlayedEl) {
+                        gamesPlayedEl.textContent = (stats.gamesPlayed && stats.gamesPlayed[diff]) || 0;
+                    }
+                });
             });
         }
 
@@ -1015,3 +1176,4 @@
     </script>
 </body>
 </html>
+
