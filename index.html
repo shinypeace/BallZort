@@ -18,6 +18,7 @@
             --text-light: #1c1e21;
             --tube-border-light: #cdd5e0;
             --primary-light: #4f46e5;
+            --secondary-light: #818cf8;
             --shadow-light: rgba(79, 70, 229, 0.15);
             --modal-bg-light: #ffffff;
             --locked-bg-light: #d1d5db;
@@ -30,6 +31,7 @@
             --text-color: var(--text-light);
             --tube-border-color: var(--tube-border-light);
             --primary-color: var(--primary-light);
+            --secondary-color: var(--secondary-light);
             --shadow-color: var(--shadow-light);
             --modal-bg-color: var(--modal-bg-light);
             --locked-bg-color: var(--locked-bg-light);
@@ -42,6 +44,7 @@
             --text-color: #e5e7eb;
             --tube-border-color: #4b5563;
             --primary-color: #818cf8;
+            --secondary-color: #4f46e5;
             --shadow-color: rgba(129, 140, 248, 0.2);
             --modal-bg-color: #1f2937;
             --locked-bg-color: #374151;
@@ -65,27 +68,78 @@
             animation: fadeIn 0.3s ease-in-out;
         }
         .screen.hidden { display: none; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to: { opacity: 1; } }
 
+        /* --- Новые стили Главного меню --- */
+        #main-menu-title {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .main-menu-button {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 700; border-radius: 12px; padding: 12px 24px;
-            text-transform: uppercase; box-shadow: 0 4px 14px 0 var(--shadow-color);
-            transition: all 0.2s ease-in-out; border: none;
+            background-color: #ffffff;
+            color: var(--primary-color);
+            font-weight: 700; 
+            border-radius: 16px; 
+            padding: 16px 24px;
+            text-transform: uppercase; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out; 
+            border: 2px solid #ffffff;
+        }
+        html.dark .main-menu-button {
+            background-color: var(--modal-bg-color);
+            color: var(--primary-color);
+            border-color: var(--tube-border-color);
         }
         .main-menu-button:hover:not(:disabled) {
-            transform: translateY(-2px); box-shadow: 0 6px 20px 0 var(--shadow-color);
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 25px var(--shadow-color), 0 5px 10px rgba(0,0,0,0.03);
+        }
+        .main-menu-button.secondary-button {
+             background-color: transparent; 
+             color: var(--primary-color);
+             border: 2px solid var(--primary-color);
+             box-shadow: none;
+        }
+        html.dark .main-menu-button.secondary-button {
+            background-color: transparent;
         }
         .main-menu-button:disabled {
             background-color: var(--locked-bg-color);
+            color: var(--locked-text-color);
             cursor: not-allowed;
             box-shadow: none;
+            border-color: var(--locked-bg-color);
         }
-        .secondary-button {
-             background-color: transparent; color: var(--primary-color);
-             border: 2px solid var(--primary-color);
+        
+        .icon-menu-button {
+            width: 64px; height: 64px;
+            background-color: #ffffff;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
         }
+        html.dark .icon-menu-button {
+            background-color: var(--modal-bg-color);
+            color: var(--primary-color);
+            border: 2px solid var(--tube-border-color);
+        }
+        .icon-menu-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow-color), 0 5px 10px rgba(0,0,0,0.03);
+        }
+        .icon-menu-button svg {
+            width: 32px; height: 32px;
+            stroke-width: 2;
+        }
+        /* --- Конец новых стилей --- */
+
         .tube-container {
             position: relative;
             width: var(--tube-width, 60px);
@@ -100,7 +154,7 @@
             justify-content: flex-start; /* Начинаем укладку с нижнего края */
             overflow: visible; /* Позволяет шару "выпрыгивать" */
             padding: 4%; /* Небольшой отступ внутри колбы */
-            box-sizing: border-box;
+            box-sizing: border-box; /* КРИТИЧЕСКИЙ ФИКС: Учитывает padding в размерах */
         }
         .tube-container::before {
             content: '';
@@ -115,7 +169,7 @@
         
         .ball {
             width: 100%; /* Шар занимает всю доступную ширину (с учетом padding) */
-            aspect-ratio: 1 / 1; /* Делает шар идеально круглым */
+            aspect-ratio: 1 / 1; /* КРИТИЧЕСКИЙ ФИКС: Делает шар идеально круглым */
             border-radius: 50%;
             margin-top: 4%; /* Отступ между шарами */
             flex-shrink: 0;
@@ -127,7 +181,7 @@
             font-weight: 900;
             font-size: calc(var(--tube-width) * 0.4);
             color: var(--mystery-ball-text-color);
-            box-sizing: border-box;
+            box-sizing: border-box; /* КРИТИЧЕСКИЙ ФИКС: Учитывает padding в размерах */
         }
         
         /* Самый нижний шар в стопке не имеет верхнего отступа */
@@ -152,15 +206,39 @@
         .modal { background-color: rgba(0, 0, 0, 0.6); }
         .modal-content { background-color: var(--modal-bg-color); }
         
-        #theme-toggle-slider { background-color: #767676; }
-        .slider-icon { font-size: 1.5rem; }
-        #theme-toggle:checked + #theme-toggle-slider:before { transform: translateX(24px); }
-        #theme-toggle-slider:before {
-            content: ''; position: absolute;
-            left: 4px; top: 4px; width: 24px; height: 24px;
-            background-color: white; border-radius: 50%;
+        /* Стили для переключателей в модалке */
+        .setting-toggle-label {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .setting-toggle-slider {
+            width: 56px; /* w-14 */
+            height: 32px; /* h-8 */
+            background-color: #767676;
+            border-radius: 9999px; /* rounded-full */
+            transition: background-color 0.3s ease;
+        }
+        .setting-toggle-slider:before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 24px; /* w-6 */
+            height: 24px; /* h-6 */
+            background-color: white;
+            border-radius: 50%;
             transition: transform 0.3s ease;
         }
+        .setting-toggle-input:checked + .setting-toggle-slider {
+            background-color: var(--primary-color);
+        }
+        .setting-toggle-input:checked + .setting-toggle-slider:before {
+            transform: translateX(24px); /* w-14 - w-6 - 2*left = 56 - 24 - 8 = 24 */
+        }
+        /* --- */
+        
         .icon-button {
             background: none; border: none; padding: 8px;
             cursor: pointer; color: var(--text-color);
@@ -220,11 +298,10 @@
     <audio id="bg-music" loop src="music.mp3"></audio>
 
     <!-- Главное меню -->
-    <div id="main-menu" class="screen hidden flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
-        <h1 class="text-6xl font-black mb-2" style="color: var(--primary-color);">Ball Sort</h1>
-        <p class="mb-8 text-lg" style="color: var(--text-color);">Переложи и отсортируй</p>
+    <div id="main-menu" class="screen flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
+        <h1 id="main-menu-title" class="text-6xl font-black mb-10">Ball Sort</h1>
         
-        <div class="w-full flex flex-col gap-4">
+        <div class="w-full flex flex-col gap-5">
             <button id="classic-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <div class="flex items-center justify-center">
                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -237,20 +314,24 @@
                     <span>Тайный шар</span>
                 </div>
             </button>
-            
-            <div class="grid grid-cols-2 gap-4 pt-4">
-                 <button class="main-menu-button secondary-button col-span-2" id="stats-button">Статистика</button>
-                <button class="main-menu-button secondary-button col-span-2" id="other-games-btn">Другие игры</button>
-            </div>
-            
-            <div class="flex justify-center items-center space-x-4 pt-6">
-                <span class="slider-icon">☀️</span>
-                <label for="theme-toggle" class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="theme-toggle" class="sr-only">
-                    <div id="theme-toggle-slider" class="w-14 h-8 rounded-full"></div>
-                </label>
-                <span class="slider-icon">🌙</span>
-            </div>
+            <button id="other-games-btn" class="main-menu-button secondary-button w-full py-4 text-lg">
+                Другие игры
+            </button>
+        </div>
+        
+        <div class="flex justify-center items-center space-x-6 pt-10">
+             <!-- Правила -->
+             <button id="rules-button" class="icon-menu-button" onclick="openModal('rules-modal')">
+                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+             </button>
+             <!-- Статистика -->
+             <button id="stats-button" class="icon-menu-button" onclick="openModal('stats-modal'); updateStatsDisplay();">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+             </button>
+             <!-- Настройки -->
+             <button id="settings-button" class="icon-menu-button" onclick="openModal('settings-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></p><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+             </button>
         </div>
     </div>
     
@@ -271,10 +352,7 @@
                     <button onclick="showPauseMenu()" class="icon-button">
                         <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </button>
-                    <button id="sound-toggle-btn" class="icon-button">
-                        <svg id="sound-on-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5 5 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
-                        <svg id="sound-off-icon" class="hidden" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l-2.25 2.25M19.5 12l2.25-2.25M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
-                    </button>
+                    <!-- Кнопка звука убрана отсюда и перенесена в Настройки -->
                 </div>
                 <div class="text-center">
                     <div class="text-xl font-bold">Ходы: <span id="move-count">0</span></div>
@@ -300,6 +378,56 @@
     </div>
 
     <!-- Модальные окна -->
+    
+    <!-- Модальное окно: Правила -->
+    <div id="rules-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--primary-color);">Правила</h2>
+            <div class="space-y-3 text-left">
+                <p>• Цель игры - отсортировать все шарики по цветам.</p>
+                <p>• В каждой колбе должны находиться шарики только одного цвета.</p>
+                <p>• Вы можете перемещать шар только в пустую колбу или на шар того же цвета.</p>
+                <p>• В колбе может быть не более 4-х шаров.</p>
+                <p>• **Тайный шар:** В этом режиме видны только верхние шары. Нижние шары скрыты, пока вы не снимете тот, что лежит над ними.</p>
+            </div>
+            <button onclick="closeModal('rules-modal')" class="main-menu-button secondary-button mt-6 w-full">Понятно</button>
+        </div>
+    </div>
+    
+    <!-- Модальное окно: Настройки -->
+    <div id="settings-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-6 text-center" style="color: var(--primary-color);">Настройки</h2>
+            
+            <div class="flex flex-col space-y-5">
+                <!-- Переключатель Темы -->
+                <div class="flex items-center justify-between">
+                    <span class="text-lg font-medium">Тема</span>
+                    <div class="flex items-center space-x-3">
+                        <span class="slider-icon text-2xl">☀️</span>
+                        <label for="theme-toggle" class="setting-toggle-label">
+                            <input type="checkbox" id="theme-toggle" class="sr-only setting-toggle-input">
+                            <div class="setting-toggle-slider"></div>
+                        </label>
+                        <span class="slider-icon text-2xl">🌙</span>
+                    </div>
+                </div>
+                
+                <!-- Переключатель Звука -->
+                <div class="flex items-center justify-between">
+                    <span class="text-lg font-medium">Звуки и музыка</span>
+                    <button id="sound-toggle-btn" class="icon-button" style="color: var(--primary-color); width: 48px; height: 48px; background-color: var(--bg-color); border-radius: 50%;">
+                        <svg id="sound-on-icon" class="w-7 h-7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5 5 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
+                        <svg id="sound-off-icon" class="w-7 h-7 hidden" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l-2.25 2.25M19.5 12l2.25-2.25M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Статистика -->
     <div id="stats-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg text-center">
             <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-color);">Статистика</h2>
@@ -339,7 +467,7 @@
                 </table>
             </div>
 
-            <button onclick="closeModal('stats-modal')" class="main-menu-button mt-6 w-full">Закрыть</button>
+            <button onclick="closeModal('stats-modal')" class="main-menu-button secondary-button mt-6 w-full">Закрыть</button>
         </div>
     </div>
     
@@ -382,6 +510,7 @@
         const undoButton = document.getElementById('undo-button');
         const undoCountSpan = document.getElementById('undo-count');
         const themeToggle = document.getElementById('theme-toggle');
+        const soundToggleBtn = document.getElementById('sound-toggle-btn');
         const bgMusic = document.getElementById('bg-music');
         
         // --- Game State ---
@@ -470,6 +599,7 @@
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMuted;
                 gameData.isMuted = newState;
 
+                // Обновляем иконки ВНУТРИ модального окна
                 document.getElementById('sound-on-icon').classList.toggle('hidden', gameData.isMuted);
                 document.getElementById('sound-off-icon').classList.toggle('hidden', !gameData.isMuted);
                 
@@ -494,25 +624,22 @@
             // Main Menu listeners
             document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
             document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
-            document.getElementById('stats-button').addEventListener('click', () => {
-                updateStatsDisplay(); // Update stats right before opening
-                openModal('stats-modal');
-            });
             document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
-            document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
 
             // Level Selection listener
             document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
 
             // Game screen listeners
-            document.getElementById('sound-toggle-btn').addEventListener('click', () => audioManager.toggleMute());
             undoButton.addEventListener('click', undoMove);
-            themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'dark' : 'light'));
             window.addEventListener('resize', () => {
                 if (!screens.game.classList.contains('hidden')) {
                      requestAnimationFrame(() => adjustTubeSize(tubes.length));
                 }
             });
+            
+            // Settings/Rules Listeners (теперь они в модалках)
+            themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'dark' : 'light'));
+            soundToggleBtn.addEventListener('click', () => audioManager.toggleMute());
             
             // Other Games listener
             document.getElementById('other-games-container').addEventListener('click', e => {
@@ -569,8 +696,8 @@
                 vkUserId = 'test_user';
             }
             await loadGameData();
-            setTheme(gameData.theme);
-            renderOtherGames(); // Render the (correct) other games list
+            setTheme(gameData.theme, true); // true = принудительная установка без сохранения
+            renderOtherGames(); 
             audioManager.toggleMute(gameData.isMuted);
             showScreen('mainMenu');
         }
@@ -726,6 +853,7 @@
             );
         }
 
+        // --- ИСПРАВЛЕННАЯ ЛОГИКА РАЗМЕРОВ ---
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
@@ -740,34 +868,33 @@
                 const cellWidth = boardWidth / cols;
                 const cellHeight = boardHeight / rows;
                 
-                const prospectiveTubeWidth = cellWidth * 0.7; // 70% width
-                // Расчет высоты колбы:
-                // 4% padding (L/R) -> 92% width for ball
-                // 4% margin-top
-                // 4% padding (T/B)
-                // H = (ball_height * 4) + (margin * 4) + (padding * 2)
-                // H = (W*0.92 * 4) + (W*0.04 * 4) + (W*0.04 * 2) = 3.68W + 0.16W + 0.08W = 3.92W
-                // Округлим до 4W для простоты
-                const prospectiveTubeHeight = prospectiveTubeWidth * (BALL_LAYERS * 1.0); 
+                const prospectiveTubeWidth = cellWidth * 0.65; // Уменьшено до 65%
                 
-                // Оставляем 20% свободного места в ячейке для "прыжка" шара
-                if (prospectiveTubeHeight < cellHeight * 0.8) { 
+                // Расчет высоты колбы: 
+                // 4 шара * (100% ширины) + 3 отступа * (4% ширины) + 2 отступа * (4% ширины)
+                // W * ( (1 * 4) + (0.04 * 3) + (0.04 * 2) ) = W * (4 + 0.12 + 0.08) = W * 4.2
+                const prospectiveTubeHeight = prospectiveTubeWidth * (BALL_LAYERS * 1 + (BALL_LAYERS - 1) * 0.04 + 0.08);
+                
+                // Оставляем 10% свободного места в ячейке для "прыжка" шара
+                if (prospectiveTubeHeight < cellHeight * 0.9) { 
                     if (prospectiveTubeHeight > bestLayout.tubeHeight) {
                         bestLayout = { cols: cols, tubeHeight: prospectiveTubeHeight };
                     }
                 }
             }
-            if(bestLayout.cols === 0) bestLayout.cols = tubeCount <= 12 ? 4 : 5;
+            if(bestLayout.cols === 0) {
+                 bestLayout.cols = tubeCount <= 12 ? 4 : 5;
+            }
             
-            const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
-            // Итоговая высота = 4 шара + 4 отступа + 2 padding = 4 * (W*0.92) + 4 * (W*0.04) + 2 * (W*0.04) = 3.92W
-            const finalTubeHeight = finalTubeWidth * (BALL_LAYERS * 0.92 + (BALL_LAYERS) * 0.04 + 0.08);
-            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; // 15% margin
+            const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.65;
+            const finalTubeHeight = finalTubeWidth * (BALL_LAYERS * 1 + (BALL_LAYERS - 1) * 0.04 + 0.08);
+            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.175; // Увеличено до 17.5%
 
             document.documentElement.style.setProperty('--tube-width', `${finalTubeWidth}px`);
             document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
             document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
         }
+        // --- КОНЕЦ ИСПРАВЛЕНИЙ ---
 
         // --- Rendering ---
         function renderTubes() {
@@ -799,7 +926,6 @@
             });
         }
         
-        // --- Эта функция скопирована из оригинального файла ---
         function renderOtherGames() {
             const container = document.getElementById('other-games-container');
             container.innerHTML = '';
@@ -879,21 +1005,14 @@
             moveCount++;
             updateMoveCount();
             
-            const topColor = fromTube.balls[fromTube.balls.length - 1].color;
-            
-            // Ищем, сколько шаров одного цвета лежит сверху
-            let amountToMove = 0;
-            for (let i = fromTube.balls.length - 1; i >= 0; i--) {
-                const ball = fromTube.balls[i];
-                if (ball.isVisible && ball.color === topColor) {
-                    amountToMove++;
-                } else {
-                    break; // Наткнулись на другой цвет или тайный шар
-                }
-            }
+            // --- ИСПРАВЛЕННАЯ ЛОГИКА: ВСЕГДА 1 ШАР ---
+            let amountToMove = 1;
             
             // Ограничиваем количество местом в колбе назначения
+            // (Эта проверка осталась на случай, если мы захотим вернуть стопки, 
+            // но с amountToMove = 1 она просто проверяет, что 1 < 4)
             amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
+            // --- КОНЕЦ ИСПРАВЛЕНИЙ ---
             
             // Извлекаем шары из колбы-источника
             const ballsToMove = fromTube.balls.splice(fromTube.balls.length - amountToMove);
@@ -909,7 +1028,8 @@
             animateMove(fromTube, toTube, ballsToMove);
         }
         
-        async function animateMove(fromTube, toTube, ballsMoved) {
+        // --- ИСПРАВЛЕННАЯ АНИМАЦИЯ ---
+        async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
             updateUndoButtonUI();
@@ -917,13 +1037,13 @@
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             
-            // Находим DOM-элементы шаров, которые нужно анимировать
-            const ballElsToAnimate = Array.from(fromEl.querySelectorAll('.ball')).slice(-ballsMoved.length);
+            const numBallsMoved = ballsToMove.length; // Теперь это всегда 1
             
-            // Защита от сбоя, если шары не найдены
+            // Находим DOM-элементы шаров, которые нужно анимировать
+            const ballElsToAnimate = Array.from(fromEl.querySelectorAll('.ball')).slice(-numBallsMoved);
+            
             if (ballElsToAnimate.length === 0) {
                 console.error("animateMove: не найдены шары для анимации.");
-                // Просто ре-рендерим состояние
                 renderTubes();
                 fromTube.isAnimating = false;
                 toTube.isAnimating = false;
@@ -931,12 +1051,12 @@
                 return;
             }
 
-            // Убираем класс 'selected-ball'
             const selectedEl = document.querySelector('.selected-ball');
             if(selectedEl) selectedEl.classList.remove('selected-ball');
 
             const toRect = toEl.getBoundingClientRect();
-            const ballWidth = ballElsToAnimate[0].offsetWidth;
+            // КРИТИЧЕСКИЙ ФИКС: Получаем ширину до того, как шар перенесется в body
+            const ballWidth = ballElsToAnimate[0].offsetWidth; 
             
             // Целевая X-координата (центр колбы назначения)
             const xTarget = toRect.left + (toRect.width / 2) - (ballWidth / 2);
@@ -948,48 +1068,44 @@
                 const ballEl = ballElsToAnimate[i];
                 const rect = ballEl.getBoundingClientRect();
                 
-                // Переносим шар в body, чтобы он мог лететь "над" всеми
                 document.body.appendChild(ballEl);
                 ballEl.style.position = 'absolute';
+                // КРИТИЧЕСКИЙ ФИКС: Задаем явную ширину
+                ballEl.style.width = `${ballWidth}px`; 
                 ballEl.style.left = `${rect.left}px`;
                 ballEl.style.top = `${rect.top}px`;
                 ballEl.style.zIndex = 100 + i;
-                ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)'; // Плавная кривая
+                ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)';
                 
-                // Анимируем
                 requestAnimationFrame(() => {
                     ballEl.style.transform = 'scale(1.05)';
                     ballEl.style.left = `${xTarget}px`;
-                    // Складываем их стопкой над целевой колбой
-                    ballEl.style.top = `${yTarget - (i * (ballWidth * 1.04))}px`; // 1.04 = 100% высоты + 4% margin
+                    // Складываем их стопкой (хотя сейчас там всегда 1)
+                    ballEl.style.top = `${yTarget - (i * (ballWidth * 1.04))}px`;
                 });
                 animatedBalls.push(ballEl);
             }
             
             audioManager.playSound('move');
             
-            // Ждем завершения анимации "перелета"
             await wait(350); 
             
-            // Удаляем анимированные шары из body
             animatedBalls.forEach(el => el.remove());
             
-            // Полностью перерисовываем игровое поле
-            // Это самый надежный способ отобразить новое состояние
             renderTubes();
             
-            await wait(50); // Даем браузеру "продохнуть"
+            await wait(50); 
 
             fromTube.isAnimating = false;
             toTube.isAnimating = false;
             updateUndoButtonUI();
             
-            // Проверяем победу
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
             if (!isAnyTubeAnimating && isLevelSolved(tubes.filter(t => !t.isPlaceholder))) {
                 winGame();
             }
         }
+        // --- КОНЕЦ ИСПРАВЛЕНИЙ АНИМАЦИИ ---
 
         async function unlockExtraTube(tubeId) {
             const tube = tubes.find(t => t.id === tubeId);
@@ -1008,15 +1124,14 @@
             stopTimer();
             audioManager.playSound('win');
             
-            // Сохраняем статистику в правильный режим
             const stats = gameData.stats[currentGameMode];
             stats.gamesPlayed[currentDifficulty] = (stats.gamesPlayed[currentDifficulty] || 0) + 1;
             if (seconds < stats.bestTime[currentDifficulty]) {
                 stats.bestTime[currentDifficulty] = seconds;
             }
             
-            showInterstitialAd(); // Показывает рекламу (если пора)
-            saveGameData(); // Сохраняет все данные, включая новую статистику
+            showInterstitialAd(); 
+            saveGameData(); 
             
             document.getElementById('win-time').textContent = formatTime(seconds);
             document.getElementById('win-moves').textContent = moveCount;
@@ -1076,11 +1191,13 @@
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
         // --- Data & Theme ---
-        function setTheme(theme) {
+        function setTheme(theme, force = false) {
             gameData.theme = theme;
             document.documentElement.classList.toggle('dark', theme === 'dark');
             themeToggle.checked = theme === 'dark';
-            saveGameData();
+            if (!force) {
+                saveGameData();
+            }
         }
 
         async function saveGameData() {
@@ -1093,7 +1210,6 @@
             }
         }
 
-        // Загрузка с новой структурой
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
@@ -1113,11 +1229,8 @@
                 gameData.isMuted = loadedData.isMuted || false;
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
-                // --- Миграция старых данных / Загрузка новых ---
                 if (loadedData.stats) {
-                    // Если это новая структура
                     if (loadedData.stats.classic || loadedData.stats.mystery) {
-                        // Слияние статистики (на случай, если мы добавили новые уровни сложности)
                         if (loadedData.stats.classic) {
                             newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.classic.bestTime};
                             newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.classic.gamesPlayed};
@@ -1127,13 +1240,11 @@
                             newStats.mystery.gamesPlayed = {...newStats.mystery.gamesPlayed, ...loadedData.stats.mystery.gamesPlayed};
                         }
                     } else {
-                        // Если это старая структура, переносим ее в "classic"
                         newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.bestTime};
                         newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.gamesPlayed};
                     }
                 }
                 
-                // Очистка null/Infinity
                 ['classic', 'mystery'].forEach(mode => {
                     Object.keys(newStats[mode].bestTime).forEach(diff => {
                         if (newStats[mode].bestTime[diff] === null) {
@@ -1144,10 +1255,8 @@
                 
                 gameData.stats = newStats;
             }
-            // Не вызываем updateStatsDisplay() здесь, он вызывается при открытии модалки
         }
 
-        // Обновление статистики с учетом табов
         function updateStatsDisplay() {
             if (!gameData.stats) return;
             
