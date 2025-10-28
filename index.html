@@ -70,32 +70,35 @@
         .screen.hidden { display: none; }
         @keyframes fadeIn { from { opacity: 0; } to: { opacity: 1; } }
 
-        /* --- Новые стили Главного меню --- */
+        /* --- Обновленные стили Главного меню --- */
         #main-menu-title {
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 5px var(--shadow-color);
         }
+        /* ИСПРАВЛЕНИЕ: Основная кнопка теперь сплошная, а не белая */
         .main-menu-button {
-            background-color: #ffffff;
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
             font-weight: 700; 
             border-radius: 16px; 
             padding: 16px 24px;
             text-transform: uppercase; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px var(--shadow-color);
             transition: all 0.2s ease-in-out; 
-            border: 2px solid #ffffff;
+            border: 2px solid var(--primary-color);
         }
         html.dark .main-menu-button {
-            background-color: var(--modal-bg-color);
-            color: var(--primary-color);
-            border-color: var(--tube-border-color);
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            border-color: var(--primary-color);
         }
         .main-menu-button:hover:not(:disabled) {
             transform: translateY(-3px); 
-            box-shadow: 0 8px 25px var(--shadow-color), 0 5px 10px rgba(0,0,0,0.03);
+            box-shadow: 0 8px 30px var(--shadow-color);
         }
+        /* Вторичная кнопка (прозрачная) */
         .main-menu-button.secondary-button {
              background-color: transparent; 
              color: var(--primary-color);
@@ -104,6 +107,7 @@
         }
         html.dark .main-menu-button.secondary-button {
             background-color: transparent;
+            color: var(--primary-color);
         }
         .main-menu-button:disabled {
             background-color: var(--locked-bg-color);
@@ -113,48 +117,51 @@
             border-color: var(--locked-bg-color);
         }
         
+        /* Круглые кнопки меню */
         .icon-menu-button {
             width: 64px; height: 64px;
-            background-color: #ffffff;
-            color: var(--primary-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--tube-border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
             transition: all 0.2s ease-in-out;
         }
         html.dark .icon-menu-button {
             background-color: var(--modal-bg-color);
-            color: var(--primary-color);
-            border: 2px solid var(--tube-border-color);
+            border-color: var(--tube-border-color);
+            color: var(--text-color);
         }
         .icon-menu-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px var(--shadow-color), 0 5px 10px rgba(0,0,0,0.03);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.07);
+            color: var(--primary-color);
         }
         .icon-menu-button svg {
             width: 32px; height: 32px;
-            stroke-width: 2;
         }
-        /* --- Конец новых стилей --- */
+        /* --- Конец стилей меню --- */
 
+        /* --- КРИТИЧЕСКИЙ ФИКС: РАЗМЕРЫ КОЛБ И ШАРОВ --- */
         .tube-container {
             position: relative;
-            width: var(--tube-width, 60px);
-            height: var(--tube-height, 240px);
+            width: var(--tube-width, 50px);
+            height: var(--tube-height, 200px);
             background-color: transparent;
             border: 4px solid var(--tube-border-color);
             border-top: none;
-            border-radius: 0 0 25px 25px;
+            border-radius: 0 0 20px 20px; /* Более узкие колбы = меньший радиус */
             margin: var(--tube-margin, 10px); cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            display: flex; flex-direction: column-reverse; /* Складываем шары снизу вверх */
-            justify-content: flex-start; /* Начинаем укладку с нижнего края */
-            overflow: visible; /* Позволяет шару "выпрыгивать" */
-            padding: 4%; /* Небольшой отступ внутри колбы */
-            box-sizing: border-box; /* КРИТИЧЕСКИЙ ФИКС: Учитывает padding в размерах */
+            display: flex; flex-direction: column-reverse; 
+            justify-content: flex-start; 
+            overflow: visible; 
+            padding: 4px; /* Фиксированный padding */
+            box-sizing: border-box; 
         }
         .tube-container::before {
             content: '';
@@ -168,10 +175,10 @@
         }
         
         .ball {
-            width: 100%; /* Шар занимает всю доступную ширину (с учетом padding) */
-            aspect-ratio: 1 / 1; /* КРИТИЧЕСКИЙ ФИКС: Делает шар идеально круглым */
+            width: 100%; /* Шар занимает 100% ширины (контента колбы) */
+            aspect-ratio: 1 / 1; /* Гарантирует, что шар КРУГЛЫЙ */
             border-radius: 50%;
-            margin-top: 4%; /* Отступ между шарами */
+            margin-top: 4px; /* Фиксированный отступ */
             flex-shrink: 0;
             box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1);
             transition: transform 0.2s ease-out, background-color 0.3s;
@@ -181,27 +188,25 @@
             font-weight: 900;
             font-size: calc(var(--tube-width) * 0.4);
             color: var(--mystery-ball-text-color);
-            box-sizing: border-box; /* КРИТИЧЕСКИЙ ФИКС: Учитывает padding в размерах */
+            box-sizing: border-box; /* Это свойство было утеряно, оно ВАЖНО */
         }
         
-        /* Самый нижний шар в стопке не имеет верхнего отступа */
         .ball:first-of-type {
             margin-top: 0;
         }
         
         .ball.mystery {
-            background-color: var(--mystery-ball-bg-color) !important; /* !important, чтобы перебить inline-стиль */
+            background-color: var(--mystery-ball-bg-color) !important; 
             color: var(--mystery-ball-text-color);
             box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
         
-        /* Этот класс добавляется шару, а не колбе */
         .ball.selected-ball {
-            /* "Выпрыгивает" на 25% высоты колбы */
-            transform: translateY(calc(var(--tube-height) * -0.25)) scale(1.1);
+            transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1); /* Прыжок на 30% высоты */
             box-shadow: 0 10px 25px var(--shadow-color);
             z-index: 100;
         }
+        /* --- КОНЕЦ ФИКСА РАЗМЕРОВ --- */
 
         .modal { background-color: rgba(0, 0, 0, 0.6); }
         .modal-content { background-color: var(--modal-bg-color); }
@@ -235,9 +240,8 @@
             background-color: var(--primary-color);
         }
         .setting-toggle-input:checked + .setting-toggle-slider:before {
-            transform: translateX(24px); /* w-14 - w-6 - 2*left = 56 - 24 - 8 = 24 */
+            transform: translateX(24px); 
         }
-        /* --- */
         
         .icon-button {
             background: none; border: none; padding: 8px;
@@ -299,18 +303,20 @@
 
     <!-- Главное меню -->
     <div id="main-menu" class="screen flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
-        <h1 id="main-menu-title" class="text-6xl font-black mb-10">Ball Sort</h1>
+        <h1 id="main-menu-title" class="text-7xl font-black mb-10">Ball Sort</h1>
         
         <div class="w-full flex flex-col gap-5">
             <button id="classic-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <div class="flex items-center justify-center">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <!-- Иконка Классики -->
+                    <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 3zM10 8.5a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 8.5zM10 14a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 14z" /></svg>
                     <span>Классика</span>
                 </div>
             </button>
             <button id="mystery-mode-btn" class="main-menu-button w-full py-4 text-lg">
                  <div class="flex items-center justify-center">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <!-- Иконка Тайны -->
+                    <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM8.94 6.44a.75.75 0 00-1.39.563l.001 3.031a.75.75 0 001.39-.001L8.94 6.44zM9 12a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd" /></svg>
                     <span>Тайный шар</span>
                 </div>
             </button>
@@ -320,17 +326,17 @@
         </div>
         
         <div class="flex justify-center items-center space-x-6 pt-10">
-             <!-- Правила -->
+             <!-- Правила (Новая SVG) -->
              <button id="rules-button" class="icon-menu-button" onclick="openModal('rules-modal')">
-                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8"><path fill-rule="evenodd" d="M10 2a.75.75 0 01.75.75v.25a.75.75 0 01-1.5 0V2.75A.75.75 0 0110 2zM4.135 4.135a.75.75 0 011.06 0l.25.25a.75.75 0 01-1.06 1.06l-.25-.25a.75.75 0 010-1.06zM15.865 4.135a.75.75 0 010 1.06l-.25.25a.75.75 0 11-1.06-1.06l.25-.25a.75.75 0 011.06 0zM5.5 8.75c0 .414.336.75.75.75h7.5a.75.75 0 000-1.5h-7.5a.75.75 0 00-.75.75zM5.5 11.75c0 .414.336.75.75.75h7.5a.75.75 0 000-1.5h-7.5a.75.75 0 00-.75.75zM5.5 14.75c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-4.5a.75.75 0 00-.75.75zM10 18a8 8 0 100-16 8 8 0 000 16z" clip-rule="evenodd" /></svg>
              </button>
-             <!-- Статистика -->
+             <!-- Статистика (Новая SVG) -->
              <button id="stats-button" class="icon-menu-button" onclick="openModal('stats-modal'); updateStatsDisplay();">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM6.75 9.25a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5z" clip-rule="evenodd" /></svg>
              </button>
-             <!-- Настройки -->
+             <!-- Настройки (Новая SVG) -->
              <button id="settings-button" class="icon-menu-button" onclick="openModal('settings-modal')">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></p><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8"><path fill-rule="evenodd" d="M7.83 1.15c.343-.343.894-.343 1.237 0l.443.443c.3.3.708.468 1.135.468s.834-.168 1.135-.468l.443-.443a.875.875 0 011.237 0l.443.443c.3.3.708.468 1.135.468s.834-.168 1.135-.468l.443-.443a.875.875 0 011.237 0l.443.443c.3.3.708.468 1.135.468s.834-.168 1.135-.468l.443-.443a.875.875 0 011.237 0l.443.443c.3.3.708.468 1.135.468s.834-.168 1.135-.468l.443-.443a.875.875 0 011.237 0l.443.443c.3.3.708.468 1.135.468s.834-.168 1.135-.468l.443-.443a.875.875 0 011.237 0l.443.443c.3.3.708.468 1.135.468v.001c.427 0 .834.168 1.135.468l.443.443a.875.875 0 010 1.237l-.443.443c-.3.3-.468.708-.468 1.135s.168.834.468 1.135l.443.443a.875.875 0 010 1.237l-.443.443c-.3.3-.468.708-.468 1.135s.168.834.468 1.135l.443.443a.875.875 0 010 1.237l-.443.443c-.3.3-.468.708-.468 1.135s.168.834.468 1.135l.443.443a.875.875 0 010 1.237l-.443.443c-.3.3-.468.708-.468 1.135s.168.834.468 1.135l.443.443a.875.875 0 010 1.237l-.443.443c-.3.3-.468.708-.468 1.135s.168.834.468 1.135l.443.443a.875.875 0 010 1.237l-.443.443c-.3.3-.468.708-.468 1.135v.001c0 .427-.168.834-.468 1.135l-.443.443a.875.875 0 01-1.237 0l-.443-.443c-.3-.3-.708-.468-1.135-.468s-.834.168-1.135.468l-.443.443a.875.875 0 01-1.237 0l-.443-.443c-.3-.3-.708-.468-1.135-.468s-.834.168-1.135.468l-.443.443a.875.875 0 01-1.237 0l-.443-.443c-.3-.3-.708-.468-1.135-.468s-.834.168-1.135.468l-.443.443a.875.875 0 01-1.237 0l-.443-.443c-.3-.3-.708-.468-1.135-.468s-.834.168-1.135.468l-.443.443a.875.875 0 01-1.237 0l-.443-.443c-.3-.3-.708-.468-1.135-.468s-.834.168-1.135.468l-.443.443a.875.875 0 01-1.237 0l-.443-.443c-.3-.3-.708-.468-1.135-.468s-.834.168-1.135.468l-.443.443a.875.875 0 01-1.237 0l-.443-.443c-.3-.3-.708-.468-1.135-.468l-.001-.001c-.427 0-.834-.168-1.135-.468l-.443-.443a.875.875 0 010-1.237l.443-.443c.3-.3.468-.708.468-1.135s-.168-.834-.468-1.135l-.443-.443a.875.875 0 010-1.237l.443-.443c.3-.3.468-.708.468-1.135s-.168-.834-.468-1.135l-.443-.443a.875.875 0 010-1.237l.443-.443c.3-.3.468-.708.468-1.135s-.168-.834-.468-1.135l-.443-.443a.875.875 0 010-1.237l.443-.443c.3-.3.468-.708.468-1.135s-.168-.834-.468-1.135l-.443-.443a.875.875 0 010-1.237l.443-.443c.3-.3.468-.708.468-1.135l-.001-.001c0-.427.168-.834.468-1.135l.443-.443zM10 6.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z" clip-rule="evenodd" /></svg>
              </button>
         </div>
     </div>
@@ -373,7 +379,8 @@
         <div class="w-full max-w-sm mx-auto text-center">
             <h1 class="text-3xl font-bold tracking-tight mb-6">Другие игры</h1>
             <div id="other-games-container" class="grid grid-cols-3 gap-x-4 gap-y-5"></div>
-            <button id="back-to-menu-btn" class="w-full mt-6 py-3 px-4 rounded-xl font-semibold text-lg secondary-button">Назад</button>
+            <!-- ИСПРАВЛЕНИЕ: Кнопка "Назад" теперь имеет правильный стиль -->
+            <button id="back-to-menu-btn" class="w-full mt-6 py-3 px-4 rounded-xl font-semibold text-lg main-menu-button secondary-button">Назад</button>
         </div>
     </div>
 
@@ -400,10 +407,10 @@
             <h2 class="text-3xl font-bold mb-6 text-center" style="color: var(--primary-color);">Настройки</h2>
             
             <div class="flex flex-col space-y-5">
-                <!-- Переключатель Темы -->
+                <!-- ИСПРАВЛЕНИЕ: Выравнивание в Настройках -->
                 <div class="flex items-center justify-between">
                     <span class="text-lg font-medium">Тема</span>
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center justify-end space-x-3 w-40">
                         <span class="slider-icon text-2xl">☀️</span>
                         <label for="theme-toggle" class="setting-toggle-label">
                             <input type="checkbox" id="theme-toggle" class="sr-only setting-toggle-input">
@@ -413,14 +420,16 @@
                     </div>
                 </div>
                 
-                <!-- Переключатель Звука -->
                 <div class="flex items-center justify-between">
                     <span class="text-lg font-medium">Звуки и музыка</span>
-                    <button id="sound-toggle-btn" class="icon-button" style="color: var(--primary-color); width: 48px; height: 48px; background-color: var(--bg-color); border-radius: 50%;">
-                        <svg id="sound-on-icon" class="w-7 h-7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5 5 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
-                        <svg id="sound-off-icon" class="w-7 h-7 hidden" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l-2.25 2.25M19.5 12l2.25-2.25M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
-                    </button>
+                    <div class="flex items-center justify-end w-40">
+                        <button id="sound-toggle-btn" class="icon-button" style="color: var(--primary-color); width: 48px; height: 48px; background-color: var(--bg-color); border-radius: 50%;">
+                            <svg id="sound-on-icon" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5 5 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
+                            <svg id="sound-off-icon" class="w-7 h-7 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l-2.25 2.25M19.5 12l2.25-2.25M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
+                        </button>
+                    </div>
                 </div>
+                <!-- КОНЕЦ ИСПРАВЛЕНИЯ ВЫРАВНИВАНИЯ -->
             </div>
             
             <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
@@ -475,6 +484,7 @@
         <div class="modal-content w-11/12 max-w-sm p-6 rounded-2xl shadow-lg text-center">
             <h2 class="text-3xl font-bold mb-6" style="color: var(--primary-color);">Пауза</h2>
             <div class="flex flex-col space-y-4">
+                <!-- ИСПРАВЛЕНИЕ: Кнопка "Продолжить" теперь сплошная (т.к. у нее нет класса secondary-button) -->
                 <button onclick="resumeGame()" class="main-menu-button w-full">Продолжить</button>
                 <button onclick="restartGame(true)" class="main-menu-button secondary-button w-full">Начать заново</button>
                 <button onclick="goToMainMenu()" class="main-menu-button secondary-button w-full">Главное меню</button>
@@ -625,6 +635,8 @@
             document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
             document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
             document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
+            // ИСПРАВЛЕНИЕ: Добавлен недостающий listener
+            document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
 
             // Level Selection listener
             document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
@@ -853,7 +865,7 @@
             );
         }
 
-        // --- ИСПРАВЛЕННАЯ ЛОГИКА РАЗМЕРОВ ---
+        // --- КРИТИЧЕСКИЙ ФИКС: РАСЧЕТ РАЗМЕРА КОЛБЫ ---
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
@@ -868,15 +880,20 @@
                 const cellWidth = boardWidth / cols;
                 const cellHeight = boardHeight / rows;
                 
-                const prospectiveTubeWidth = cellWidth * 0.65; // Уменьшено до 65%
+                const prospectiveTubeWidth = cellWidth * 0.6; // Уменьшено до 60%
                 
-                // Расчет высоты колбы: 
-                // 4 шара * (100% ширины) + 3 отступа * (4% ширины) + 2 отступа * (4% ширины)
-                // W * ( (1 * 4) + (0.04 * 3) + (0.04 * 2) ) = W * (4 + 0.12 + 0.08) = W * 4.2
-                const prospectiveTubeHeight = prospectiveTubeWidth * (BALL_LAYERS * 1 + (BALL_LAYERS - 1) * 0.04 + 0.08);
+                // Расчет высоты колбы (на основе CSS: 4px padding, 4px margin)
+                // (Шар) * 4 + (Отступ) * 3 + (Padding) * 2
+                // Шар = Ширина - 8px (т.к. padding 4px L/R)
+                // Отступ = 4px
+                // Padding = 4px
+                // Высота = ( (Ширина - 8) * 4 ) + ( 4 * 3 ) + ( 4 * 2 )
+                // Высота = 4 * Ширина - 32 + 12 + 8
+                // Высота = 4 * Ширина - 12
+                const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 12;
                 
-                // Оставляем 10% свободного места в ячейке для "прыжка" шара
-                if (prospectiveTubeHeight < cellHeight * 0.9) { 
+                // Оставляем 20% свободного места в ячейке для "прыжка" шара
+                if (prospectiveTubeHeight < cellHeight * 0.8) { 
                     if (prospectiveTubeHeight > bestLayout.tubeHeight) {
                         bestLayout = { cols: cols, tubeHeight: prospectiveTubeHeight };
                     }
@@ -884,17 +901,18 @@
             }
             if(bestLayout.cols === 0) {
                  bestLayout.cols = tubeCount <= 12 ? 4 : 5;
+                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.6 * 4 ) - 12;
             }
             
-            const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.65;
-            const finalTubeHeight = finalTubeWidth * (BALL_LAYERS * 1 + (BALL_LAYERS - 1) * 0.04 + 0.08);
-            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.175; // Увеличено до 17.5%
+            const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.6;
+            const finalTubeHeight = bestLayout.tubeHeight;
+            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.2; // 20% margin L/R
 
             document.documentElement.style.setProperty('--tube-width', `${finalTubeWidth}px`);
             document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
             document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
         }
-        // --- КОНЕЦ ИСПРАВЛЕНИЙ ---
+        // --- КОНЕЦ ФИКСА РАЗМЕРОВ ---
 
         // --- Rendering ---
         function renderTubes() {
@@ -1001,18 +1019,17 @@
             return topBall.color === to.balls[to.balls.length - 1].color;
         }
 
+        // --- ИСПРАВЛЕНИЕ: ПЕРЕМЕЩАЕМ 1 ШАР ---
         function initiateMove(fromTube, toTube) {
             moveCount++;
             updateMoveCount();
             
-            // --- ИСПРАВЛЕННАЯ ЛОГИКА: ВСЕГДА 1 ШАР ---
+            // --- ЛОГИКА: ВСЕГДА 1 ШАР ---
             let amountToMove = 1;
             
             // Ограничиваем количество местом в колбе назначения
-            // (Эта проверка осталась на случай, если мы захотим вернуть стопки, 
-            // но с amountToMove = 1 она просто проверяет, что 1 < 4)
             amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
-            // --- КОНЕЦ ИСПРАВЛЕНИЙ ---
+            // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
             
             // Извлекаем шары из колбы-источника
             const ballsToMove = fromTube.balls.splice(fromTube.balls.length - amountToMove);
@@ -1028,7 +1045,7 @@
             animateMove(fromTube, toTube, ballsToMove);
         }
         
-        // --- ИСПРАВЛЕННАЯ АНИМАЦИЯ ---
+        // --- ИСПРАВЛЕНИЕ: АНИМАЦИЯ ---
         async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
@@ -1080,7 +1097,6 @@
                 requestAnimationFrame(() => {
                     ballEl.style.transform = 'scale(1.05)';
                     ballEl.style.left = `${xTarget}px`;
-                    // Складываем их стопкой (хотя сейчас там всегда 1)
                     ballEl.style.top = `${yTarget - (i * (ballWidth * 1.04))}px`;
                 });
                 animatedBalls.push(ballEl);
