@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru" class="light">
+<!-- ИСПРАВЛЕНИЕ: Убран класс 'light' -->
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -13,50 +14,38 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* --- ИСПРАВЛЕНИЕ: Новая синяя цветовая схема --- */
         :root {
-            --bg-light: #eef2f9;
-            --text-light: #1c1e21;
-            --tube-border-light: #cdd5e0;
-            --primary-light: #4f46e5;
-            --secondary-light: #818cf8;
-            --shadow-light: rgba(79, 70, 229, 0.15);
-            --modal-bg-light: #ffffff;
-            --locked-bg-light: #d1d5db;
-            --locked-text-light: #9ca3af;
-            --mystery-ball-bg: #d1d5db;
-            --mystery-ball-text: #6b7280;
+            --bg-gradient-start: #3b82f6; /* blue-500 */
+            --bg-gradient-end: #1d4ed8; /* blue-700 */
+            
+            --text-color: #ffffff;
+            --text-color-dark: #e5e7eb; /* Для теней */
+            
+            --tube-border-color: #93c5fd; /* blue-300 */
+            --modal-bg-color: #1e40af; /* blue-800 */
+            --modal-shadow: rgba(0,0,0,0.3);
+            
+            --primary-color: #ffffff; /* Белые кнопки */
+            --primary-text: #3b82f6; /* Синий текст на них */
+            --primary-shadow: rgba(0, 0, 0, 0.2);
+            
+            --secondary-color: transparent; /* Прозрачные вторичные кнопки */
+            --secondary-text: #ffffff;
+            --secondary-border: #93c5fd; /* blue-300 */
+            
+            --locked-bg-color: #3b82f6; /* blue-500 */
+            --locked-text-color: #93c5fd; /* blue-300 */
+
+            --mystery-ball-bg: #93c5fd; /* blue-300 */
+            --mystery-ball-text: #1e40af; /* blue-800 */
         }
-        html.light {
-            --bg-color: var(--bg-light);
-            --text-color: var(--text-light);
-            --tube-border-color: var(--tube-border-light);
-            --primary-color: var(--primary-light);
-            --secondary-color: var(--secondary-light);
-            --shadow-color: var(--shadow-light);
-            --modal-bg-color: var(--modal-bg-light);
-            --locked-bg-color: var(--locked-bg-light);
-            --locked-text-color: var(--locked-text-light);
-            --mystery-ball-bg-color: var(--mystery-ball-bg);
-            --mystery-ball-text-color: var(--mystery-ball-text);
-        }
-        html.dark {
-            --bg-color: #111827;
-            --text-color: #e5e7eb;
-            --tube-border-color: #4b5563;
-            --primary-color: #818cf8;
-            --secondary-color: #4f46e5;
-            --shadow-color: rgba(129, 140, 248, 0.2);
-            --modal-bg-color: #1f2937;
-            --locked-bg-color: #374151;
-            --locked-text-color: #6b7280;
-            --mystery-ball-bg-color: #374151;
-            --mystery-ball-text-color: #9ca3af;
-        }
+        
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: var(--bg-color);
+            /* ИСПРАВЛЕНИЕ: Градиентный фон */
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
             overflow: hidden;
             -webkit-tap-highlight-color: transparent;
             height: 100vh;
@@ -72,40 +61,30 @@
 
         /* --- Стили Главного меню --- */
         #main-menu-title {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 5px var(--shadow-color);
+            color: var(--text-color);
+            text-shadow: 0 4px 10px var(--primary-shadow);
         }
+        /* ИСПРАВЛЕНИЕ: Кнопки под синий фон */
         .main-menu-button {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--primary-text);
             font-weight: 700; 
             border-radius: 16px; 
             padding: 16px 24px;
             text-transform: uppercase; 
-            box-shadow: 0 5px 20px var(--shadow-color);
+            box-shadow: 0 5px 20px var(--primary-shadow);
             transition: all 0.2s ease-in-out; 
             border: 2px solid var(--primary-color);
         }
-        html.dark .main-menu-button {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border-color: var(--primary-color);
-        }
         .main-menu-button:hover:not(:disabled) {
             transform: translateY(-3px); 
-            box-shadow: 0 8px 30px var(--shadow-color);
+            box-shadow: 0 8px 30px var(--primary-shadow);
         }
         .main-menu-button.secondary-button {
-             background-color: transparent; 
-             color: var(--primary-color);
-             border: 2px solid var(--primary-color);
+             background-color: var(--secondary-color); 
+             color: var(--secondary-text);
+             border: 2px solid var(--secondary-border);
              box-shadow: none;
-        }
-        html.dark .main-menu-button.secondary-button {
-            background-color: transparent;
-            color: var(--primary-color);
         }
         .main-menu-button:disabled {
             background-color: var(--locked-bg-color);
@@ -113,11 +92,12 @@
             cursor: not-allowed;
             box-shadow: none;
             border-color: var(--locked-bg-color);
+            opacity: 0.7;
         }
         
         .icon-menu-button {
             width: 64px; height: 64px;
-            background-color: var(--bg-color);
+            background-color: var(--modal-bg-color);
             color: var(--text-color);
             border-radius: 50%;
             display: flex;
@@ -125,18 +105,12 @@
             justify-content: center;
             cursor: pointer;
             border: 1px solid var(--tube-border-color);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             transition: all 0.2s ease-in-out;
-        }
-        html.dark .icon-menu-button {
-            background-color: var(--modal-bg-color);
-            border-color: var(--tube-border-color);
-            color: var(--text-color);
         }
         .icon-menu-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.07);
-            color: var(--primary-color);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
         .icon-menu-button svg {
             width: 32px; height: 32px;
@@ -149,8 +123,9 @@
             position: relative;
             width: var(--tube-width, 50px);
             height: var(--tube-height, 200px);
-            background-color: transparent;
-            border: 4px solid var(--tube-border-color);
+            /* Фон колбы: легкий градиент */
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.0) 100%);
+            border: 3px solid var(--tube-border-color);
             border-top: none;
             border-radius: 0 0 20px 20px; 
             margin: var(--tube-margin, 10px); cursor: pointer;
@@ -164,52 +139,58 @@
         .tube-container::before {
             content: '';
             position: absolute;
-            top: -8px;
-            left: -4px;
-            right: -4px;
-            height: 8px;
+            top: -6px; /* Чуть тоньше */
+            left: -3px;
+            right: -3px;
+            height: 6px;
             background-color: var(--tube-border-color);
-            border-radius: 5px 5px 0 0;
+            border-radius: 3px 3px 0 0;
         }
         
         .ball {
-            width: 100%; /* Шар занимает 100% ширины (контента колбы) */
-            aspect-ratio: 1 / 1; /* Гарантирует, что шар КРУГЛЫЙ */
+            width: 100%; 
+            aspect-ratio: 1 / 1; 
             border-radius: 50%;
-            /* ИСПРАВЛЕНИЕ: Равномерный отступ для всех шаров */
-            margin-top: 4px; /* Фиксированный отступ */
+            /* ИСПРАВЛЕНИЕ: Равномерный отступ 4px (кроме самого нижнего) */
+            margin-top: 4px; 
             flex-shrink: 0;
             box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease-out, background-color 0.3s;
+            /* ИСПРАВЛЕНИЕ: Убрана transition для background-color, чтобы не мигал */
+            transition: transform 0.2s ease-out; 
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
             font-size: calc(var(--tube-width) * 0.4);
-            color: var(--mystery-ball-text-color);
+            color: var(--mystery-ball-text);
             box-sizing: border-box; 
         }
         
-        /* ИСПРАВЛЕНИЕ: Первый шар (визуально нижний) теперь тоже имеет отступ от дна */
-        .ball:last-child { /* :last-child, т.к. column-reverse */
-            margin-top: 4px;
+        /* ИСПРАВЛЕНИЕ: Самый нижний шар (первый в DOM) не имеет отступа сверху */
+        .ball:first-child { 
+            margin-top: 0; 
         }
         
         .ball.mystery {
-            background-color: var(--mystery-ball-bg-color) !important; 
-            color: var(--mystery-ball-text-color);
+            background-color: var(--mystery-ball-bg) !important; 
+            color: var(--mystery-ball-text);
             box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
         
         .ball.selected-ball {
             transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1); /* Прыжок на 30% высоты */
-            box-shadow: 0 10px 25px var(--shadow-color);
+            box-shadow: 0 10px 25px var(--primary-shadow);
             z-index: 100;
         }
         /* --- КОНЕЦ СТИЛЕЙ КОЛБ --- */
 
         .modal { background-color: rgba(0, 0, 0, 0.6); }
-        .modal-content { background-color: var(--modal-bg-color); }
+        /* ИСПРАВЛЕНИЕ: Стили модального окна */
+        .modal-content { 
+            background-color: var(--modal-bg-color); 
+            border: 2px solid var(--tube-border-color);
+            box-shadow: 0 10px 30px var(--modal-shadow);
+        }
         
         /* Стили для переключателей в модалке */
         .setting-toggle-label {
@@ -219,10 +200,12 @@
             cursor: pointer;
         }
         .setting-toggle-slider {
-            width: 56px; /* w-14 */
-            height: 32px; /* h-8 */
-            background-color: #767676;
-            border-radius: 9999px; /* rounded-full */
+            width: 56px; 
+            height: 32px; 
+            /* ИСПРАВЛЕНИЕ: Цвет переключателя */
+            background-color: #1d4ed8;
+            border: 1px solid var(--tube-border-color);
+            border-radius: 9999px; 
             transition: background-color 0.3s ease;
         }
         .setting-toggle-slider:before {
@@ -230,8 +213,8 @@
             position: absolute;
             left: 4px;
             top: 4px;
-            width: 24px; /* w-6 */
-            height: 24px; /* h-6 */
+            width: 24px; 
+            height: 24px; 
             background-color: white;
             border-radius: 50%;
             transition: transform 0.3s ease;
@@ -257,7 +240,7 @@
         .icon-button.disabled { opacity: 0.4; cursor: not-allowed; }
         .ad-label {
             font-size: 0.6rem; font-weight: bold;
-            background-color: var(--primary-color); color: white;
+            background-color: var(--primary-color); color: var(--primary-text);
             padding: 1px 4px; border-radius: 4px;
         }
         
@@ -306,7 +289,6 @@
         <h1 id="main-menu-title" class="text-7xl font-black mb-10">Ball Sort</h1>
         
         <div class="w-full flex flex-col gap-5">
-            <!-- ИСПРАВЛЕНИЕ: Убраны SVG из кнопок -->
             <button id="classic-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Классика</span>
             </button>
@@ -319,12 +301,12 @@
         </div>
         
         <div class="flex justify-center items-center space-x-6 pt-10">
-             <!-- ИСПРАВЛЕНИЕ: Возвращены старые SVG -->
              <button id="rules-button" class="icon-menu-button" onclick="openModal('rules-modal')">
                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
              </button>
+             <!-- ИСПРАВЛЕНИЕ: Новая SVG Статистики (столбчатая) -->
              <button id="stats-button" class="icon-menu-button" onclick="openModal('stats-modal'); updateStatsDisplay();">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
              </button>
              <button id="settings-button" class="icon-menu-button" onclick="openModal('settings-modal')">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -334,7 +316,7 @@
     
     <!-- Экран выбора уровня -->
     <div id="level-selection-screen" class="screen hidden flex flex-col items-center justify-center p-8 h-full w-full max-w-md mx-auto">
-        <h2 id="level-selection-title" class="text-4xl font-black mb-6" style="color: var(--primary-color);">Выбор уровня</h2>
+        <h2 id="level-selection-title" class="text-4xl font-black mb-6" style="color: var(--text-color);">Выбор уровня</h2>
         <div id="level-selection-container" class="grid grid-cols-2 gap-4 w-full">
             <!-- Level buttons will be generated here -->
         </div>
@@ -349,7 +331,6 @@
                     <button onclick="showPauseMenu()" class="icon-button">
                         <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </button>
-                    <!-- Кнопка звука убрана отсюда и перенесена в Настройки -->
                 </div>
                 <div class="text-center">
                     <div class="text-xl font-bold">Ходы: <span id="move-count">0</span></div>
@@ -414,17 +395,7 @@
                     </label>
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <span class="text-lg font-medium">Тема</span>
-                    <div class="flex items-center space-x-3">
-                        <span class="slider-icon text-2xl">☀️</span>
-                        <label for="theme-toggle" class="setting-toggle-label">
-                            <input type="checkbox" id="theme-toggle" class="sr-only setting-toggle-input">
-                            <div class="setting-toggle-slider"></div>
-                        </label>
-                        <span class="slider-icon text-2xl">🌙</span>
-                    </div>
-                </div>
+                <!-- ИСПРАВЛЕНИЕ: Убран переключатель Темы -->
             </div>
             
             <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
@@ -513,9 +484,9 @@
         const timerSpan = document.getElementById('timer');
         const undoButton = document.getElementById('undo-button');
         const undoCountSpan = document.getElementById('undo-count');
-        const themeToggle = document.getElementById('theme-toggle');
-        const musicToggle = document.getElementById('music-toggle'); // Новый
-        const sfxToggle = document.getElementById('sfx-toggle'); // Новый
+        // const themeToggle = document.getElementById('theme-toggle'); // Удалено
+        const musicToggle = document.getElementById('music-toggle'); 
+        const sfxToggle = document.getElementById('sfx-toggle'); 
         const bgMusic = document.getElementById('bg-music');
         
         // --- Game State ---
@@ -538,11 +509,10 @@
             }
         });
 
-        // ИСПРАВЛЕНИЕ: Разделение звуков
         let gameData = {
-            theme: 'light',
-            isMusicMuted: false, // Переименовано
-            isSfxMuted: false, // Добавлено
+            // theme: 'light', // Удалено
+            isMusicMuted: false, 
+            isSfxMuted: false, 
             levelsCompletedSinceAd: 0,
             stats: defaultStats()
         };
@@ -561,21 +531,45 @@
             impossible: { name: 'Невозможно', tubes: 24, empty: 2, colors: 11, doubleColors: true }
         };
         
-        // --- Audio Manager ---
+        // --- ИСПРАВЛЕНИЕ: Audio Manager ---
         const audioManager = {
-            moveSynth: null, 
+            dropSynth: null, // Переименован
             winSynth: null,
+            selectSynth: null, // Добавлен
+            tapSynth: null, // Добавлен
             isReady: false,
 
             init() {
-                this.moveSynth = new Tone.MembraneSynth({
+                // Звук "падения" шара
+                this.dropSynth = new Tone.MembraneSynth({
                     pitchDecay: 0.02,
                     octaves: 3,
                     oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.3, sustain: 0.01, release: 0.2 }
                 }).toDestination();
-                this.moveSynth.volume.value = -10;
+                this.dropSynth.volume.value = -10;
 
+                // Звук "выбора" шара (бульк)
+                this.selectSynth = new Tone.FMSynth({
+                    harmonicity: 1.2,
+                    modulationIndex: 10,
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.01, release: 0.2 },
+                    modulation: { type: "square" },
+                    modulationEnvelope: { attack: 0.05, decay: 0.1, sustain: 0, release: 0.1 }
+                }).toDestination();
+                this.selectSynth.volume.value = -15;
+
+                // Звук "тапа" по кнопке
+                this.tapSynth = new Tone.PluckSynth({
+                    attackNoise: 1,
+                    dampening: 4000,
+                    resonance: 0.7,
+                    release: 0.1
+                }).toDestination();
+                this.tapSynth.volume.value = -12;
+
+                // Звук "победы"
                 this.winSynth = new Tone.PolySynth(Tone.Synth, {
                      oscillator: { type: 'triangle8' },
                      envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 }
@@ -586,14 +580,19 @@
             },
             
             playSound(sound) {
-                // ИСПРАВЛЕНИЕ: Проверка isSfxMuted
                 if (!this.isReady || gameData.isSfxMuted) return;
                 try {
-                    if (sound === 'move') { 
-                        this.moveSynth.triggerAttackRelease("C3", "8n", Tone.now());
+                    const now = Tone.now();
+                    if (sound === 'drop') { 
+                        this.dropSynth.triggerAttackRelease("C3", "8n", now);
+                    }
+                    if (sound === 'select') { 
+                        this.selectSynth.triggerAttackRelease("C4", "8n", now);
+                    }
+                     if (sound === 'tap') { 
+                        this.tapSynth.triggerAttackRelease("C5", "8n", now);
                     }
                     if (sound === 'win') {
-                        const now = Tone.now();
                         const notes = ['C4', 'E4', 'G4', 'C5', 'E5', 'G5'];
                         notes.forEach((note, i) => {
                             this.winSynth.triggerAttackRelease(note, '16n', now + i * 0.1);
@@ -602,7 +601,6 @@
                 } catch(e) { console.error("Sound play error", e); }
             },
 
-            // ИСПРАВЛЕНИЕ: Раздельные функции
             toggleMusicMute(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMusicMuted;
                 gameData.isMusicMuted = newState;
@@ -636,6 +634,13 @@
             
             bgMusic.volume = 0.3; 
             
+            // --- Добавляем звуки на кнопки ---
+            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button');
+            allButtons.forEach(btn => {
+                btn.addEventListener('click', () => audioManager.playSound('tap'));
+            });
+            // ---
+            
             // Main Menu listeners
             document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
             document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
@@ -654,7 +659,7 @@
             });
             
             // Settings/Rules Listeners
-            themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'dark' : 'light'));
+            // themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'dark' : 'light')); // Удалено
             musicToggle.addEventListener('change', () => audioManager.toggleMusicMute(!musicToggle.checked));
             sfxToggle.addEventListener('change', () => audioManager.toggleSfxMute(!sfxToggle.checked));
             
@@ -713,7 +718,7 @@
                 vkUserId = 'test_user';
             }
             await loadGameData();
-            setTheme(gameData.theme, true); // true = принудительная установка без сохранения
+            // setTheme(gameData.theme, true); // Удалено
             renderOtherGames(); 
             audioManager.toggleMusicMute(gameData.isMusicMuted); // Устанавливаем состояние музыки
             audioManager.toggleSfxMute(gameData.isSfxMuted); // Устанавливаем состояние SFX
@@ -806,15 +811,13 @@
                 let isUnlocked = (difficulty === 'easy');
                 let winsOnPrev = 0;
                 if (prevDifficulty) {
-                    // Check wins for the *previous* difficulty *in the current mode*
                     winsOnPrev = statsForCurrentMode.gamesPlayed[prevDifficulty] || 0;
                     if (winsOnPrev >= WINS_TO_UNLOCK) {
                         isUnlocked = true;
                     }
                 }
                 
-                // ИСПРАВЛЕНИЕ: Открываем все уровни для теста
-                isUnlocked = true; // [DEBUG] Открыть все уровни для теста. Закомментировать для релиза.
+                isUnlocked = true; // [DEBUG] Открыть все уровни для теста.
 
                 const isFullWidth = ['insane', 'impossible'].includes(difficulty);
 
@@ -872,37 +875,42 @@
             );
         }
 
-        // --- ИСПРАВЛЕНИЕ: Адаптация (взята из оригинального файла) ---
+        // --- ИСПРАВЛЕНИЕ: Адаптация и Расчет Высоты ---
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
             if(!boardHeight || !boardWidth) return;
             let bestLayout = { cols: 0, tubeHeight: 0 };
 
-            // Эта логика цикла взята из оригинального файла (liquid sort)
-            for (let cols = tubeCount; cols >= 1; cols--) {
+            // ИСПРАВЛЕНИЕ: Ограничиваем макс. кол-во колонок
+            const maxCols = Math.min(Math.ceil(tubeCount / 2), 7); // Max 7 cols
+            const minCols = Math.max(3, Math.floor(tubeCount / 5)); // Min 3 cols
+
+            for (let cols = maxCols; cols >= minCols; cols--) {
                 const rows = Math.ceil(tubeCount / cols);
                 const cellWidth = boardWidth / cols;
                 const cellHeight = boardHeight / rows;
                 
                 const prospectiveTubeWidth = cellWidth * 0.7; // 70% ширины ячейки
                 
-                // Расчет высоты колбы (на основе CSS: 4px padding, 4px margin)
-                // Шар = Ширина - 8px (padding L/R)
-                // Высота = ( (Ширина - 8) * 4 ) + ( 4 * 4 ) + ( 4 * 2 )
-                // Высота = (4 * W) - 32 + 16 + 8 = 4W - 8
-                const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 8;
+                // ИСПРАВЛЕНИЕ: Точный расчет высоты
+                // W = prospectiveTubeWidth
+                // BallHeight = W - 8px (padding L/R)
+                // TotalBallHeight = 4 * (W - 8) = 4W - 32
+                // TotalMargin = 3 * 4px = 12 (3 отступа между 4 шарами)
+                // TotalPadding = 2 * 4px = 8 (padding T/B)
+                // H = (4W - 32) + 12 + 8 = 4W - 12
+                const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 12;
                 
-                // Используем 95% высоты ячейки (как в оригинале)
-                if (prospectiveTubeHeight < cellHeight * 0.95) { 
+                if (prospectiveTubeHeight < cellHeight * 0.9) { // Оставляем 10% на "прыжок"
                     if (prospectiveTubeHeight > bestLayout.tubeHeight) {
                         bestLayout = { cols: cols, tubeHeight: prospectiveTubeHeight };
                     }
                 }
             }
             if(bestLayout.cols === 0) {
-                 bestLayout.cols = tubeCount <= 12 ? 4 : 5;
-                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
+                 bestLayout.cols = tubeCount <= 12 ? 4 : 6;
+                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 12;
             }
             
             const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
@@ -963,7 +971,8 @@
                     <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-3xl mb-2 flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden">
                        <img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'text-xs text-gray-400\\'>${game.name}</span>'">
                     </div>
-                    <span class="text-xs font-medium text-center">${game.name}</span>`;
+                    <span class="text-xs font-medium text-center" style="color: var(--text-color-dark);">${game.name}</span>`;
+                // ИСПРАВЛЕНИЕ: Текст в "Других играх" теперь светлый
                 container.appendChild(gameEl);
             });
         }
@@ -981,9 +990,9 @@
                 // Выбор колбы ИСТОЧНИКА
                 if (clickedTubeData.balls.length > 0) {
                     const topBall = clickedTubeData.balls[clickedTubeData.balls.length - 1];
-                    // Нельзя выбрать колбу, если верхний шар - тайный
                     if (!topBall.isVisible) return; 
                     
+                    audioManager.playSound('select'); // Звук выбора
                     selectedTube = clickedTubeData;
                     const topBallEl = tubeEl.querySelector('.ball:last-child');
                     if (topBallEl) topBallEl.classList.add('selected-ball');
@@ -1037,6 +1046,7 @@
             animateMove(fromTube, toTube, ballsToMove);
         }
         
+        // --- ИСПРАВЛЕНИЕ: Плавная 2-этапная анимация ---
         async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
@@ -1045,11 +1055,9 @@
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             
-            const numBallsMoved = ballsToMove.length; // 1
+            const ballEl = Array.from(fromEl.querySelectorAll('.ball')).pop(); // Get top ball
             
-            const ballElsToAnimate = Array.from(fromEl.querySelectorAll('.ball')).slice(-numBallsMoved);
-            
-            if (ballElsToAnimate.length === 0) {
+            if (!ballEl) {
                 console.error("animateMove: не найдены шары для анимации.");
                 renderTubes();
                 fromTube.isAnimating = false;
@@ -1058,46 +1066,63 @@
                 return;
             }
 
-            const selectedEl = document.querySelector('.selected-ball');
-            if(selectedEl) selectedEl.classList.remove('selected-ball');
-
             const toRect = toEl.getBoundingClientRect();
-            const ballWidth = ballElsToAnimate[0].offsetWidth; 
+            const ballWidth = ballEl.offsetWidth; 
+            
+            // ИСПРАВЛЕНИЕ: Принудительно задаем цвет шара
+            const ballColor = ballsToMove[0].color;
+            ballEl.style.backgroundColor = ballColor; 
             
             const xTarget = toRect.left + (toRect.width / 2) - (ballWidth / 2);
-            const yTarget = toRect.top - (ballWidth * 0.5);
+            const yHover = toRect.top - (ballWidth * 0.5); // Позиция *над* колбой
 
-            const animatedBalls = [];
-            for (let i = 0; i < ballElsToAnimate.length; i++) {
-                const ballEl = ballElsToAnimate[i];
-                const rect = ballEl.getBoundingClientRect();
-                
-                document.body.appendChild(ballEl);
-                ballEl.style.position = 'absolute';
-                ballEl.style.width = `${ballWidth}px`; 
-                ballEl.style.left = `${rect.left}px`;
-                ballEl.style.top = `${rect.top}px`;
-                ballEl.style.zIndex = 100 + i;
-                ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)';
-                
-                requestAnimationFrame(() => {
-                    ballEl.style.transform = 'scale(1.05)';
-                    ballEl.style.left = `${xTarget}px`;
-                    ballEl.style.top = `${yTarget - (i * (ballWidth * 1.04))}px`;
-                });
-                animatedBalls.push(ballEl);
-            }
+            const rect = ballEl.getBoundingClientRect();
+            document.body.appendChild(ballEl);
+            ballEl.style.position = 'absolute';
+            ballEl.style.width = `${ballWidth}px`; 
+            ballEl.style.left = `${rect.left}px`;
+            ballEl.style.top = `${rect.top}px`;
+            ballEl.style.zIndex = 100;
+            ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)';
             
-            audioManager.playSound('move');
+            // 1. Анимация *вверх* и *вбок*
+            requestAnimationFrame(() => {
+                ballEl.style.transform = 'scale(1.05)';
+                ballEl.style.left = `${xTarget}px`;
+                ballEl.style.top = `${yHover}px`;
+            });
             
             await wait(350); 
-            
-            animatedBalls.forEach(el => el.remove());
-            
-            renderTubes();
-            
-            await wait(50); 
 
+            // 2. Анимация *падения*
+            ballEl.remove(); // Удаляем летящий шар
+            renderTubes(); // Перерисовываем доску (шар *уже* в данных toTube)
+
+            // Находим *новый* шар, который только что появился в toTube
+            const newToEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
+            const newBallEl = newToEl.querySelector('.ball:last-child');
+            
+            if (newBallEl) {
+                const ballHeight = newBallEl.offsetHeight;
+                // Считаем, где он должен "появиться" (там, где был yHover)
+                const startY = yHover - newBallEl.getBoundingClientRect().top;
+
+                newBallEl.style.transition = 'none';
+                newBallEl.style.transform = `translateY(${startY}px)`;
+                
+                // Заставляем браузер применить transform
+                newBallEl.getBoundingClientRect(); 
+
+                // А теперь плавно роняем
+                newBallEl.style.transition = 'transform 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; // "EaseInBack"
+                newBallEl.style.transform = 'translateY(0)';
+                
+                audioManager.playSound('drop'); // Звук падения
+                await wait(300);
+                newBallEl.style.transition = 'transform 0.2s ease-out'; // Сбрасываем transition
+            }
+            // --- Конец 2-этапной анимации ---
+            
             fromTube.isAnimating = false;
             toTube.isAnimating = false;
             updateUndoButtonUI();
@@ -1113,8 +1138,7 @@
             if (tube.isAnimating) return;
             const adShown = await showRewardedAd();
             if (adShown) {
-                // ИСПРАВЛЕНИЕ: Не сохраняем состояние в историю
-                // saveState(); 
+                // ИСПРАВЛЕНИЕ: Не сохраняем в историю
                 if (tube) {
                     tube.isPlaceholder = false;
                     renderTubes();
@@ -1194,19 +1218,14 @@
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
         // --- Data & Theme ---
-        function setTheme(theme, force = false) {
-            gameData.theme = theme;
-            document.documentElement.classList.toggle('dark', theme === 'dark');
-            themeToggle.checked = theme === 'dark';
-            if (!force) {
-                saveGameData();
-            }
-        }
+        // function setTheme(theme, force = false) { // Удалено
+        // }
 
         async function saveGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
             try {
+                // ИСПРАВЛЕНИЕ: Убрана 'theme' из сохранения
                 await vkBridge.send('VKWebAppStorageSet', { key: storageKey, value: JSON.stringify(gameData) });
             } catch (error) {
                 localStorage.setItem(storageKey, JSON.stringify(gameData));
@@ -1228,8 +1247,7 @@
             const newStats = defaultStats();
             
             if (loadedData) {
-                gameData.theme = loadedData.theme || 'light';
-                // ИСПРАВЛЕНИЕ: Загрузка раздельных звуков
+                // gameData.theme = loadedData.theme || 'light'; // Удалено
                 gameData.isMusicMuted = loadedData.isMusicMuted ?? loadedData.isMuted ?? false; // Миграция
                 gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
