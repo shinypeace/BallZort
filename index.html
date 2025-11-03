@@ -39,6 +39,9 @@
 
             --mystery-ball-bg: #93c5fd; /* blue-300 */
             --mystery-ball-text: #1e40af; /* blue-800 */
+
+            /* ИСПРАВЛЕНИЕ: Цвет включенного ползунка */
+            --toggle-on-color: #34d399; /* emerald-400 */
         }
         
         body {
@@ -151,11 +154,10 @@
             width: 100%; 
             aspect-ratio: 1 / 1; 
             border-radius: 50%;
-            /* ИСПРАВЛЕНИЕ: Равномерный отступ 4px (кроме самого нижнего) */
+            /* ИСПРАВЛЕНИЕ: Равномерный отступ 4px */
             margin-top: 4px; 
             flex-shrink: 0;
             box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1);
-            /* ИСПРАВЛЕНИЕ: Убрана transition для background-color, чтобы не мигал */
             transition: transform 0.2s ease-out; 
             display: flex;
             align-items: center;
@@ -166,10 +168,7 @@
             box-sizing: border-box; 
         }
         
-        /* ИСПРАВЛЕНИЕ: Самый нижний шар (первый в DOM) не имеет отступа сверху */
-        .ball:first-child { 
-            margin-top: 0; 
-        }
+        /* ИСПРАВЛЕНИЕ: Убран :first-child, который ломал отступы */
         
         .ball.mystery {
             background-color: var(--mystery-ball-bg) !important; 
@@ -177,15 +176,15 @@
             box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
         
+        /* ИСПРАВЛЕНИЕ: Сохраняем inset тень при выборе */
         .ball.selected-ball {
             transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1); /* Прыжок на 30% высоты */
-            box-shadow: 0 10px 25px var(--primary-shadow);
+            box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1), 0 10px 25px var(--primary-shadow);
             z-index: 100;
         }
         /* --- КОНЕЦ СТИЛЕЙ КОЛБ --- */
 
         .modal { background-color: rgba(0, 0, 0, 0.6); }
-        /* ИСПРАВЛЕНИЕ: Стили модального окна */
         .modal-content { 
             background-color: var(--modal-bg-color); 
             border: 2px solid var(--tube-border-color);
@@ -202,7 +201,6 @@
         .setting-toggle-slider {
             width: 56px; 
             height: 32px; 
-            /* ИСПРАВЛЕНИЕ: Цвет переключателя */
             background-color: #1d4ed8;
             border: 1px solid var(--tube-border-color);
             border-radius: 9999px; 
@@ -219,8 +217,9 @@
             border-radius: 50%;
             transition: transform 0.3s ease;
         }
+        /* ИСПРАВЛЕНИЕ: Цвет включенного ползунка */
         .setting-toggle-input:checked + .setting-toggle-slider {
-            background-color: var(--primary-color);
+            background-color: var(--toggle-on-color); 
         }
         .setting-toggle-input:checked + .setting-toggle-slider:before {
             transform: translateX(24px); 
@@ -304,7 +303,6 @@
              <button id="rules-button" class="icon-menu-button" onclick="openModal('rules-modal')">
                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
              </button>
-             <!-- ИСПРАВЛЕНИЕ: Новая SVG Статистики (столбчатая) -->
              <button id="stats-button" class="icon-menu-button" onclick="openModal('stats-modal'); updateStatsDisplay();">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
              </button>
@@ -378,7 +376,6 @@
             <h2 class="text-3xl font-bold mb-6 text-center" style="color: var(--primary-color);">Настройки</h2>
             
             <div class="flex flex-col space-y-5">
-                <!-- ИСПРАВЛЕНИЕ: Разделение Звука и Музыки -->
                 <div class="flex items-center justify-between">
                     <span class="text-lg font-medium">Музыка</span>
                     <label for="music-toggle" class="setting-toggle-label">
@@ -394,8 +391,6 @@
                         <div class="setting-toggle-slider"></div>
                     </label>
                 </div>
-
-                <!-- ИСПРАВЛЕНИЕ: Убран переключатель Темы -->
             </div>
             
             <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
@@ -412,7 +407,6 @@
                 <button class="stats-tab" data-tab="mystery">Тайный шар</button>
             </div>
 
-            <!-- Таблица "Классика" -->
             <div id="stats-table-classic" class="stats-table-container active">
                 <table class="stats-table">
                     <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
@@ -427,7 +421,6 @@
                 </table>
             </div>
             
-            <!-- Таблица "Тайный шар" -->
             <div id="stats-table-mystery" class="stats-table-container">
                  <table class="stats-table">
                     <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
@@ -484,7 +477,6 @@
         const timerSpan = document.getElementById('timer');
         const undoButton = document.getElementById('undo-button');
         const undoCountSpan = document.getElementById('undo-count');
-        // const themeToggle = document.getElementById('theme-toggle'); // Удалено
         const musicToggle = document.getElementById('music-toggle'); 
         const sfxToggle = document.getElementById('sfx-toggle'); 
         const bgMusic = document.getElementById('bg-music');
@@ -492,12 +484,11 @@
         // --- Game State ---
         let tubes = [], selectedTube = null, moveCount = 0, timerInterval = null, seconds = 0;
         let currentDifficulty = 'easy', history = [], isPaused = false;
-        let currentGameMode = 'classic'; // 'classic' or 'mystery'
+        let currentGameMode = 'classic';
         let undosLeft = 3;
         let vkUserId = null;
         let wasMusicPlaying = false;
 
-        // --- New Stats Structure ---
         const defaultStats = () => ({
             classic: {
                 gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
@@ -510,7 +501,6 @@
         });
 
         let gameData = {
-            // theme: 'light', // Удалено
             isMusicMuted: false, 
             isSfxMuted: false, 
             levelsCompletedSinceAd: 0,
@@ -533,10 +523,10 @@
         
         // --- ИСПРАВЛЕНИЕ: Audio Manager ---
         const audioManager = {
-            dropSynth: null, // Переименован
+            dropSynth: null, 
             winSynth: null,
-            selectSynth: null, // Добавлен
-            tapSynth: null, // Добавлен
+            selectSynth: null, 
+            tapSynth: null, 
             isReady: false,
 
             init() {
@@ -549,25 +539,25 @@
                 }).toDestination();
                 this.dropSynth.volume.value = -10;
 
-                // Звук "выбора" шара (бульк)
-                this.selectSynth = new Tone.FMSynth({
-                    harmonicity: 1.2,
-                    modulationIndex: 10,
+                // ИСПРАВЛЕНИЕ: Звук "выбора" шара (выше, чем падение)
+                this.selectSynth = new Tone.MembraneSynth({
+                    pitchDecay: 0.01,
+                    octaves: 4,
                     oscillator: { type: "sine" },
-                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.01, release: 0.2 },
-                    modulation: { type: "square" },
-                    modulationEnvelope: { attack: 0.05, decay: 0.1, sustain: 0, release: 0.1 }
+                    envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 }
                 }).toDestination();
-                this.selectSynth.volume.value = -15;
+                this.selectSynth.volume.value = -12;
 
-                // Звук "тапа" по кнопке
-                this.tapSynth = new Tone.PluckSynth({
-                    attackNoise: 1,
-                    dampening: 4000,
-                    resonance: 0.7,
-                    release: 0.1
+                // ИСПРАВЛЕНИЕ: Звук "тапа" (короткий "клик")
+                this.tapSynth = new Tone.MetalSynth({
+                    frequency: 300,
+                    envelope: { attack: 0.001, decay: 0.05, release: 0.05 },
+                    harmonicity: 3.1,
+                    modulationIndex: 12,
+                    resonance: 1500,
+                    octaves: 1.5
                 }).toDestination();
-                this.tapSynth.volume.value = -12;
+                this.tapSynth.volume.value = -20;
 
                 // Звук "победы"
                 this.winSynth = new Tone.PolySynth(Tone.Synth, {
@@ -590,7 +580,7 @@
                         this.selectSynth.triggerAttackRelease("C4", "8n", now);
                     }
                      if (sound === 'tap') { 
-                        this.tapSynth.triggerAttackRelease("C5", "8n", now);
+                        this.tapSynth.triggerAttackRelease("8n", now);
                     }
                     if (sound === 'win') {
                         const notes = ['C4', 'E4', 'G4', 'C5', 'E5', 'G5'];
@@ -604,7 +594,7 @@
             toggleMusicMute(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMusicMuted;
                 gameData.isMusicMuted = newState;
-                musicToggle.checked = !newState; // Включенный = не Muted
+                musicToggle.checked = !newState; 
                 
                 if (gameData.isMusicMuted) {
                     bgMusic.pause();
@@ -620,7 +610,7 @@
             toggleSfxMute(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isSfxMuted;
                 gameData.isSfxMuted = newState;
-                sfxToggle.checked = !newState; // Включенный = не Muted
+                sfxToggle.checked = !newState; 
 
                 if(typeof forceState === 'undefined') {
                     saveGameData();
@@ -634,12 +624,10 @@
             
             bgMusic.volume = 0.3; 
             
-            // --- Добавляем звуки на кнопки ---
             const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button');
             allButtons.forEach(btn => {
                 btn.addEventListener('click', () => audioManager.playSound('tap'));
             });
-            // ---
             
             // Main Menu listeners
             document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
@@ -647,7 +635,6 @@
             document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
             document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
 
-            // Level Selection listener
             document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
 
             // Game screen listeners
@@ -659,17 +646,14 @@
             });
             
             // Settings/Rules Listeners
-            // themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'dark' : 'light')); // Удалено
             musicToggle.addEventListener('change', () => audioManager.toggleMusicMute(!musicToggle.checked));
             sfxToggle.addEventListener('change', () => audioManager.toggleSfxMute(!sfxToggle.checked));
             
-            // Other Games listener
             document.getElementById('other-games-container').addEventListener('click', e => {
                 const gameEl = e.target.closest('[data-app-id]');
                 if (gameEl) vkBridge.send('VKWebAppOpenApp', { app_id: parseInt(gameEl.dataset.appId) });
             });
             
-            // Stats modal tab listener
             document.querySelector('.stats-tabs').addEventListener('click', e => {
                 if (e.target.classList.contains('stats-tab')) {
                     const tabName = e.target.dataset.tab;
@@ -685,7 +669,7 @@
                  if (!audioManager.isReady) {
                     await Tone.start();
                     audioManager.init();
-                    if(!gameData.isMusicMuted) { // Проверяем музыку
+                    if(!gameData.isMusicMuted) { 
                         bgMusic.play().catch(e => {});
                     }
                  }
@@ -703,7 +687,7 @@
                     }
                 }
                 if (e.detail.type === 'VKWebAppViewRestore') {
-                    if (wasMusicPlaying && !gameData.isMusicMuted) { // Проверяем музыку
+                    if (wasMusicPlaying && !gameData.isMusicMuted) { 
                        bgMusic.play().catch(e => {});
                     }
                     wasMusicPlaying = false;
@@ -718,10 +702,9 @@
                 vkUserId = 'test_user';
             }
             await loadGameData();
-            // setTheme(gameData.theme, true); // Удалено
             renderOtherGames(); 
-            audioManager.toggleMusicMute(gameData.isMusicMuted); // Устанавливаем состояние музыки
-            audioManager.toggleSfxMute(gameData.isSfxMuted); // Устанавливаем состояние SFX
+            audioManager.toggleMusicMute(gameData.isMusicMuted); 
+            audioManager.toggleSfxMute(gameData.isSfxMuted); 
             showScreen('mainMenu');
         }
 
@@ -743,21 +726,32 @@
         function showLevelSelection(mode) {
             currentGameMode = mode;
             levelSelectionTitle.textContent = mode === 'classic' ? 'Классика' : 'Тайный шар';
-            renderMenu(); // Populate the level buttons
+            renderMenu();
             showScreen('levelSelection');
         }
 
         async function showRewardedAd() {
             try {
                 const adData = await vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' });
+                // ИСПРАВЛЕНИЕ: Перезапуск аудио после рекламы
+                await Tone.start();
                 return adData.result === true;
-            } catch (e) { console.error("Rewarded ad error:", e); return false; }
+            } catch (e) { 
+                console.error("Rewarded ad error:", e); 
+                await Tone.start(); // Перезапуск на всякий случай
+                return false; 
+            }
         }
 
-        function showInterstitialAd() {
+        async function showInterstitialAd() {
             gameData.levelsCompletedSinceAd++;
             if (gameData.levelsCompletedSinceAd >= 3) {
-                vkBridge.send('VKWebAppShowInterstitialAd').catch(e => {});
+                try {
+                    await vkBridge.send('VKWebAppShowInterstitialAd');
+                    await Tone.start(); // ИСПРАВЛЕНИЕ: Перезапуск аудио
+                } catch(e) {
+                    await Tone.start(); // ИСПРАВЛЕНИЕ: Перезапуск аудио
+                }
                 gameData.levelsCompletedSinceAd = 0;
             }
             saveGameData();
@@ -875,42 +869,40 @@
             );
         }
 
-        // --- ИСПРАВЛЕНИЕ: Адаптация и Расчет Высоты ---
+        // --- ИСПРАВЛЕНИЕ: Возвращена Адаптация (из liquid sort) ---
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
             if(!boardHeight || !boardWidth) return;
             let bestLayout = { cols: 0, tubeHeight: 0 };
 
-            // ИСПРАВЛЕНИЕ: Ограничиваем макс. кол-во колонок
-            const maxCols = Math.min(Math.ceil(tubeCount / 2), 7); // Max 7 cols
-            const minCols = Math.max(3, Math.floor(tubeCount / 5)); // Min 3 cols
-
-            for (let cols = maxCols; cols >= minCols; cols--) {
+            // Эта логика цикла взята из оригинального файла (liquid sort)
+            for (let cols = tubeCount; cols >= 1; cols--) {
                 const rows = Math.ceil(tubeCount / cols);
                 const cellWidth = boardWidth / cols;
                 const cellHeight = boardHeight / rows;
                 
                 const prospectiveTubeWidth = cellWidth * 0.7; // 70% ширины ячейки
                 
-                // ИСПРАВЛЕНИЕ: Точный расчет высоты
+                // ИСПРАВЛЕНИЕ: Точный расчет высоты (H = 4W - 12)
                 // W = prospectiveTubeWidth
                 // BallHeight = W - 8px (padding L/R)
                 // TotalBallHeight = 4 * (W - 8) = 4W - 32
-                // TotalMargin = 3 * 4px = 12 (3 отступа между 4 шарами)
+                // TotalMargin = 4 * 4px = 16 (4 отступа, вкл. нижний)
                 // TotalPadding = 2 * 4px = 8 (padding T/B)
-                // H = (4W - 32) + 12 + 8 = 4W - 12
-                const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 12;
+                // H = (4W - 32) + 16 + 8 = 4W - 8
+                const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 8;
                 
-                if (prospectiveTubeHeight < cellHeight * 0.9) { // Оставляем 10% на "прыжок"
+                // Используем 95% высоты ячейки (как в оригинале)
+                if (prospectiveTubeHeight < cellHeight * 0.95) { 
                     if (prospectiveTubeHeight > bestLayout.tubeHeight) {
                         bestLayout = { cols: cols, tubeHeight: prospectiveTubeHeight };
                     }
                 }
             }
             if(bestLayout.cols === 0) {
-                 bestLayout.cols = tubeCount <= 12 ? 4 : 6;
-                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 12;
+                 bestLayout.cols = tubeCount <= 12 ? 4 : 5; // Fallback
+                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
             }
             
             const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
@@ -972,7 +964,6 @@
                        <img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'text-xs text-gray-400\\'>${game.name}</span>'">
                     </div>
                     <span class="text-xs font-medium text-center" style="color: var(--text-color-dark);">${game.name}</span>`;
-                // ИСПРАВЛЕНИЕ: Текст в "Других играх" теперь светлый
                 container.appendChild(gameEl);
             });
         }
@@ -987,18 +978,16 @@
             const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
 
             if (selectedTube === null) {
-                // Выбор колбы ИСТОЧНИКА
                 if (clickedTubeData.balls.length > 0) {
                     const topBall = clickedTubeData.balls[clickedTubeData.balls.length - 1];
                     if (!topBall.isVisible) return; 
                     
-                    audioManager.playSound('select'); // Звук выбора
+                    audioManager.playSound('select'); 
                     selectedTube = clickedTubeData;
                     const topBallEl = tubeEl.querySelector('.ball:last-child');
                     if (topBallEl) topBallEl.classList.add('selected-ball');
                 }
             } else {
-                // Выбор колбы НАЗНАЧЕНИЯ
                 const currentSelectedTube = selectedTube;
                 const selectedBallEl = document.querySelector('.selected-ball');
                 
@@ -1006,11 +995,11 @@
                 if (selectedBallEl) selectedBallEl.classList.remove('selected-ball');
 
                 if (currentSelectedTube.id === clickedTubeData.id) {
-                   return; // Отмена выбора
+                   return;
                 }
                 
                 if (canMove(currentSelectedTube, clickedTubeData)) {
-                    saveState(); // Сохраняем состояние ПЕРЕД ходом
+                    saveState(); 
                     initiateMove(currentSelectedTube, clickedTubeData);
                 }
             }
@@ -1046,7 +1035,6 @@
             animateMove(fromTube, toTube, ballsToMove);
         }
         
-        // --- ИСПРАВЛЕНИЕ: Плавная 2-этапная анимация ---
         async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
@@ -1055,7 +1043,7 @@
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             
-            const ballEl = Array.from(fromEl.querySelectorAll('.ball')).pop(); // Get top ball
+            const ballEl = Array.from(fromEl.querySelectorAll('.ball')).pop(); 
             
             if (!ballEl) {
                 console.error("animateMove: не найдены шары для анимации.");
@@ -1069,12 +1057,14 @@
             const toRect = toEl.getBoundingClientRect();
             const ballWidth = ballEl.offsetWidth; 
             
-            // ИСПРАВЛЕНИЕ: Принудительно задаем цвет шара
             const ballColor = ballsToMove[0].color;
             ballEl.style.backgroundColor = ballColor; 
             
+            // ИСПРАВЛЕНИЕ: Копируем box-shadow из .ball, чтобы он не пропал
+            ballEl.style.boxShadow = 'inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1), 0 10px 25px var(--primary-shadow)';
+
             const xTarget = toRect.left + (toRect.width / 2) - (ballWidth / 2);
-            const yHover = toRect.top - (ballWidth * 0.5); // Позиция *над* колбой
+            const yHover = toRect.top - (ballWidth * 0.5); 
 
             const rect = ballEl.getBoundingClientRect();
             document.body.appendChild(ballEl);
@@ -1095,33 +1085,28 @@
             await wait(350); 
 
             // 2. Анимация *падения*
-            ballEl.remove(); // Удаляем летящий шар
-            renderTubes(); // Перерисовываем доску (шар *уже* в данных toTube)
+            ballEl.remove(); 
+            renderTubes(); 
 
-            // Находим *новый* шар, который только что появился в toTube
             const newToEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             const newBallEl = newToEl.querySelector('.ball:last-child');
             
             if (newBallEl) {
                 const ballHeight = newBallEl.offsetHeight;
-                // Считаем, где он должен "появиться" (там, где был yHover)
                 const startY = yHover - newBallEl.getBoundingClientRect().top;
 
                 newBallEl.style.transition = 'none';
                 newBallEl.style.transform = `translateY(${startY}px)`;
                 
-                // Заставляем браузер применить transform
                 newBallEl.getBoundingClientRect(); 
 
-                // А теперь плавно роняем
                 newBallEl.style.transition = 'transform 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; // "EaseInBack"
                 newBallEl.style.transform = 'translateY(0)';
                 
-                audioManager.playSound('drop'); // Звук падения
+                audioManager.playSound('drop'); 
                 await wait(300);
-                newBallEl.style.transition = 'transform 0.2s ease-out'; // Сбрасываем transition
+                newBallEl.style.transition = 'transform 0.2s ease-out'; 
             }
-            // --- Конец 2-этапной анимации ---
             
             fromTube.isAnimating = false;
             toTube.isAnimating = false;
@@ -1136,9 +1121,8 @@
         async function unlockExtraTube(tubeId) {
             const tube = tubes.find(t => t.id === tubeId);
             if (tube.isAnimating) return;
-            const adShown = await showRewardedAd();
+            const adShown = await showRewardedAd(); // Уже содержит Tone.start()
             if (adShown) {
-                // ИСПРАВЛЕНИЕ: Не сохраняем в историю
                 if (tube) {
                     tube.isPlaceholder = false;
                     renderTubes();
@@ -1156,7 +1140,7 @@
                 stats.bestTime[currentDifficulty] = seconds;
             }
             
-            showInterstitialAd(); 
+            showInterstitialAd(); // Уже содержит Tone.start()
             saveGameData(); 
             
             document.getElementById('win-time').textContent = formatTime(seconds);
@@ -1165,13 +1149,12 @@
         }
         
         function saveState() {
-            // Глубокое копирование
             const stateToSave = tubes.map(t => ({
                 id: t.id,
                 balls: t.balls.map(b => ({ ...b })), 
                 isPlaceholder: t.isPlaceholder
             }));
-            history.push({state: stateToSave, moveCount: moveCount}); // Сохраняем и кол-во ходов
+            history.push({state: stateToSave, moveCount: moveCount}); 
             if (history.length > 20) history.shift();
             updateUndoButtonUI();
         }
@@ -1192,7 +1175,6 @@
                 });
                 
                 selectedTube = null; 
-                // ИСПРАВЛЕНИЕ: Восстанавливаем кол-во ходов
                 moveCount = prevStateData.moveCount; 
                 updateMoveCount();
                 renderTubes(); 
@@ -1218,14 +1200,10 @@
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
         // --- Data & Theme ---
-        // function setTheme(theme, force = false) { // Удалено
-        // }
-
         async function saveGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
             try {
-                // ИСПРАВЛЕНИЕ: Убрана 'theme' из сохранения
                 await vkBridge.send('VKWebAppStorageSet', { key: storageKey, value: JSON.stringify(gameData) });
             } catch (error) {
                 localStorage.setItem(storageKey, JSON.stringify(gameData));
@@ -1247,8 +1225,7 @@
             const newStats = defaultStats();
             
             if (loadedData) {
-                // gameData.theme = loadedData.theme || 'light'; // Удалено
-                gameData.isMusicMuted = loadedData.isMusicMuted ?? loadedData.isMuted ?? false; // Миграция
+                gameData.isMusicMuted = loadedData.isMusicMuted ?? loadedData.isMuted ?? false;
                 gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
