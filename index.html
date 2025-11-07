@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru" class="light">
+<!-- ИСПРАВЛЕНИЕ: Убран класс 'light' -->
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChromaFlow</title>
+    <title>Сортировка шариков</title>
     <!-- VK Bridge -->
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <!-- Tone.js for Audio -->
@@ -11,50 +12,47 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Новый шрифт: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- НОВАЯ ТЕМА --- */
+        /* --- ИСПРАВЛЕНИЕ: Новая синяя цветовая схема --- */
         :root {
-            /* Светлая тема (Дзен / Природа) */
-            --bg-light: #f8f7f2; /* Пергамент */
-            --text-light: #3d352e; /* Темно-коричневый */
-            --tube-border-light: #b0a695; /* Состаренное дерево */
-            --primary-light: #28a745; /* Спокойный зеленый */
-            --shadow-light: rgba(40, 167, 69, 0.2);
-            --modal-bg-light: #ffffff;
-            --locked-bg-light: #d1d5db;
-            --locked-text-light: #9ca3af;
+            --bg-gradient-start: #3b82f6; /* blue-500 */
+            --bg-gradient-end: #1d4ed8; /* blue-700 */
+            
+            --text-color: #ffffff;
+            --text-color-dark: #e5e7eb; /* Для теней */
+            
+            --tube-border-color: #93c5fd; /* blue-300 */
+            --modal-bg-color: #1e40af; /* blue-800 */
+            --modal-shadow: rgba(0,0,0,0.3);
+            
+            --primary-color: #ffffff; /* Белые кнопки */
+            --primary-text: #3b82f6; /* Синий текст на них */
+            --primary-shadow: rgba(0, 0, 0, 0.2);
+            
+            --secondary-color: transparent; /* Прозрачные вторичные кнопки */
+            --secondary-text: #ffffff;
+            --secondary-border: #93c5fd; /* blue-300 */
+            
+            --locked-bg-color: #3b82f6; /* blue-500 */
+            --locked-text-color: #93c5fd; /* blue-300 */
+
+            --mystery-ball-bg: #93c5fd; /* blue-300 */
+            --mystery-ball-text: #1e40af; /* blue-800 */
+
+            --toggle-on-color: #34d399; /* emerald-400 */
+
+            /* --- НОВЫЕ СТИЛИ: VIP --- */
+            --vip-gold-start: #fde047; /* yellow-300 */
+            --vip-gold-end: #f59e0b; /* amber-500 */
+            --vip-text: #422006; /* Коричневый */
+            --vip-shadow: rgba(245, 158, 11, 0.3);
         }
         
-        /* Темная тема (Глубокая ночь) */
-        html.dark {
-            --bg-color: #1a202c; /* Темный сланец */
-            --text-color: #e2e8f0; /* Светло-серый */
-            --tube-border-color: #4a5568; /* Темный камень */
-            --primary-color: #48bb78; /* Яркий зеленый */
-            --shadow-color: rgba(72, 187, 120, 0.2);
-            --modal-bg-color: #2d3748; /* Шифер */
-            --locked-bg-color: #374151;
-            --locked-text-color: #6b7280;
-        }
-
-        html.light {
-            --bg-color: var(--bg-light);
-            --text-color: var(--text-light);
-            --tube-border-color: var(--tube-border-light);
-            --primary-color: var(--primary-light);
-            --shadow-color: var(--shadow-light);
-            --modal-bg-color: var(--modal-bg-light);
-            --locked-bg-color: var(--locked-bg-light);
-            --locked-text-color: var(--locked-text-light);
-        }
-
         body {
-            font-family: 'Poppins', sans-serif; /* Новый шрифт */
-            background-color: var(--bg-color);
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
             overflow: hidden;
             -webkit-tap-highlight-color: transparent;
             height: 100vh;
@@ -66,84 +64,181 @@
             animation: fadeIn 0.3s ease-in-out;
         }
         .screen.hidden { display: none; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to: { opacity: 1; } }
 
-        /* --- НОВЫЙ СТИЛЬ КНОПОК --- */
+        /* --- Стили Главного меню --- */
+        #main-menu-title {
+            color: var(--text-color);
+            text-shadow: 0 4px 10px var(--primary-shadow);
+        }
         .main-menu-button {
             background-color: var(--primary-color);
-            color: white;
-            font-weight: 600; /* Semibold */
-            font-size: 1.1rem;
-            border-radius: 10px; /* Мягче углы */
-            padding: 14px 24px;
-            text-transform: none; /* Убран Uppercase */
-            box-shadow: 0 4px 14px 0 var(--shadow-color);
-            transition: all 0.2s ease-in-out; border: none;
+            color: var(--primary-text);
+            font-weight: 700; 
+            border-radius: 16px; 
+            padding: 16px 24px;
+            text-transform: uppercase; 
+            box-shadow: 0 5px 20px var(--primary-shadow);
+            transition: all 0.2s ease-in-out; 
+            border: 2px solid var(--primary-color);
         }
         .main-menu-button:hover:not(:disabled) {
-            transform: translateY(-2px); box-shadow: 0 6px 20px 0 var(--shadow-color);
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 30px var(--primary-shadow);
+        }
+        .main-menu-button.secondary-button {
+             background-color: var(--secondary-color); 
+             color: var(--secondary-text);
+             border: 2px solid var(--secondary-border);
+             box-shadow: none;
         }
         .main-menu-button:disabled {
             background-color: var(--locked-bg-color);
+            color: var(--locked-text-color);
             cursor: not-allowed;
             box-shadow: none;
-        }
-        .secondary-button {
-             background-color: transparent; color: var(--primary-color);
-             border: 2px solid var(--primary-color);
+            border-color: var(--locked-bg-color);
+            opacity: 0.7;
         }
         
-        /* --- НОВЫЙ СТИЛЬ КОЛБ --- */
+        /* --- НОВЫЙ СТИЛЬ: VIP Кнопка --- */
+        .vip-button {
+            background: linear-gradient(45deg, var(--vip-gold-start), var(--vip-gold-end));
+            color: var(--vip-text);
+            border: 2px solid var(--vip-gold-start);
+            box-shadow: 0 5px 20px var(--vip-shadow);
+            font-size: 1.1rem; /* Чуть больше */
+        }
+        .vip-button:hover {
+            box-shadow: 0 8px 30px var(--vip-shadow);
+        }
+        .vip-button span {
+            margin: 0 8px;
+        }
+        
+        .icon-menu-button {
+            width: 64px; height: 64px;
+            background-color: var(--modal-bg-color);
+            color: var(--text-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid var(--tube-border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s ease-in-out;
+        }
+        .icon-menu-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        .icon-menu-button svg {
+            width: 32px; height: 32px;
+            stroke-width: 2;
+        }
+        /* --- Конец стилей меню --- */
+
+        /* --- СТИЛИ КОЛБ И ШАРОВ --- */
         .tube-container {
             position: relative;
-            width: var(--tube-width, 60px);
-            height: var(--tube-height, 240px);
-            background-color: transparent;
-            /* Более толстая "стеклянная" рамка */
-            border: 5px solid var(--tube-border-color);
+            width: var(--tube-width, 50px);
+            height: var(--tube-height, 200px);
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.0) 100%);
+            border: 3px solid var(--tube-border-color);
             border-top: none;
-            /* Более округлое дно */
-            border-radius: 0 0 30px 30px;
+            border-radius: 0 0 20px 20px; 
             margin: var(--tube-margin, 10px); cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            display: flex; flex-direction: column-reverse;
-            overflow: hidden;
-            /* Эффект "внутреннего стекла" */
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column-reverse; 
+            justify-content: flex-start; 
+            overflow: visible; 
+            padding: 2px; 
+            box-sizing: border-box; 
         }
-        /* Ободок колбы */
         .tube-container::before {
             content: '';
             position: absolute;
-            top: -10px; /* Толще */
-            left: -5px; /* Соответствует толщине */
-            right: -5px; /* Соответствует толщине */
-            height: 10px; /* Толще */
+            top: -6px; 
+            left: -3px;
+            right: -3px;
+            height: 6px;
             background-color: var(--tube-border-color);
-            border-radius: 6px 6px 0 0; /* Немного скруглен */
+            border-radius: 3px 3px 0 0;
         }
-        .tube-container.selected {
-            transform: translateY(-20px) scale(1.05);
-            box-shadow: 0 0 25px var(--primary-color);
-        }
-        .tube-container.pouring {
-            transition: transform 0.4s ease-in-out; z-index: 10;
-        }
-        .liquid {
-            width: 100%; transition: height 0.3s ease-in-out;
-        }
-        .modal { background-color: rgba(0, 0, 0, 0.6); }
-        .modal-content { background-color: var(--modal-bg-color); }
         
-        #theme-toggle-slider { background-color: #767676; }
-        .slider-icon { font-size: 1.5rem; }
-        #theme-toggle:checked + #theme-toggle-slider:before { transform: translateX(24px); }
-        #theme-toggle-slider:before {
-            content: ''; position: absolute;
-            left: 4px; top: 4px; width: 24px; height: 24px;
-            background-color: white; border-radius: 50%;
+        .ball {
+            width: 100%; 
+            aspect-ratio: 1 / 1; 
+            border-radius: 50%;
+            /* ИСПРАВЛЕНИЕ: Уменьшен margin для более плотной посадки */
+            margin-top: 2px; 
+            flex-shrink: 0;
+            box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-out; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: calc(var(--tube-width) * 0.4);
+            color: var(--mystery-ball-text);
+            box-sizing: border-box; 
+        }
+        
+        
+        .ball.mystery {
+            background-color: var(--mystery-ball-bg) !important; 
+            color: var(--mystery-ball-text);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .ball.selected-ball {
+            transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1);
+            box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1), 0 10px 25px var(--primary-shadow);
+            z-index: 100;
+        }
+        /* --- КОНЕЦ СТИЛЕЙ КОЛБ --- */
+
+        .modal { background-color: rgba(0, 0, 0, 0.6); }
+        .modal-content { 
+            background-color: var(--modal-bg-color); 
+            border: 2px solid var(--tube-border-color);
+            box-shadow: 0 10px 30px var(--modal-shadow);
+        }
+        
+        /* Стили для переключателей в модалке */
+        .setting-toggle-label {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .setting-toggle-slider {
+            width: 56px; 
+            height: 32px; 
+            background-color: #1d4ed8;
+            border: 1px solid var(--tube-border-color);
+            border-radius: 9999px; 
+            transition: background-color 0.3s ease;
+        }
+        .setting-toggle-slider:before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 24px; 
+            height: 24px; 
+            background-color: white;
+            border-radius: 50%;
             transition: transform 0.3s ease;
         }
+        .setting-toggle-input:checked + .setting-toggle-slider {
+            background-color: var(--toggle-on-color); 
+        }
+        .setting-toggle-input:checked + .setting-toggle-slider:before {
+            transform: translateX(24px); 
+        }
+        
         .icon-button {
             background: none; border: none; padding: 8px;
             cursor: pointer; color: var(--text-color);
@@ -158,8 +253,37 @@
         .icon-button.disabled { opacity: 0.4; cursor: not-allowed; }
         .ad-label {
             font-size: 0.6rem; font-weight: bold;
-            background-color: var(--primary-color); color: white;
+            background-color: var(--primary-color); color: var(--primary-text);
             padding: 1px 4px; border-radius: 4px;
+        }
+        
+        /* Стили для табов статистики */
+        .stats-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--tube-border-color);
+            margin-bottom: 1rem;
+        }
+        .stats-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--locked-text-color);
+            border-bottom: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .stats-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .stats-table-container {
+            display: none;
+        }
+        .stats-table-container.active {
+            display: block;
         }
         .stats-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         .stats-table th, .stats-table td {
@@ -167,54 +291,80 @@
             border-bottom: 1px solid var(--tube-border-color);
         }
         .stats-table th { color: var(--primary-color); }
+
+        /* --- НОВЫЕ СТИЛИ: VIP Modal --- */
+        .vip-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+        .vip-list li {
+            position: relative;
+            padding-left: 30px; /* Space for checkmark */
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .vip-list li::before {
+            content: '✅'; /* Checkmark emoji */
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center h-screen select-none">
 
     <audio id="bg-music" loop src="music.mp3"></audio>
 
-    <!-- Главное меню (Обновлено) -->
-    <div id="main-menu" class="screen hidden flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
-        <!-- Новое название -->
-        <h1 class="text-6xl font-black mb-2" style="color: var(--primary-color);">ChromaFlow</h1>
-        <p class="mb-8 text-lg" style="color: var(--text-color);">Смешай и отсортируй</p>
+    <!-- Главное меню -->
+    <div id="main-menu" class="screen flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
+        <h1 id="main-menu-title" class="text-7xl font-black mb-10">Ball Sort</h1>
         
-        <div class="w-full">
-            <!-- Новая структура кнопок -->
-            <button id="play-button" class="main-menu-button w-full mb-4">Играть</button>
-            <button class="main-menu-button secondary-button w-full mb-4" id="stats-button">Статистика</button>
-            
-            <div class="flex justify-center items-center space-x-4 pt-6">
-                <span class="slider-icon">☀️</span>
-                <label for="theme-toggle" class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="theme-toggle" class="sr-only">
-                    <div id="theme-toggle-slider" class="w-14 h-8 rounded-full"></div>
-                </label>
-                <span class="slider-icon">🌙</span>
-            </div>
+        <div class="w-full flex flex-col gap-5">
+            <button id="classic-mode-btn" class="main-menu-button w-full py-4 text-lg">
+                <span>Классика</span>
+            </button>
+            <button id="mystery-mode-btn" class="main-menu-button w-full py-4 text-lg">
+                <span>Тайный шар</span>
+            </button>
+            <!-- НОВАЯ КНОПКА: VIP -->
+            <button id="vip-mode-btn" class="main-menu-button vip-button w-full py-4">
+                👑<span>VIP доступ</span>👑
+            </button>
+            <button id="other-games-btn" class="main-menu-button secondary-button w-full py-4 text-lg">
+                Другие игры
+            </button>
+        </div>
+        
+        <div class="flex justify-center items-center space-x-6 pt-10">
+             <button id="rules-button" class="icon-menu-button" onclick="openModal('rules-modal')">
+                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+             </button>
+             <button id="stats-button" class="icon-menu-button" onclick="openModal('stats-modal'); updateStatsDisplay();">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+             </button>
+             <button id="settings-button" class="icon-menu-button" onclick="openModal('settings-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+             </button>
         </div>
     </div>
-
-    <!-- Новый экран выбора уровня -->
-    <div id="level-screen" class="screen hidden flex flex-col items-center justify-center p-8 h-full w-full max-w-md mx-auto">
-        <h2 class="text-4xl font-bold mb-8" style="color: var(--primary-color);">Выбор Уровня</h2>
-        <div id="level-list-container" class="flex flex-col w-full space-y-3">
-            <!-- Уровни будут сгенерированы здесь -->
+    
+    <!-- Экран выбора уровня -->
+    <div id="level-selection-screen" class="screen hidden flex flex-col items-center justify-center p-8 h-full w-full max-w-md mx-auto">
+        <h2 id="level-selection-title" class="text-4xl font-black mb-6" style="color: var(--text-color);">Выбор уровня</h2>
+        <div id="level-selection-container" class="grid grid-cols-2 gap-4 w-full">
+            <!-- Level buttons will be generated here -->
         </div>
-        <button id="back-to-menu-from-levels" class="main-menu-button secondary-button w-full mt-6">Назад</button>
+        <button id="back-to-menu-from-levels-btn" class="main-menu-button secondary-button w-full mt-6">Назад</button>
     </div>
 
-    <!-- Игровое поле (без изменений) -->
+    <!-- Игровое поле -->
     <div id="game-screen" class="screen hidden">
         <div class="grid grid-rows-[auto_1fr_auto] h-full w-full max-w-lg mx-auto p-4">
             <div class="flex justify-between items-center mb-4 px-2">
                 <div class="flex items-center">
                     <button onclick="showPauseMenu()" class="icon-button">
                         <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </button>
-                    <button id="sound-toggle-btn" class="icon-button">
-                        <svg id="sound-on-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5 5 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
-                        <svg id="sound-off-icon" class="hidden" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l-2.25 2.25M19.5 12l2.25-2.25M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
                     </button>
                 </div>
                 <div class="text-center">
@@ -223,7 +373,8 @@
                 </div>
                 <button id="undo-button" class="icon-button disabled">
                     <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l4-4m-4 4l4 4"></path></svg>
-                    <span id="undo-count" class="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                    <!-- ИЗМЕНЕНИЕ: ID для span отмены -->
+                    <span id="undo-count-display" class="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">3</span>
                 </button>
             </div>
             <div id="game-board" class="flex flex-wrap justify-center items-center content-center min-h-0"></div>
@@ -231,26 +382,119 @@
         </div>
     </div>
     
-    <!-- Экран "Другие игры" (УДАЛЕН) -->
+    <!-- Экран "Другие игры" -->
+    <div id="other-games-screen" class="screen hidden flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-sm mx-auto text-center">
+            <h1 class="text-3xl font-bold tracking-tight mb-6">Другие игры</h1>
+            <div id="other-games-container" class="grid grid-cols-3 gap-x-4 gap-y-5"></div>
+            <button id="back-to-menu-btn" class="w-full mt-6 py-3 px-4 rounded-xl font-semibold text-lg main-menu-button secondary-button">Назад</button>
+        </div>
+    </div>
 
-    <!-- Модальные окна (Стили кнопок обновлены) -->
+    <!-- Модальные окна -->
+    
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО: VIP -->
+    <div id="vip-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 VIP Доступ 👑</h2>
+            <ul class="vip-list text-left">
+                <li>Без рекламы</li>
+                <li>Моментальное открытие всех уровней</li>
+                <li>Бесконечные отмены ходов</li>
+                <li>Бесконечные доп. колбы</li>
+            </ul>
+            <p class="text-center text-sm text-gray-300 mt-6 mb-4">
+                И в целом поддержать молодого разработчика
+            </p>
+            <button id="purchase-vip-btn" class="main-menu-button vip-button w-full">20 голосов</button>
+            <button onclick="closeModal('vip-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Правила -->
+    <div id="rules-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--primary-color);">Правила</h2>
+            <div class="space-y-3 text-left">
+                <p>• Цель игры - отсортировать все шарики по цветам.</p>
+                <p>• В каждой колбе должны находиться шарики только одного цвета.</p>
+                <p>• Вы можете перемещать шар только в пустую колбу или на шар того же цвета.</p>
+                <p>• В колбе может быть не более 4-х шаров.</p>
+                <p>• **Тайный шар:** В этом режиме видны только верхние шары. Нижние шары скрыты, пока вы не снимете тот, что лежит над ними.</p>
+            </div>
+            <button onclick="closeModal('rules-modal')" class="main-menu-button secondary-button mt-6 w-full">Понятно</button>
+        </div>
+    </div>
+    
+    <!-- Модальное окно: Настройки -->
+    <div id="settings-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-6 text-center" style="color: var(--primary-color);">Настройки</h2>
+            
+            <div class="flex flex-col space-y-5">
+                <div class="flex items-center justify-between">
+                    <span class="text-lg font-medium">Музыка</span>
+                    <label for="music-toggle" class="setting-toggle-label">
+                        <input type="checkbox" id="music-toggle" class="sr-only setting-toggle-input">
+                        <div class="setting-toggle-slider"></div>
+                    </label>
+                </div>
+                
+                 <div class="flex items-center justify-between">
+                    <span class="text-lg font-medium">Звуки</span>
+                    <label for="sfx-toggle" class="setting-toggle-label">
+                        <input type="checkbox" id="sfx-toggle" class="sr-only setting-toggle-input">
+                        <div class="setting-toggle-slider"></div>
+                    </label>
+                </div>
+            </div>
+            
+            <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Статистика -->
     <div id="stats-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg text-center">
             <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-color);">Статистика</h2>
-            <table class="stats-table">
-                <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
-                <tbody>
-                    <tr><td>Легко</td><td id="games-played-easy">0</td><td id="best-time-easy">--:--</td></tr>
-                    <tr><td>Средне</td><td id="games-played-medium">0</td><td id="best-time-medium">--:--</td></tr>
-                    <tr><td>Сложно</td><td id="games-played-hard">0</td><td id="best-time-hard">--:--</td></tr>
-                    <tr><td>Эксперт</td><td id="games-played-expert">0</td><td id="best-time-expert">--:--</td></tr>
-                    <tr><td>Безумие</td><td id="games-played-insane">0</td><td id="best-time-insane">--:--</td></tr>
-                    <tr><td>Невозможно</td><td id="games-played-impossible">0</td><td id="best-time-impossible">--:--</td></tr>
-                </tbody>
-            </table>
-            <button onclick="closeModal('stats-modal')" class="main-menu-button mt-6 w-full">Закрыть</button>
+            
+            <div class="stats-tabs">
+                <button class="stats-tab active" data-tab="classic">Классика</button>
+                <button class="stats-tab" data-tab="mystery">Тайный шар</button>
+            </div>
+
+            <div id="stats-table-classic" class="stats-table-container active">
+                <table class="stats-table">
+                    <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
+                    <tbody>
+                        <tr><td>Легко</td><td id="games-played-classic-easy">0</td><td id="best-time-classic-easy">--:--</td></tr>
+                        <tr><td>Средне</td><td id="games-played-classic-medium">0</td><td id="best-time-classic-medium">--:--</td></tr>
+                        <tr><td>Сложно</td><td id="games-played-classic-hard">0</td><td id="best-time-classic-hard">--:--</td></tr>
+                        <tr><td>Эксперт</td><td id="games-played-classic-expert">0</td><td id="best-time-classic-expert">--:--</td></tr>
+                        <tr><td>Безумие</td><td id="games-played-classic-insane">0</td><td id="best-time-classic-insane">--:--</td></tr>
+                        <tr><td>Невозможно</td><td id="games-played-classic-impossible">0</td><td id="best-time-classic-impossible">--:--</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="stats-table-mystery" class="stats-table-container">
+                 <table class="stats-table">
+                    <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
+                    <tbody>
+                        <tr><td>Легко</td><td id="games-played-mystery-easy">0</td><td id="best-time-mystery-easy">--:--</td></tr>
+                        <tr><td>Средне</td><td id="games-played-mystery-medium">0</td><td id="best-time-mystery-medium">--:--</td></tr>
+                        <tr><td>Сложно</td><td id="games-played-mystery-hard">0</td><td id="best-time-mystery-hard">--:--</td></tr>
+                        <tr><td>Эксперт</td><td id="games-played-mystery-expert">0</td><td id="best-time-mystery-expert">--:--</td></tr>
+                        <tr><td>Безумие</td><td id="games-played-mystery-insane">0</td><td id="best-time-mystery-insane">--:--</td></tr>
+                        <tr><td>Невозможно</td><td id="games-played-mystery-impossible">0</td><td id="best-time-mystery-impossible">--:--</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button onclick="closeModal('stats-modal')" class="main-menu-button secondary-button mt-6 w-full">Закрыть</button>
         </div>
     </div>
+    
     <div id="pause-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center">
         <div class="modal-content w-11/12 max-w-sm p-6 rounded-2xl shadow-lg text-center">
             <h2 class="text-3xl font-bold mb-6" style="color: var(--primary-color);">Пауза</h2>
@@ -278,40 +522,65 @@
         // --- DOM Elements ---
         const screens = {
             mainMenu: document.getElementById('main-menu'),
-            levelScreen: document.getElementById('level-screen'), // Новый экран
-            game: document.getElementById('game-screen')
-            // otherGames: (УДАЛЕН)
+            levelSelection: document.getElementById('level-selection-screen'),
+            game: document.getElementById('game-screen'),
+            otherGames: document.getElementById('other-games-screen')
         };
-        // Контейнер уровней теперь на новом экране
-        const levelSelectionContainer = document.getElementById('level-list-container');
+        const levelSelectionContainer = document.getElementById('level-selection-container');
+        const levelSelectionTitle = document.getElementById('level-selection-title');
         const gameBoard = document.getElementById('game-board');
         const moveCountSpan = document.getElementById('move-count');
         const timerSpan = document.getElementById('timer');
         const undoButton = document.getElementById('undo-button');
-        const undoCountSpan = document.getElementById('undo-count');
-        const themeToggle = document.getElementById('theme-toggle');
+        const undoCountSpan = document.getElementById('undo-count-display'); // ИЗМЕНЕН ID
+        const musicToggle = document.getElementById('music-toggle'); 
+        const sfxToggle = document.getElementById('sfx-toggle'); 
         const bgMusic = document.getElementById('bg-music');
         
         // --- Game State ---
         let tubes = [], selectedTube = null, moveCount = 0, timerInterval = null, seconds = 0;
         let currentDifficulty = 'easy', history = [], isPaused = false;
+        let currentGameMode = 'classic';
         let undosLeft = 3;
         let vkUserId = null;
         let wasMusicPlaying = false;
 
-        let gameData = {
-            theme: 'light',
-            isMuted: false,
-            levelsCompletedSinceAd: 0,
-            stats: { 
+        const defaultStats = () => ({
+            classic: {
                 gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
-                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity } 
+                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
+            },
+            mystery: {
+                gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
+                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
             }
+        });
+
+        let gameData = {
+            isMusicMuted: false, 
+            isSfxMuted: false, 
+            isVip: false, // НОВОЕ ПОЛЕ: VIP Статус
+            levelsCompletedSinceAd: 0,
+            stats: defaultStats()
         };
 
         // --- Config ---
-        const COLORS = ["#d90429", "#f77f00", "#fcc419", "#20c997", "#43a047", "#0077b6", "#03045e", "#7209b7", "#ff006e", "#8d5b4c", "#8d99ae", "#00b4d8", "#c72c71"];
-        const LIQUID_LAYERS = 4;
+        const COLORS = [
+            "#d90429", // Red
+            "#f77f00", // Orange
+            "#fcc419", // Yellow
+            "#20c997", // Teal
+            "#43a047", // Green
+            "#0077b6", // Blue
+            "#03045e", // Navy
+            "#7209b7", // Purple
+            "#f472b6", // Light Pink
+            "#8d5b4c", // Brown
+            "#8d99ae", // Gray
+            "#00b4d8", // Light Blue
+            "#a3e635"  // Lime
+        ];
+        const BALL_LAYERS = 4; 
         const UNDO_LIMIT = 3;
         const WINS_TO_UNLOCK = 10;
         const LEVEL_CONFIG = {
@@ -323,69 +592,92 @@
             impossible: { name: 'Невозможно', tubes: 24, empty: 2, colors: 11, doubleColors: true }
         };
         
-        // --- Audio Manager (НОВЫЕ ЗВУКИ) ---
+        // --- ИСПРАВЛЕНИЕ: Audio Manager ---
         const audioManager = {
-            pourSynth: null,
+            dropSynth: null, 
             winSynth: null,
+            selectSynth: null, 
+            tapSynth: null, 
             isReady: false,
 
             init() {
-                // Новый звук "булька" (FMSynth с другими параметрами)
-                this.pourSynth = new Tone.FMSynth({
-                    harmonicity: 3.0,
-                    modulationIndex: 10,
-                    detune: 0,
+                // Звук "падения" шара
+                this.dropSynth = new Tone.MembraneSynth({
+                    pitchDecay: 0.02,
+                    octaves: 3,
                     oscillator: { type: "sine" },
-                    envelope: { attack: 0.02, decay: 0.2, sustain: 0.1, release: 0.3 },
-                    modulation: { type: "triangle" },
-                    modulationEnvelope: { attack: 0.05, decay: 0.1, sustain: 0.2, release: 0.3 }
+                    envelope: { attack: 0.001, decay: 0.3, sustain: 0.01, release: 0.2 }
                 }).toDestination();
-                this.pourSynth.volume.value = -8; // Немного громче
+                this.dropSynth.volume.value = -10;
 
-                // Новый звук победы (PluckSynth - "капля")
-                this.winSynth = new Tone.PluckSynth({
-                    attackNoise: 0.5,
-                    dampening: 4000,
-                    resonance: 0.7
+                // Звук "выбора" шара
+                this.selectSynth = new Tone.MembraneSynth({
+                    pitchDecay: 0.01,
+                    octaves: 4,
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 }
                 }).toDestination();
-                this.winSynth.volume.value = -6;
+                this.selectSynth.volume.value = -12;
+
+                // ИСПРАВЛЕНИЕ: Звук "тапа" (короткий "клик")
+                this.tapSynth = new Tone.NoiseSynth({
+                    noise: { type: 'white' },
+                    envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.1 }
+                }).toDestination();
+                this.tapSynth.volume.value = -20;
+
+                // Звук "победы"
+                this.winSynth = new Tone.PolySynth(Tone.Synth, {
+                     oscillator: { type: 'triangle8' },
+                     envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 }
+                }).toDestination();
+                this.winSynth.volume.value = -10;
                 
                 this.isReady = true;
             },
             
             playSound(sound) {
-                if (!this.isReady || gameData.isMuted) return;
+                if (!this.isReady || gameData.isSfxMuted) return;
                 try {
-                    if (sound === 'pour') {
-                        // Новый триггер звука
-                        this.pourSynth.triggerAttackRelease("C3", "8n");
-                        this.pourSynth.frequency.setValueAtTime("C3", Tone.now());
-                        this.pourSynth.frequency.linearRampToValueAtTime("G2", Tone.now() + 0.2);
+                    const now = Tone.now();
+                    if (sound === 'drop') { 
+                        this.dropSynth.triggerAttackRelease("C3", "8n", now);
+                    }
+                    if (sound === 'select') { 
+                        this.selectSynth.triggerAttackRelease("C4", "8n", now);
+                    }
+                     if (sound === 'tap') { 
+                        this.tapSynth.triggerAttackRelease("8n", now);
                     }
                     if (sound === 'win') {
-                        // Новая мелодия победы
-                        const now = Tone.now();
-                        const notes = ['C4', 'E4', 'G4', 'C5']; // Простой мажорный арпеджио
+                        const notes = ['C4', 'E4', 'G4', 'C5', 'E5', 'G5'];
                         notes.forEach((note, i) => {
-                            // PluckSynth.triggerAttack не требует Release
-                            this.winSynth.triggerAttack(note, now + i * 0.12);
+                            this.winSynth.triggerAttackRelease(note, '16n', now + i * 0.1);
                         });
                     }
                 } catch(e) { console.error("Sound play error", e); }
             },
 
-            toggleMute(forceState) {
-                const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMuted;
-                gameData.isMuted = newState;
-
-                document.getElementById('sound-on-icon').classList.toggle('hidden', gameData.isMuted);
-                document.getElementById('sound-off-icon').classList.toggle('hidden', !gameData.isMuted);
+            toggleMusicMute(forceState) {
+                const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMusicMuted;
+                gameData.isMusicMuted = newState;
+                musicToggle.checked = !newState; 
                 
-                if (gameData.isMuted) {
+                if (gameData.isMusicMuted) {
                     bgMusic.pause();
                 } else {
                     bgMusic.play().catch(e => {});
                 }
+
+                if(typeof forceState === 'undefined') {
+                    saveGameData();
+                }
+            },
+            
+            toggleSfxMute(forceState) {
+                const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isSfxMuted;
+                gameData.isSfxMuted = newState;
+                sfxToggle.checked = !newState; 
 
                 if(typeof forceState === 'undefined') {
                     saveGameData();
@@ -399,27 +691,54 @@
             
             bgMusic.volume = 0.3; 
             
-            // Обновленные и новые слушатели
-            document.getElementById('stats-button').addEventListener('click', () => openModal('stats-modal'));
-            document.getElementById('play-button').addEventListener('click', () => showScreen('levelScreen'));
-            document.getElementById('back-to-menu-from-levels').addEventListener('click', () => showScreen('mainMenu'));
+            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button');
+            allButtons.forEach(btn => {
+                btn.addEventListener('click', () => audioManager.playSound('tap'));
+            });
             
-            document.getElementById('sound-toggle-btn').addEventListener('click', () => audioManager.toggleMute());
+            // Main Menu listeners
+            document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
+            document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
+            document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
+            document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
+            document.getElementById('vip-mode-btn').addEventListener('click', () => openModal('vip-modal')); // VIP
+            document.getElementById('purchase-vip-btn').addEventListener('click', activateVip); // VIP
+
+            document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
+
+            // Game screen listeners
             undoButton.addEventListener('click', undoMove);
-            themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'dark' : 'light'));
             window.addEventListener('resize', () => {
                 if (!screens.game.classList.contains('hidden')) {
                      requestAnimationFrame(() => adjustTubeSize(tubes.length));
                 }
             });
             
-            // Слушатели для "Других игр" УДАЛЕНЫ
-
+            // Settings/Rules Listeners
+            musicToggle.addEventListener('change', () => audioManager.toggleMusicMute(!musicToggle.checked));
+            sfxToggle.addEventListener('change', () => audioManager.toggleSfxMute(!sfxToggle.checked));
+            
+            document.getElementById('other-games-container').addEventListener('click', e => {
+                const gameEl = e.target.closest('[data-app-id]');
+                if (gameEl) vkBridge.send('VKWebAppOpenApp', { app_id: parseInt(gameEl.dataset.appId) });
+            });
+            
+            document.querySelector('.stats-tabs').addEventListener('click', e => {
+                if (e.target.classList.contains('stats-tab')) {
+                    const tabName = e.target.dataset.tab;
+                    document.querySelectorAll('.stats-tab').forEach(tab => tab.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    document.querySelectorAll('.stats-table-container').forEach(container => container.classList.remove('active'));
+                    document.getElementById(`stats-table-${tabName}`).classList.add('active');
+                }
+            });
+            
             document.body.addEventListener('click', async () => {
                  if (!audioManager.isReady) {
                     await Tone.start();
                     audioManager.init();
-                    if(!gameData.isMuted) {
+                    if(!gameData.isMusicMuted) { 
                         bgMusic.play().catch(e => {});
                     }
                  }
@@ -437,7 +756,7 @@
                     }
                 }
                 if (e.detail.type === 'VKWebAppViewRestore') {
-                    if (wasMusicPlaying && !gameData.isMuted) {
+                    if (wasMusicPlaying && !gameData.isMusicMuted) { 
                        bgMusic.play().catch(e => {});
                     }
                     wasMusicPlaying = false;
@@ -452,10 +771,10 @@
                 vkUserId = 'test_user';
             }
             await loadGameData();
-            setTheme(gameData.theme);
-            renderLevelList(); // Рендерим список уровней при запуске
-            // renderOtherGames(); // УДАЛЕНО
-            audioManager.toggleMute(gameData.isMuted);
+            renderOtherGames(); 
+            audioManager.toggleMusicMute(gameData.isMusicMuted); 
+            audioManager.toggleSfxMute(gameData.isSfxMuted); 
+            applyVipStatus(gameData.isVip); // Применяем VIP-статус при загрузке
             showScreen('mainMenu');
         }
 
@@ -464,7 +783,7 @@
             Object.values(screens).forEach(s => s.classList.add('hidden'));
             screens[screenName].classList.remove('hidden');
             
-            if (!gameData.isMuted) {
+            if (!gameData.isMusicMuted) {
                 bgMusic.play().catch(e => {});
             }
             
@@ -474,21 +793,72 @@
             vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e => {});
         }
 
-        async function showRewardedAd() {
-            try {
-                const adData = await vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' });
-                return adData.result === true;
-            } catch (e) { console.error("Rewarded ad error:", e); return false; }
+        function showLevelSelection(mode) {
+            currentGameMode = mode;
+            levelSelectionTitle.textContent = mode === 'classic' ? 'Классика' : 'Тайный шар';
+            renderMenu();
+            showScreen('levelSelection');
         }
 
-        function showInterstitialAd() {
+        async function showRewardedAd() {
+            // VIP-пользователи не видят рекламу
+            if (gameData.isVip) return true; 
+
+            try {
+                const adData = await vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' });
+                await Tone.start();
+                return adData.result === true;
+            } catch (e) { 
+                console.error("Rewarded ad error:", e); 
+                await Tone.start(); 
+                return false; 
+            }
+        }
+
+        async function showInterstitialAd() {
+            // VIP-пользователи не видят рекламу
+            if (gameData.isVip) return; 
+
             gameData.levelsCompletedSinceAd++;
             if (gameData.levelsCompletedSinceAd >= 3) {
-                vkBridge.send('VKWebAppShowInterstitialAd').catch(e => {});
+                try {
+                    await vkBridge.send('VKWebAppShowInterstitialAd');
+                    await Tone.start(); 
+                } catch(e) {
+                    await Tone.start(); 
+                }
                 gameData.levelsCompletedSinceAd = 0;
             }
             saveGameData();
         }
+
+        // --- НОВЫЕ ФУНКЦИИ: VIP ---
+        function activateVip() {
+            gameData.isVip = true;
+            saveGameData();
+            closeModal('vip-modal');
+            applyVipStatus(true);
+        }
+
+        function applyVipStatus(isVip) {
+            if (!isVip) return;
+            
+            // 1. Разблокировать уровни
+            if (!screens.levelSelection.classList.contains('hidden')) {
+                renderMenu(); // Перерисовать меню уровней, если оно открыто
+            }
+            // 2. Обновить UI отмены (покажет "бесконечность")
+            updateUndoButtonUI();
+            // 3. Обновить доп. колбы (уберет "AD")
+            if (!screens.game.classList.contains('hidden')) {
+                renderTubes();
+            }
+            // 4. Скрыть кнопку VIP
+            const vipButton = document.getElementById('vip-mode-btn');
+            if (vipButton) vipButton.classList.add('hidden');
+        }
+        // --- КОНЕЦ VIP ФУНКЦИЙ ---
+
 
         // --- Game Flow ---
         function startGame(difficulty) {
@@ -500,6 +870,7 @@
         function resetGame() {
             isPaused = false; moveCount = 0; seconds = 0; history = [];
             undosLeft = UNDO_LIMIT;
+            selectedTube = null;
             updateMoveCount(); 
             updateUndoButtonUI(); 
             startTimer();
@@ -520,15 +891,14 @@
             closeModal('pause-modal');
             closeModal('win-modal');
             stopTimer();
-            renderLevelList(); // Обновляем список уровней (на случай анлоков)
             showScreen('mainMenu');
         }
 
         // --- Level Generation & Rendering ---
-        // (Переименовано из renderMenu в renderLevelList)
-        function renderLevelList() {
-            levelSelectionContainer.innerHTML = ''; // Целимся в новый контейнер
+        function renderMenu() {
+            levelSelectionContainer.innerHTML = '';
             const difficulties = Object.keys(LEVEL_CONFIG);
+            const statsForCurrentMode = gameData.stats[currentGameMode] || defaultStats()[currentGameMode];
 
             for (let i = 0; i < difficulties.length; i++) {
                 const difficulty = difficulties[i];
@@ -538,16 +908,21 @@
                 let isUnlocked = (difficulty === 'easy');
                 let winsOnPrev = 0;
                 if (prevDifficulty) {
-                    winsOnPrev = gameData.stats.gamesPlayed[prevDifficulty] || 0;
+                    winsOnPrev = statsForCurrentMode.gamesPlayed[prevDifficulty] || 0;
                     if (winsOnPrev >= WINS_TO_UNLOCK) {
                         isUnlocked = true;
                     }
                 }
                 
-                // (Логика isFullWidth УДАЛЕНА)
+                // ИСПРАВЛЕНИЕ: Возвращаем блокировку, но VIP ее отключает
+                if (gameData.isVip) {
+                    isUnlocked = true;
+                }
+
+                const isFullWidth = ['insane', 'impossible'].includes(difficulty);
+
                 const button = document.createElement('button');
-                // Новый стиль кнопок - вертикальный список
-                button.className = `main-menu-button secondary-button w-full relative overflow-hidden`;
+                button.className = `main-menu-button relative overflow-hidden ${isFullWidth ? 'col-span-2' : ''}`;
                 button.onclick = () => startGame(difficulty);
                 button.disabled = !isUnlocked;
 
@@ -559,10 +934,8 @@
                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg>
                            <span>${config.name}</span>
                         </div>
-                        <div class="absolute bottom-1 right-2 text-xs font-bold opacity-80">${winsOnPrev}/${WINS_TO_UNLOCK}</div>
+                        <div class="absolute bottom-1 right-2 text-xs font-bold text-white opacity-80">${winsOnPrev}/${WINS_TO_UNLOCK}</div>
                     `;
-                    // Цвет текста на заблокированной кнопке
-                    button.style.color = 'var(--locked-text-color)';
                 }
                 levelSelectionContainer.appendChild(button);
             }
@@ -572,13 +945,22 @@
             const config = LEVEL_CONFIG[difficulty];
             const tubesWithLiquid = config.tubes - config.empty;
             const levelColors = shuffleArray([...COLORS]).slice(0, config.colors);
-            const layersPerColor = config.doubleColors ? LIQUID_LAYERS * 2 : LIQUID_LAYERS;
+            const layersPerColor = config.doubleColors ? BALL_LAYERS * 2 : BALL_LAYERS;
             let colorPool = levelColors.flatMap(color => Array(layersPerColor).fill(color));
             colorPool = shuffleArray(colorPool);
+            
             tubes = [];
-            for (let i = 0; i < tubesWithLiquid; i++) tubes.push({ id: i, liquids: colorPool.splice(0, LIQUID_LAYERS), isAnimating: false });
-            for (let i = 0; i < config.empty; i++) tubes.push({ id: tubes.length, liquids: [], isAnimating: false });
-            tubes.push({ id: tubes.length, liquids: [], isPlaceholder: true, isAnimating: false });
+            for (let i = 0; i < tubesWithLiquid; i++) {
+                const ballsData = colorPool.splice(0, BALL_LAYERS);
+                const balls = ballsData.map((color, index) => ({
+                    color: color,
+                    isVisible: currentGameMode === 'classic' || index === ballsData.length - 1
+                }));
+                tubes.push({ id: i, balls: balls, isAnimating: false });
+            }
+            
+            for (let i = 0; i < config.empty; i++) tubes.push({ id: tubes.length, balls: [], isAnimating: false });
+            tubes.push({ id: tubes.length, balls: [], isPlaceholder: true, isAnimating: false });
             
             if (isLevelSolved(tubes.filter(t => !t.isPlaceholder))) {
                 return generateLevel(difficulty);
@@ -587,10 +969,13 @@
         }
 
         function isLevelSolved(currentTubes) {
-            return currentTubes.every(t => t.liquids.length === 0 || (t.liquids.length === LIQUID_LAYERS && new Set(t.liquids).size === 1));
+            return currentTubes.every(t => 
+                t.balls.length === 0 || 
+                (t.balls.length === BALL_LAYERS && new Set(t.balls.map(b => b.color)).size === 1)
+            );
         }
 
-        // Адаптация колб (НЕ ИЗМЕНЕНО, т.к. работает отлично)
+        // --- ИСПРАВЛЕНИЕ: Адаптация и Расчет Высоты ---
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
@@ -601,24 +986,38 @@
                 const rows = Math.ceil(tubeCount / cols);
                 const cellWidth = boardWidth / cols;
                 const cellHeight = boardHeight / rows;
-                const prospectiveTubeWidth = cellWidth * 0.8;
-                const prospectiveTubeHeight = prospectiveTubeWidth * 4;
-                if (prospectiveTubeHeight < cellHeight * 0.95) {
+                
+                const prospectiveTubeWidth = cellWidth * 0.7; // 70% ширины ячейки
+                
+                // ИСПРАВЛЕНИЕ: Точный расчет высоты (H = 4W - 4)
+                // W = prospectiveTubeWidth
+                // BallHeight = W - 4px (padding L/R 2px)
+                // TotalBallHeight = 4 * (W - 4) = 4W - 16
+                // TotalMargin = 4 * 2px = 8 (4 отступа)
+                // TotalPadding = 2 * 2px = 4 (padding T/B)
+                // H = (4W - 16) + 8 + 4 = 4W - 4
+                const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 4;
+                
+                if (prospectiveTubeHeight < cellHeight * 0.95) { 
                     if (prospectiveTubeHeight > bestLayout.tubeHeight) {
                         bestLayout = { cols: cols, tubeHeight: prospectiveTubeHeight };
                     }
                 }
             }
-            if(bestLayout.cols === 0) bestLayout.cols = tubeCount <= 12 ? 4 : 5;
+            if(bestLayout.cols === 0) {
+                 bestLayout.cols = tubeCount <= 12 ? 4 : 5; // Fallback
+                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 4;
+            }
             
-            const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.8;
-            const finalTubeHeight = finalTubeWidth * 4;
-            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.1;
+            const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
+            const finalTubeHeight = bestLayout.tubeHeight;
+            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; // 15% margin L/R
 
             document.documentElement.style.setProperty('--tube-width', `${finalTubeWidth}px`);
             document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
             document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
         }
+        // --- КОНЕЦ ФИКСА АДАПТАЦИИ ---
 
         // --- Rendering ---
         function renderTubes() {
@@ -630,23 +1029,49 @@
                 
                 if (tube.isPlaceholder) {
                     tubeEl.style.borderStyle = 'dashed';
-                    tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span><span class="ad-label">AD</span></div>`;
+                    // ИЗМЕНЕНИЕ: Скрываем "AD" для VIP
+                    tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span>${gameData.isVip ? '' : '<span class="ad-label">AD</span>'}</div>`;
                     tubeEl.addEventListener('click', () => unlockExtraTube(tube.id));
                 } else {
                     tubeEl.addEventListener('click', () => onTubeClick(tube.id));
-                    tube.liquids.forEach(color => {
-                        const liquidEl = document.createElement('div');
-                        liquidEl.className = 'liquid';
-                        liquidEl.style.backgroundColor = color;
-                        liquidEl.style.height = `${100 / LIQUID_LAYERS}%`;
-                        tubeEl.appendChild(liquidEl);
+                    tube.balls.forEach(ball => {
+                        const ballEl = document.createElement('div');
+                        ballEl.className = 'ball';
+                        if (ball.isVisible) {
+                            ballEl.style.backgroundColor = ball.color;
+                        } else {
+                            ballEl.classList.add('mystery');
+                            ballEl.textContent = '?';
+                        }
+                        tubeEl.appendChild(ballEl);
                     });
                 }
                 gameBoard.appendChild(tubeEl);
             });
         }
         
-        // renderOtherGames (УДАЛЕНО)
+        function renderOtherGames() {
+            const container = document.getElementById('other-games-container');
+            container.innerHTML = '';
+            const games = [
+                { name: 'Bubble Shooter', appId: 54051411, icon: 'icon1.png' }, { name: 'Тетрис', appId: 54051413, icon: 'icon2.png' },
+                { name: 'Tower Blocks', appId: 53962513, icon: 'icon3.png' }, { name: 'Блок Про', appId: 53936296, icon: 'icon4.png' },
+                { name: 'Филворды', appId: 53867134, icon: 'icon5.png' }, { name: 'Словли', appId: 53861990, icon: 'icon6.png' },
+                { name: 'Brick Balls', appId: 54023580, icon: 'icon7.png' }, { name: '2048', appId: 53965380, icon: 'icon8.png' },
+                { name: 'Math Matrix', appId: 53970659, icon: 'icon9.png' }
+            ];
+            games.forEach(game => {
+                const gameEl = document.createElement('div');
+                gameEl.className = "flex flex-col items-center cursor-pointer group";
+                gameEl.dataset.appId = game.appId;
+                gameEl.innerHTML = `
+                    <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-3xl mb-2 flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden">
+                       <img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'text-xs text-gray-400\\'>${game.name}</span>'">
+                    </div>
+                    <span class="text-xs font-medium text-center" style="color: var(--text-color-dark);">${game.name}</span>`;
+                container.appendChild(gameEl);
+            });
+        }
 
         // --- Game Logic ---
         function onTubeClick(tubeId) {
@@ -658,97 +1083,139 @@
             const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
 
             if (selectedTube === null) {
-                if (clickedTubeData.liquids.length > 0) {
+                if (clickedTubeData.balls.length > 0) {
+                    const topBall = clickedTubeData.balls[clickedTubeData.balls.length - 1];
+                    if (!topBall.isVisible) return; 
+                    
+                    audioManager.playSound('select'); 
                     selectedTube = clickedTubeData;
-                    tubeEl.classList.add('selected');
+                    const topBallEl = tubeEl.querySelector('.ball:last-child');
+                    if (topBallEl) topBallEl.classList.add('selected-ball');
                 }
             } else {
                 const currentSelectedTube = selectedTube;
-                const selectedEl = document.querySelector('.tube-container.selected');
+                const selectedBallEl = document.querySelector('.selected-ball');
                 
                 selectedTube = null;
-                selectedEl?.classList.remove('selected');
+                if (selectedBallEl) selectedBallEl.classList.remove('selected-ball');
 
                 if (currentSelectedTube.id === clickedTubeData.id) {
-                   return; // Deselected
+                   return;
                 }
                 
-                if (canPour(currentSelectedTube, clickedTubeData)) {
-                    saveState();
-                    initiatePour(currentSelectedTube, clickedTubeData);
+                if (canMove(currentSelectedTube, clickedTubeData)) {
+                    saveState(); 
+                    initiateMove(currentSelectedTube, clickedTubeData);
                 }
             }
         }
 
-        function canPour(from, to) {
+        function canMove(from, to) {
             if (!from || !to || from.isAnimating || to.isAnimating) return false;
-            if (from.liquids.length === 0 || to.liquids.length === LIQUID_LAYERS) return false;
-            if (to.liquids.length === 0) return true;
-            return from.liquids[from.liquids.length - 1] === to.liquids[to.liquids.length - 1];
+            if (from.balls.length === 0 || to.balls.length === BALL_LAYERS) return false;
+            
+            const topBall = from.balls[from.balls.length - 1];
+            if (!topBall.isVisible) return false; 
+
+            if (to.balls.length === 0) return true; 
+            
+            return topBall.color === to.balls[to.balls.length - 1].color;
         }
 
-        function initiatePour(fromTube, toTube) {
+        function initiateMove(fromTube, toTube) {
             moveCount++;
             updateMoveCount();
             
-            const topColor = fromTube.liquids[fromTube.liquids.length - 1];
-            let amountToMove = fromTube.liquids.slice().reverse().findIndex(c => c !== topColor);
-            if (amountToMove === -1) amountToMove = fromTube.liquids.length;
-            amountToMove = Math.min(amountToMove, LIQUID_LAYERS - toTube.liquids.length);
-            const liquidsToMove = fromTube.liquids.splice(fromTube.liquids.length - amountToMove);
-            toTube.liquids.push(...liquidsToMove);
+            let amountToMove = 1;
+            amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
+            
+            const ballsToMove = fromTube.balls.splice(fromTube.balls.length - amountToMove);
+            
+            if (currentGameMode === 'mystery' && fromTube.balls.length > 0) {
+                fromTube.balls[fromTube.balls.length - 1].isVisible = true;
+            }
+            
+            toTube.balls.push(...ballsToMove);
 
-            animatePour(fromTube, toTube, liquidsToMove);
+            animateMove(fromTube, toTube, ballsToMove);
         }
         
-        async function animatePour(fromTube, toTube, liquidsMoved) {
+        async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
-            updateUndoButtonUI(); // Обновляем состояние кнопки перед анимацией
+            updateUndoButtonUI();
 
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
-
-            fromEl.classList.add('pouring');
             
-            audioManager.playSound('pour');
-            const fromRect = fromEl.getBoundingClientRect();
+            const ballEl = Array.from(fromEl.querySelectorAll('.ball')).pop(); 
+            
+            if (!ballEl) {
+                console.error("animateMove: не найдены шары для анимации.");
+                renderTubes();
+                fromTube.isAnimating = false;
+                toTube.isAnimating = false;
+                updateUndoButtonUI();
+                return;
+            }
+
             const toRect = toEl.getBoundingClientRect();
-            const rotation = (toRect.x > fromRect.x) ? 20 : -20;
-            fromEl.style.transformOrigin = 'top center';
-            let moveX = (toRect.left + toRect.width / 2) - (fromRect.left + fromRect.width / 2);
-            let moveY = toRect.top - fromRect.top - fromRect.height / 2;
+            const ballWidth = ballEl.offsetWidth; 
             
-            fromEl.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            await wait(200);
-            fromEl.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotation}deg)`;
+            const ballColor = ballsToMove[0].color;
+            ballEl.style.backgroundColor = ballColor; 
             
-            const liquidElsToRemove = Array.from(fromEl.querySelectorAll('.liquid')).slice(-liquidsMoved.length);
-            liquidElsToRemove.forEach(el => el.style.height = '0%');
-            await wait(300);
-            liquidElsToRemove.forEach(el => el.remove());
+            ballEl.style.boxShadow = 'inset 0 -4px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1), 0 10px 25px var(--primary-shadow)';
 
-            for (const color of liquidsMoved.slice().reverse()) {
-                const newLiquid = document.createElement('div');
-                newLiquid.className = 'liquid';
-                newLiquid.style.backgroundColor = color;
-                newLiquid.style.height = '0%';
-                toEl.appendChild(newLiquid);
-                await wait(1);
-                newLiquid.style.height = `${100 / LIQUID_LAYERS}%`;
-                await wait(50);
+            const xTarget = toRect.left + (toRect.width / 2) - (ballWidth / 2);
+            const yHover = toRect.top - (ballWidth * 0.5); 
+
+            const rect = ballEl.getBoundingClientRect();
+            document.body.appendChild(ballEl);
+            ballEl.style.position = 'absolute';
+            ballEl.style.width = `${ballWidth}px`; 
+            ballEl.style.left = `${rect.left}px`;
+            ballEl.style.top = `${rect.top}px`;
+            ballEl.style.zIndex = 100;
+            ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)';
+            
+            // 1. Анимация *вверх* и *вбок*
+            requestAnimationFrame(() => {
+                ballEl.style.transform = 'scale(1.05)';
+                ballEl.style.left = `${xTarget}px`;
+                ballEl.style.top = `${yHover}px`;
+            });
+            
+            await wait(350); 
+
+            // 2. Анимация *падения*
+            ballEl.remove(); 
+            renderTubes(); 
+
+            const newToEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
+            const newBallEl = newToEl.querySelector('.ball:last-child');
+            
+            if (newBallEl) {
+                const ballHeight = newBallEl.offsetHeight;
+                const startY = yHover - newBallEl.getBoundingClientRect().top;
+
+                newBallEl.style.transition = 'none';
+                newBallEl.style.transform = `translateY(${startY}px)`;
+                
+                newBallEl.getBoundingClientRect(); 
+
+                newBallEl.style.transition = 'transform 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; // "EaseInBack"
+                newBallEl.style.transform = 'translateY(0)';
+                
+                audioManager.playSound('drop'); 
+                await wait(300);
+                newBallEl.style.transition = 'transform 0.2s ease-out'; 
+                newBallEl.style.transform = '';
             }
             
-            await wait(200);
-            fromEl.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            await wait(200);
-            fromEl.style.transform = 'translate(0, 0)';
-            await wait(300);
-
-            fromEl.classList.remove('pouring');
             fromTube.isAnimating = false;
             toTube.isAnimating = false;
-            updateUndoButtonUI(); // Обновляем состояние кнопки после анимации
+            updateUndoButtonUI();
             
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
             if (!isAnyTubeAnimating && isLevelSolved(tubes.filter(t => !t.isPlaceholder))) {
@@ -759,9 +1226,16 @@
         async function unlockExtraTube(tubeId) {
             const tube = tubes.find(t => t.id === tubeId);
             if (tube.isAnimating) return;
-            const adShown = await showRewardedAd();
+            
+            // ИЗМЕНЕНИЕ: VIP получает колбу бесплатно
+            let adShown = false;
+            if (gameData.isVip) {
+                adShown = true;
+            } else {
+                adShown = await showRewardedAd(); // Обычные игроки смотрят рекламу
+            }
+            
             if (adShown) {
-                saveState();
                 if (tube) {
                     tube.isPlaceholder = false;
                     renderTubes();
@@ -772,13 +1246,16 @@
         function winGame() {
             stopTimer();
             audioManager.playSound('win');
-            gameData.stats.gamesPlayed[currentDifficulty] = (gameData.stats.gamesPlayed[currentDifficulty] || 0) + 1;
-            if (seconds < gameData.stats.bestTime[currentDifficulty]) {
-                gameData.stats.bestTime[currentDifficulty] = seconds;
+            
+            const stats = gameData.stats[currentGameMode];
+            stats.gamesPlayed[currentDifficulty] = (stats.gamesPlayed[currentDifficulty] || 0) + 1;
+            if (seconds < stats.bestTime[currentDifficulty]) {
+                stats.bestTime[currentDifficulty] = seconds;
             }
-            showInterstitialAd();
-            saveGameData();
-            updateStatsDisplay();
+            
+            showInterstitialAd(); // VIP-статус проверяется внутри этой функции
+            saveGameData(); 
+            
             document.getElementById('win-time').textContent = formatTime(seconds);
             document.getElementById('win-moves').textContent = moveCount;
             openModal('win-modal');
@@ -787,39 +1264,60 @@
         function saveState() {
             const stateToSave = tubes.map(t => ({
                 id: t.id,
-                liquids: [...t.liquids],
+                balls: t.balls.map(b => ({ ...b })), 
                 isPlaceholder: t.isPlaceholder
             }));
-            history.push(stateToSave);
+            history.push({state: stateToSave, moveCount: moveCount}); 
             if (history.length > 20) history.shift();
             updateUndoButtonUI();
         }
 
         function undoMove() {
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
-            if (history.length > 0 && !isAnyTubeAnimating && undosLeft > 0) {
-                undosLeft--;
-                const prevState = history.pop();
+            // ИЗМЕНЕНИЕ: Убрана проверка undosLeft > 0
+            if (history.length > 0 && !isAnyTubeAnimating) {
+                
+                // ИЗМЕНЕНИЕ: Проверка на VIP
+                if (!gameData.isVip) {
+                    if (undosLeft <= 0) return; // Обычный игрок не может отменить
+                    undosLeft--;
+                }
+                
+                const prevStateData = history.pop();
+                const prevState = prevStateData.state;
                 
                 tubes.forEach(tube => {
                     const prevTube = prevState.find(pt => pt.id === tube.id);
                     if (prevTube) {
-                        tube.liquids = [...prevTube.liquids];
+                        tube.balls = prevTube.balls.map(b => ({ ...b }));
                         tube.isPlaceholder = prevTube.isPlaceholder;
                     }
                 });
-
-                moveCount--;
+                
+                selectedTube = null; 
+                moveCount = prevStateData.moveCount; 
                 updateMoveCount();
-                renderTubes();
+                renderTubes(); 
                 updateUndoButtonUI();
             }
         }
         
         function updateUndoButtonUI() {
-            undoCountSpan.textContent = undosLeft;
+            // ИЗМЕНЕНИЕ: Показываем "бесконечность" для VIP
+            if (gameData.isVip) {
+                undoCountSpan.textContent = '∞';
+                undoCountSpan.style.fontSize = '1.2rem'; // Делаем знак бесконечности крупнее
+                undoCountSpan.style.lineHeight = '1.2rem';
+            } else {
+                undoCountSpan.textContent = undosLeft;
+                undoCountSpan.style.fontSize = '0.75rem'; // Возвращаем стандартный размер
+                undoCountSpan.style.lineHeight = '1rem';
+            }
+            
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
-            const isDisabled = history.length === 0 || undosLeft <= 0 || isAnyTubeAnimating;
+            // ИЗМЕНЕНИЕ: Логика отключения кнопки
+            const undoLimitReached = !gameData.isVip && undosLeft <= 0;
+            const isDisabled = history.length === 0 || undoLimitReached || isAnyTubeAnimating;
             undoButton.classList.toggle('disabled', isDisabled);
         }
 
@@ -834,13 +1332,6 @@
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
         // --- Data & Theme ---
-        function setTheme(theme) {
-            gameData.theme = theme;
-            document.documentElement.classList.toggle('dark', theme === 'dark');
-            themeToggle.checked = theme === 'dark';
-            saveGameData();
-        }
-
         async function saveGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
@@ -862,30 +1353,62 @@
                 const localData = localStorage.getItem(storageKey);
                 if (localData) loadedData = JSON.parse(localData);
             }
+            
+            const newStats = defaultStats();
+            
             if (loadedData) {
-                if (loadedData.stats && loadedData.stats.bestTime) {
-                    for (const diff in loadedData.stats.bestTime) {
-                        if (loadedData.stats.bestTime[diff] === null) {
-                            loadedData.stats.bestTime[diff] = Infinity;
+                // ИСПРАВЛЕНИЕ: Звуки по умолчанию ВКЛ (false = не выключены)
+                gameData.isMusicMuted = loadedData.isMusicMuted ?? false;
+                gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
+                gameData.isVip = loadedData.isVip ?? false; // Загружаем VIP
+                gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
+                
+                if (loadedData.stats) {
+                    if (loadedData.stats.classic || loadedData.stats.mystery) {
+                        if (loadedData.stats.classic) {
+                            newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.classic.bestTime};
+                            newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.classic.gamesPlayed};
                         }
+                         if (loadedData.stats.mystery) {
+                            newStats.mystery.bestTime = {...newStats.mystery.bestTime, ...loadedData.stats.mystery.bestTime};
+                            newStats.mystery.gamesPlayed = {...newStats.mystery.gamesPlayed, ...loadedData.stats.mystery.gamesPlayed};
+                        }
+                    } else {
+                        newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.bestTime};
+                        newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.gamesPlayed};
                     }
                 }
-                gameData.stats.bestTime = {...gameData.stats.bestTime, ...loadedData.stats?.bestTime };
-                gameData.stats.gamesPlayed = {...gameData.stats.gamesPlayed, ...loadedData.stats?.gamesPlayed };
-                gameData.theme = loadedData.theme || 'light';
-                gameData.isMuted = loadedData.isMuted || false;
-                gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
+                
+                ['classic', 'mystery'].forEach(mode => {
+                    Object.keys(newStats[mode].bestTime).forEach(diff => {
+                        if (newStats[mode].bestTime[diff] === null) {
+                            newStats[mode].bestTime[diff] = Infinity;
+                        }
+                    });
+                });
+                
+                gameData.stats = newStats;
             }
-            updateStatsDisplay();
         }
 
         function updateStatsDisplay() {
             if (!gameData.stats) return;
-            Object.keys(gameData.stats.bestTime).forEach(diff => {
-                const bestTimeEl = document.getElementById(`best-time-${diff}`);
-                const gamesPlayedEl = document.getElementById(`games-played-${diff}`);
-                if (bestTimeEl) bestTimeEl.textContent = gameData.stats.bestTime[diff] === Infinity ? '--:--' : formatTime(gameData.stats.bestTime[diff]);
-                if(gamesPlayedEl) gamesPlayedEl.textContent = (gameData.stats.gamesPlayed && gameData.stats.gamesPlayed[diff]) || 0;
+            
+            ['classic', 'mystery'].forEach(mode => {
+                const stats = gameData.stats[mode];
+                Object.keys(stats.bestTime).forEach(diff => {
+                    const bestTimeEl = document.getElementById(`best-time-${mode}-${diff}`);
+                    const gamesPlayedEl = document.getElementById(`games-played-${mode}-${diff}`);
+                    
+                    if (bestTimeEl) {
+                        bestTimeEl.textContent = (stats.bestTime[diff] === Infinity || stats.bestTime[diff] === null) 
+                            ? '--:--' 
+                            : formatTime(stats.bestTime[diff]);
+                    }
+                    if(gamesPlayedEl) {
+                        gamesPlayedEl.textContent = (stats.gamesPlayed && stats.gamesPlayed[diff]) || 0;
+                    }
+                });
             });
         }
 
