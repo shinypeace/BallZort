@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- ИСПРАВЛЕНИЕ: Убрана привязка к теме, теперь управляется JS -->
 <html lang="ru" data-theme="blue">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- ИСПРАВЛЕНИЕ: Система тем --- */
+        /* --- Система тем --- */
         :root {
             /* Переменные по умолчанию (синяя тема) */
             --bg-gradient-start: #3b82f6; /* blue-500 */
@@ -206,11 +205,10 @@
             width: 100%; 
             aspect-ratio: 1 / 1; 
             border-radius: 50%;
-            /* ИСПРАВЛЕНИЕ: Уменьшен margin для более плотной посадки */
             margin-top: 1px; 
             flex-shrink: 0;
-            /* ИСПРАВЛЕНИЕ: Глянцевый/Объемный шар */
-            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.3), inset 0 3px 3px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.2);
+            /* ИСПРАВЛЕНИЕ: ЕЩЕ более глянцевый/объемный шар */
+            box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.2s ease-out; 
             display: flex;
             align-items: center;
@@ -231,7 +229,7 @@
         .ball.selected-ball {
             transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1);
             /* ИСПРАВЛЕНИЕ: Глянцевый стиль + тень при подпрыгивании */
-            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.3), inset 0 3px 3px rgba(255,255,255,0.4), 0 10px 25px var(--primary-shadow);
+            box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow);
             z-index: 100;
         }
         /* --- КОНЕЦ СТИЛЕЙ КОЛБ --- */
@@ -277,7 +275,7 @@
             transform: translateX(24px); 
         }
         
-        /* --- НОВЫЕ СТИЛИ: Выбор темы (VIP) --- */
+        /* --- Выбор темы (VIP) --- */
         #theme-selector-container {
             border-top: 1px solid var(--tube-border-color);
             padding-top: 1.25rem;
@@ -401,7 +399,7 @@
                 <span>Тайный шар</span>
             </button>
             <button id="vip-mode-btn" class="main-menu-button vip-button w-full py-4">
-                👑<span>VIP доступ</span>👑
+                👑<span>VIP Доступ</span>👑
             </button>
             <button id="other-games-btn" class="main-menu-button secondary-button w-full py-4 text-lg">
                 Другие игры
@@ -466,13 +464,14 @@
     
     <div id="vip-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <!-- ИСПРАВЛЕНИЕ: VIP -->
             <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 VIP Доступ 👑</h2>
             <ul class="vip-list text-left">
                 <li>Без рекламы</li>
                 <li>Моментальное открытие всех уровней</li>
                 <li>Бесконечные отмены ходов</li>
                 <li>Бесконечные доп. колбы</li>
-                <li>Доступ к эксклюзивным темам</li> <!-- НОВЫЙ ПУНКТ -->
+                <li>Доступ к эксклюзивным темам</li>
             </ul>
             <p class="text-center text-sm text-gray-300 mt-6 mb-4">
                 И в целом поддержать молодого разработчика
@@ -482,12 +481,19 @@
         </div>
     </div>
     
-    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО: VIP Спасибо -->
     <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
-            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 Вы ВИП 👑</h2>
+            <!-- ИСПРАВЛЕНИЕ: VIP -->
+            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 Вы VIP 👑</h2>
             <p class="text-center text-lg mb-4">Спасибо за вашу поддержку!</p>
-            <p class="text-center mb-6">Вам доступны все VIP-функции, включая новые темы в Настройках.</p>
+            <!-- ИСПРАВЛЕНИЕ: Добавлен список бонусов -->
+            <ul class="vip-list text-left text-sm">
+                <li>Без рекламы</li>
+                <li>Все уровни открыты</li>
+                <li>Бесконечные отмены ходов</li>
+                <li>Бесконечные доп. колбы</li>
+                <li>Доступ к эксклюзивным темам</li>
+            </ul>
             <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
         </div>
     </div>
@@ -530,19 +536,19 @@
                 </div>
             </div>
             
-            <!-- НОВЫЙ БЛОК: Выбор темы (скрыт по умолчанию) -->
             <div id="theme-selector-container" class="hidden">
                 <h3 class="text-lg font-medium text-center mt-6 mb-4">Темы</h3>
                 <div class="theme-selector">
-                    <div class_name="theme-option active" id="theme-blue">
+                    <!-- ИСПРАВЛЕНИЕ: class_name -> class -->
+                    <div class="theme-option active" id="theme-blue">
                         <div id="theme-preview-blue" class="theme-preview"></div>
                         <span class="text-sm">Синяя</span>
                     </div>
-                    <div class_name="theme-option" id="theme-neon">
+                    <div class="theme-option" id="theme-neon">
                         <div id="theme-preview-neon" class="theme-preview"></div>
                         <span class="text-sm">Неон</span>
                     </div>
-                    <div class_name="theme-option" id="theme-ocean">
+                    <div class="theme-option" id="theme-ocean">
                         <div id="theme-preview-ocean" class="theme-preview"></div>
                         <span class="text-sm">Океан</span>
                     </div>
@@ -660,26 +666,27 @@
             isMusicMuted: false, 
             isSfxMuted: false, 
             isVip: false,
-            currentTheme: 'blue', // НОВОЕ ПОЛЕ: Тема
+            currentTheme: 'blue', 
             levelsCompletedSinceAd: 0,
             stats: defaultStats()
         };
 
         // --- Config ---
+        // ИСПРАВЛЕНИЕ: Новые цвета (убраны похожие)
         const COLORS = [
             "#d90429", // Red
             "#f77f00", // Orange
             "#fcc419", // Yellow
-            "#20c997", // Teal
             "#43a047", // Green
-            "#0077b6", // Blue
+            "#a3e635", // Lime
+            "#00b4d8", // Light Blue
             "#03045e", // Navy
             "#7209b7", // Purple
-            "#f472b6", // Light Pink
+            "#f472b6", // Pink
             "#8d5b4c", // Brown
             "#8d99ae", // Gray
-            "#00b4d8", // Light Blue
-            "#a3e635"  // Lime
+            "#FFFFFF", // White
+            "#333333"  // Black
         ];
         const BALL_LAYERS = 4; 
         const UNDO_LIMIT = 3;
@@ -950,7 +957,6 @@
             saveGameData();
             closeModal('vip-modal');
             applyVipStatus(true);
-            // Можно сразу открыть окно благодарности
             openModal('vip-thanks-modal');
         }
 
@@ -959,26 +965,22 @@
             const themeSelector = document.getElementById('theme-selector-container');
             
             if (isVip) {
-                // 1. Изменяем кнопку
                 if (vipButton) {
-                    vipButton.innerHTML = '👑<span>Вы ВИП</span>👑';
+                    // ИСПРАВЛЕНИЕ: VIP
+                    vipButton.innerHTML = '👑<span>Вы VIP</span>👑';
                     vipButton.onclick = () => openModal('vip-thanks-modal');
                 }
-                // 2. Показываем выбор тем
                 if (themeSelector) {
                     themeSelector.classList.remove('hidden');
                 }
-                // 3. Обновляем UI (отмены, колбы)
                 updateUndoButtonUI();
                 if (!screens.game.classList.contains('hidden')) {
                     renderTubes();
                 }
-                // 4. Разблокировать уровни
                 if (!screens.levelSelection.classList.contains('hidden')) {
                     renderMenu();
                 }
             } else {
-                 // Скрываем выбор тем, если не VIP
                  if (themeSelector) {
                     themeSelector.classList.add('hidden');
                 }
@@ -989,7 +991,6 @@
             document.documentElement.dataset.theme = themeName;
             gameData.currentTheme = themeName;
             
-            // Обновляем .active класс в селекторе
             document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
             const activeOption = document.getElementById(`theme-${themeName}`);
             if (activeOption) activeOption.classList.add('active');
@@ -1214,10 +1215,12 @@
 
         // --- Game Logic ---
         function onTubeClick(tubeId) {
-            if (isPaused) return;
-
+            // ИСПРАВЛЕНИЕ: Упрощенная проверка на анимацию
             const clickedTubeData = tubes.find(t => t.id === tubeId);
-            if (clickedTubeData.isPlaceholder || clickedTubeData.isAnimating) return;
+            if (!clickedTubeData || clickedTubeData.isPlaceholder || clickedTubeData.isAnimating) return;
+
+            // Если кликаем во время паузы
+            if (isPaused) return;
 
             const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
 
@@ -1239,7 +1242,14 @@
                 if (selectedBallEl) selectedBallEl.classList.remove('selected-ball');
 
                 if (currentSelectedTube.id === clickedTubeData.id) {
-                   return;
+                   return; // Отмена выбора
+                }
+                
+                // Проверяем, не анимируется ли *целевая* колба
+                if (clickedTubeData.isAnimating) {
+                    selectedTube = currentSelectedTube; // Возвращаем выбор
+                    if (selectedBallEl) selectedBallEl.classList.add('selected-ball');
+                    return;
                 }
                 
                 if (canMove(currentSelectedTube, clickedTubeData)) {
@@ -1250,7 +1260,7 @@
         }
 
         function canMove(from, to) {
-            if (!from || !to || from.isAnimating || to.isAnimating) return false;
+            if (!from || !to) return false;
             if (from.balls.length === 0 || to.balls.length === BALL_LAYERS) return false;
             
             const topBall = from.balls[from.balls.length - 1];
@@ -1261,12 +1271,11 @@
             return topBall.color === to.balls[to.balls.length - 1].color;
         }
 
-        // --- ИСПРАВЛЕНИЕ: Логика перемещения 2-3 шаров ---
         function initiateMove(fromTube, toTube) {
             moveCount++;
             updateMoveCount();
             
-            // Считаем, сколько шаров одного цвета сверху (до 3)
+            // ИСПРАВЛЕНИЕ: Считаем до 4 шаров
             let amountToMove = 0;
             const topColor = fromTube.balls[fromTube.balls.length - 1].color;
             for (let i = fromTube.balls.length - 1; i >= 0; i--) {
@@ -1275,10 +1284,9 @@
                 } else {
                     break;
                 }
-                if (amountToMove >= 3) break; // Лимит 3 шара
+                if (amountToMove >= 4) break; // Лимит 4 шара
             }
             
-            // Ограничиваем кол-вом места в новой колбе
             amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
             
             const ballsToMove = fromTube.balls.splice(fromTube.balls.length - amountToMove);
@@ -1289,10 +1297,10 @@
             
             toTube.balls.push(...ballsToMove);
 
-            // Анимация по-прежнему показывает 1 шар, но перемещает в данных 1-3
             animateMove(fromTube, toTube, ballsToMove);
         }
         
+        // --- ИСПРАВЛЕНИЕ: Анимация нескольких шаров ---
         async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
@@ -1301,67 +1309,78 @@
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             
-            // Нам нужен ОДИН шар для анимации
-            const ballEl = document.createElement('div');
-            ballEl.className = 'ball';
-            ballEl.style.backgroundColor = ballsToMove[0].color;
-            
+            const flyingBalls = [];
             const fromRect = fromEl.getBoundingClientRect();
-            ballEl.style.width = `${fromRect.width - 4}px`; // 4px = padding*2
-            
-            ballEl.style.boxShadow = 'inset 0 -5px 10px rgba(0,0,0,0.3), inset 0 3px 3px rgba(255,255,255,0.4), 0 10px 25px var(--primary-shadow)';
-
             const toRect = toEl.getBoundingClientRect();
+            const ballWidth = fromRect.width - 4; // 4px = padding*2
             const xTarget = toRect.left + 2; // 2px = padding
-            const yHover = toRect.top - (ballEl.offsetWidth * 0.5); 
-            
-            // Удаляем шары из DOM донора
-            for(let i=0; i<ballsToMove.length; i++) {
+            const yHover = toRect.top - (ballWidth * 0.5); 
+
+            // 1. Удаляем шары из DOM донора и создаем летящие
+            for (let i = 0; i < ballsToMove.length; i++) {
                 if (fromEl.querySelector('.ball:last-child')) {
                      fromEl.querySelector('.ball:last-child').remove();
                 }
+                
+                const ballEl = document.createElement('div');
+                ballEl.className = 'ball';
+                ballEl.style.backgroundColor = ballsToMove[i].color;
+                ballEl.style.width = `${ballWidth}px`;
+                ballEl.style.boxShadow = 'inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow)';
+                ballEl.style.position = 'absolute';
+                // Складываем их стопкой вверху колбы
+                ballEl.style.left = `${fromRect.left + 2}px`;
+                ballEl.style.top = `${fromRect.top + 2 - (i * (ballWidth * 0.3))}px`; // Слегка смещаем
+                ballEl.style.zIndex = 100 - i;
+                // ИСПРАВЛЕНИЕ: Ускоренная анимация
+                ballEl.style.transition = `all 0.25s cubic-bezier(0.5, 0, 0.3, 1.2)`; 
+                document.body.appendChild(ballEl);
+                flyingBalls.push(ballEl);
             }
 
-            document.body.appendChild(ballEl);
-            ballEl.style.position = 'absolute';
-            ballEl.style.left = `${fromRect.left + 2}px`;
-            ballEl.style.top = `${fromRect.top + 2}px`;
-            ballEl.style.zIndex = 100;
-            ballEl.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 0.3, 1.2)';
-            
-            // 1. Анимация *вверх* и *вбок*
+            // 2. Анимация *вверх* и *вбок*
             requestAnimationFrame(() => {
-                ballEl.style.transform = 'scale(1.05)';
-                ballEl.style.left = `${xTarget}px`;
-                ballEl.style.top = `${yHover}px`;
+                flyingBalls.forEach((ballEl, i) => {
+                    ballEl.style.transform = 'scale(1.05)';
+                    ballEl.style.left = `${xTarget}px`;
+                    ballEl.style.top = `${yHover - (i * (ballWidth * 0.3))}px`;
+                    ballEl.style.transitionDelay = `${i * 0.05}s`; // Задержка для "лесенки"
+                });
             });
             
-            await wait(350); 
+            // Ждем, пока последний шар долетит
+            await wait(250 + (ballsToMove.length * 50)); 
 
-            // 2. Анимация *падения*
-            ballEl.remove(); 
-            renderTubes(); // Сразу рендерим правильное состояние
+            // 3. Анимация *падения*
+            flyingBalls.forEach(ballEl => ballEl.remove()); 
+            renderTubes(); // Рендерим финальное состояние
 
             const newToEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             const newBalls = Array.from(newToEl.querySelectorAll('.ball')).slice(-ballsToMove.length);
 
             if (newBalls.length > 0) {
+                const newBallHeight = newBalls[0].offsetHeight;
                 const startY = yHover - newBalls[0].getBoundingClientRect().top;
                 
                 newBalls.forEach((nb, i) => {
                     nb.style.transition = 'none';
-                    nb.style.transform = `translateY(${startY - (nb.offsetHeight * i)}px)`;
+                    // Располагаем их "лесенкой" над колбой
+                    const yOffset = (newBalls.length - 1 - i) * (newBallHeight * 0.3);
+                    nb.style.transform = `translateY(${startY - yOffset}px)`;
                 });
                 
-                newBalls[0].getBoundingClientRect(); 
+                newBalls[0].getBoundingClientRect(); // Force reflow
 
                 newBalls.forEach((nb, i) => {
-                    nb.style.transition = 'transform 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; // "EaseInBack"
+                    // ИСПРАВЛЕНИЕ: Ускоренная анимация
+                    nb.style.transition = 'transform 0.2s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; 
+                    nb.style.transitionDelay = `${i * 0.05}s`; // Падают "лесенкой"
                     nb.style.transform = 'translateY(0)';
                 });
                 
                 audioManager.playSound('drop'); 
-                await wait(300);
+                await wait(200 + (ballsToMove.length * 50)); // Ждем падения
+                
                 newBalls.forEach(nb => {
                     nb.style.transition = 'transform 0.2s ease-out'; 
                     nb.style.transform = '';
