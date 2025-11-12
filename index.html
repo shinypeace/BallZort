@@ -506,14 +506,7 @@
         </div>
     </div>
     
-    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО: Сообщение после покупки -->
-    <div id="purchase-info-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content w-full max-w-sm p-8 rounded-2xl shadow-lg text-center">
-            <h2 class="text-2xl font-bold" style="color: var(--primary-color);">Спасибо!</h2>
-            <p class="text-lg mt-4 mb-6">Ваш VIP-статус будет активирован в течение минуты. Пожалуйста, перезапустите игру.</p>
-            <button onclick="closeModal('purchase-info-modal')" class="main-menu-button secondary-button w-full">ОК</button>
-        </div>
-    </div>
+    <!-- УДАЛЕНО: purchase-info-modal -->
     
     <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
@@ -527,7 +520,7 @@
                 <li>Бесконечные отмены ходов</li>
                 <li>Бесконечные доп. колбы</li>
                 <li>Доступ к эксклюзивным темам</li>
-            <!-- ИСПРАВЛЕНИЕ: Добавлен недостающий закрывающий тег -->
+            </ul> <!-- ИСПРАВЛЕНИЕ: Добавлен недостающий закрывающий тег -->
             <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
         </div>
     </div>
@@ -924,8 +917,8 @@
                 console.warn("Could not get VK User ID.", error);
                 vkUserId = 'test_user';
             }
-            await loadGameData();
-            setTheme(gameData.currentTheme, false); // Устанавливаем тему без сохранения
+            await loadGameData(); // Загрузит isVip из VK Storage
+            setTheme(gameData.currentTheme, false); 
             renderOtherGames(); 
             audioManager.toggleMusicMute(gameData.isMusicMuted); 
             audioManager.toggleSfxMute(gameData.isSfxMuted); 
@@ -985,38 +978,33 @@
             saveGameData();
         }
 
-        // --- НОВЫЕ ФУНКЦИИ: VIP и Темы ---
-        
-        // ЭТО РЕАЛИЗАЦИЯ (НЕ СИМУЛЯЦИЯ)
+        // --- ИЗМЕНЕНИЕ: Небезопасная покупка (как вы просили) ---
         async function activateVip() {
-            // Показываем окно обработки, чтобы избежать двойных нажатий
             openModal('processing-modal');
             
             try {
-                // --- Шаг 1: Вызов окна покупки VK ---
                 const data = await vkBridge.send('VKWebAppShowOrderBox', {
                     type: 'item',
                     item: 'vip_access_1' // ID товара из настроек VK
                 });
 
-                // --- Шаг 2: Обработка ответа от VK Bridge ---
                 if (data.status === 'ok') {
-                    // Пользователь закрыл окно.
-                    // Мы НЕ выдаем VIP. Мы просто ждем.
-                    // Наш сервер (payment_handler.js) получит callback,
-                    // запишет в базу данных.
-                    // Игрок увидит VIP при следующей перезагрузке игры
-                    // (когда `loadGameData` его загрузит).
+                    // ВНИМАНИЕ! НЕБЕЗОПАСНО!
+                    // Выдаем VIP сразу, доверяя ответу клиента.
+                    
+                    gameData.isVip = true;
+                    await saveGameData(); // Сохраняем VIP-статус в VK Storage
+                    applyVipStatus(true); // Применяем VIP-эффекты
+                    
                     closeModal('processing-modal');
-                    // Показываем сообщение с инструкцией (alert() не работает)
-                    openModal('purchase-info-modal');
+                    openModal('vip-thanks-modal'); // Показываем окно благодарности
+                    
                 } else {
                     // data.status === 'cancel' или другая ошибка
                     console.log('Покупка отменена или не удалась (статус окна)');
                     closeModal('processing-modal');
                 }
             } catch (error) {
-                // Пользователь закрыл окно или произошла ошибка
                 console.error('Ошибка VKWebAppShowOrderBox:', error);
                 closeModal('processing-modal');
             }
@@ -1192,9 +1180,8 @@
                 
                 const prospectiveTubeWidth = cellWidth * 0.7; // 70% ширины ячейки
                 
-                // ИСПРАВЛЕНИЕ: Точный расчет высоты (H = 4W - 8)
-                // W = prospectiveTubeWidth
-                // BallHeight = W - 4px (padding L/R 2px)
+                // ИСПРАВЛЕНИЕ: Точный расчет высоты
+                // BallHeight = (W - 4px padding)
                 // TotalBallHeight = 4 * (W - 4) = 4W - 16
                 // TotalMargin = 4 * 1px = 4 (4 отступа)
                 // TotalPadding = 2 * 2px = 4 (padding T/B)
@@ -1212,6 +1199,12 @@
                  bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
             }
             
+            // ИСПРАВЛЕНИЕ: Ограничение колонок для "Невозможного"
+            if (tubeCount > 18 && bestLayout.cols > 7) {
+                 bestLayout.cols = 7;
+                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
+            }
+
             const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
             const finalTubeHeight = bestLayout.tubeHeight;
             const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; // 15% margin L/R
@@ -1567,40 +1560,22 @@
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
             try {
+                // Сохраняем ВСЕ, включая isVip
                 await vkBridge.send('VKWebAppStorageSet', { key: storageKey, value: JSON.stringify(gameData) });
             } catch (error) {
                 localStorage.setItem(storageKey, JSON.stringify(gameData));
             }
         }
 
-        // ЭТО РЕАЛИЗАЦИЯ (НЕ СИМУЛЯЦИЯ)
+        // ИЗМЕНЕНИЕ: Загрузка из VK Storage (небезопасно)
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
-            let loadedData = null; // Для музыки, звуков, статистики
+            let loadedData = null; 
             
-            // --- 1. Загружаем VIP статус с *НАШЕГО* сервера ---
-            let isVipFromServer = false;
-            try {
-                // *** ЗАМЕНИТЕ ЭТОТ URL НА АДРЕС ВАШЕГО СЕРВЕРА ***
-                const response = await fetch(`https://your-server.com/get-vip-status?user_id=${vkUserId}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Server error: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                if (data.isVip) {
-                    isVipFromServer = true;
-                }
-            } catch (e) {
-                console.error("Не удалось проверить VIP статус:", e);
-                // (Если сервер упал, играем без VIP)
-            }
-            
-            gameData.isVip = isVipFromServer; // <--- УСТАНОВКА VIP С СЕРВERA
+            // --- УБРАНА ПРОВЕРКА С СЕРВЕРА ---
 
-            // --- 2. Загружаем остальное (Настройки, Статистика) из VK Storage ---
+            // --- Загружаем ВСЕ из VK Storage ---
             try {
                 const response = await vkBridge.send('VKWebAppStorageGet', { keys: [storageKey] });
                 if (response.keys[0]?.value) loadedData = JSON.parse(response.keys[0].value);
@@ -1614,7 +1589,7 @@
             if (loadedData) {
                 gameData.isMusicMuted = loadedData.isMusicMuted ?? false;
                 gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
-                // gameData.isVip = loadedData.isVip ?? false; // <-- БЕЗОПАСНО УДАЛЕНО
+                gameData.isVip = loadedData.isVip ?? false; // <-- ВОЗВРАЩЕНО
                 gameData.currentTheme = loadedData.currentTheme || 'blue';
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
@@ -1629,11 +1604,13 @@
                             newStats.mystery.gamesPlayed = {...newStats.mystery.gamesPlayed, ...loadedData.stats.mystery.gamesPlayed};
                         }
                     } else {
+                        // Миграция со старой структуры
                         newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.bestTime};
                         newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.gamesPlayed};
                     }
                 }
                 
+                // Исправляем null -> Infinity
                 ['classic', 'mystery'].forEach(mode => {
                     Object.keys(newStats[mode].bestTime).forEach(diff => {
                         if (newStats[mode].bestTime[diff] === null) {
@@ -1644,6 +1621,7 @@
                 
                 gameData.stats = newStats;
             }
+            // --- КОНЕЦ ЛОГИКИ ЗАГРУЗКИ ---
         }
 
         function updateStatsDisplay() {
