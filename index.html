@@ -506,6 +506,15 @@
         </div>
     </div>
     
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО: Сообщение после покупки -->
+    <div id="purchase-info-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-8 rounded-2xl shadow-lg text-center">
+            <h2 class="text-2xl font-bold" style="color: var(--primary-color);">Спасибо!</h2>
+            <p class="text-lg mt-4 mb-6">Ваш VIP-статус будет активирован в течение минуты. Пожалуйста, перезапустите игру.</p>
+            <button onclick="closeModal('purchase-info-modal')" class="main-menu-button secondary-button w-full">ОК</button>
+        </div>
+    </div>
+    
     <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
             <!-- ИСПРАВЛЕНИЕ: VIP -->
@@ -518,8 +527,8 @@
                 <li>Бесконечные отмены ходов</li>
                 <li>Бесконечные доп. колбы</li>
                 <li>Доступ к эксклюзивным темам</li>
-            <button id="purchase-vip-btn" class="main-menu-button vip-button w-full">20 голосов</button>
-            <button onclick="closeModal('vip-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
+            <!-- ИСПРАВЛЕНИЕ: Добавлен недостающий закрывающий тег -->
+            <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
         </div>
     </div>
 
@@ -977,35 +986,30 @@
         }
 
         // --- НОВЫЕ ФУНКЦИИ: VIP и Темы ---
+        
+        // ЭТО РЕАЛИЗАЦИЯ (НЕ СИМУЛЯЦИЯ)
         async function activateVip() {
             // Показываем окно обработки, чтобы избежать двойных нажатий
             openModal('processing-modal');
             
             try {
                 // --- Шаг 1: Вызов окна покупки VK ---
-                // 'vip_access_1' - это ID товара (item), который вы должны создать
-                // в настройках вашего приложения VK (Управление -> Приложение -> Платежи -> Товары)
                 const data = await vkBridge.send('VKWebAppShowOrderBox', {
                     type: 'item',
-                    item: 'vip_access_1' // Убедитесь, что этот товар создан!
+                    item: 'vip_access_1' // ID товара из настроек VK
                 });
 
                 // --- Шаг 2: Обработка ответа от VK Bridge ---
                 if (data.status === 'ok') {
-                    // ВНИМАНИЕ! НЕБЕЗОПАСНО!
-                    // Это означает только, что пользователь закрыл окно,
-                    // А НЕ то, что он успешно оплатил.
-                    // В реальном приложении здесь НЕЛЬЗЯ выдавать VIP.
-                    // VIP должен выдаваться вашим СЕРВЕРОМ после получения
-                    // и проверки callback-уведомления от VK.
-                    
-                    // --- Шаг 3: Симуляция покупки (ТОЛЬКО ДЛЯ ТЕСТА) ---
-                    // Мы *симулируем* успешную покупку
-                    gameData.isVip = true;
-                    saveGameData();
-                    applyVipStatus(true);
+                    // Пользователь закрыл окно.
+                    // Мы НЕ выдаем VIP. Мы просто ждем.
+                    // Наш сервер (payment_handler.js) получит callback,
+                    // запишет в базу данных.
+                    // Игрок увидит VIP при следующей перезагрузке игры
+                    // (когда `loadGameData` его загрузит).
                     closeModal('processing-modal');
-                    openModal('vip-thanks-modal'); // Показываем окно благодарности
+                    // Показываем сообщение с инструкцией (alert() не работает)
+                    openModal('purchase-info-modal');
                 } else {
                     // data.status === 'cancel' или другая ошибка
                     console.log('Покупка отменена или не удалась (статус окна)');
@@ -1569,10 +1573,34 @@
             }
         }
 
+        // ЭТО РЕАЛИЗАЦИЯ (НЕ СИМУЛЯЦИЯ)
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
-            let loadedData = null;
+            let loadedData = null; // Для музыки, звуков, статистики
+            
+            // --- 1. Загружаем VIP статус с *НАШЕГО* сервера ---
+            let isVipFromServer = false;
+            try {
+                // *** ЗАМЕНИТЕ ЭТОТ URL НА АДРЕС ВАШЕГО СЕРВЕРА ***
+                const response = await fetch(`https://your-server.com/get-vip-status?user_id=${vkUserId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                if (data.isVip) {
+                    isVipFromServer = true;
+                }
+            } catch (e) {
+                console.error("Не удалось проверить VIP статус:", e);
+                // (Если сервер упал, играем без VIP)
+            }
+            
+            gameData.isVip = isVipFromServer; // <--- УСТАНОВКА VIP С СЕРВERA
+
+            // --- 2. Загружаем остальное (Настройки, Статистика) из VK Storage ---
             try {
                 const response = await vkBridge.send('VKWebAppStorageGet', { keys: [storageKey] });
                 if (response.keys[0]?.value) loadedData = JSON.parse(response.keys[0].value);
@@ -1586,8 +1614,8 @@
             if (loadedData) {
                 gameData.isMusicMuted = loadedData.isMusicMuted ?? false;
                 gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
-                gameData.isVip = loadedData.isVip ?? false;
-                gameData.currentTheme = loadedData.currentTheme || 'blue'; // Загружаем тему
+                // gameData.isVip = loadedData.isVip ?? false; // <-- БЕЗОПАСНО УДАЛЕНО
+                gameData.currentTheme = loadedData.currentTheme || 'blue';
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
                 if (loadedData.stats) {
