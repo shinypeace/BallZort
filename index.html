@@ -381,6 +381,22 @@
             left: 0;
             top: 0;
         }
+        
+        /* НОВЫЙ СТИЛЬ: Модальное окно обработки */
+        .processing-spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--tube-border-color);
+            border-bottom-color: var(--primary-color);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="flex items-center justify-center h-screen select-none">
@@ -481,6 +497,15 @@
         </div>
     </div>
     
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО: Обработка платежа -->
+    <div id="processing-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-8 rounded-2xl shadow-lg text-center">
+            <div class="processing-spinner mb-4"></div>
+            <h2 class="text-2xl font-bold" style="color: var(--primary-color);">Обработка...</h2>
+            <p class="text-lg">Пожалуйста, подождите</p>
+        </div>
+    </div>
+    
     <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
             <!-- ИСПРАВЛЕНИЕ: VIP -->
@@ -493,8 +518,8 @@
                 <li>Бесконечные отмены ходов</li>
                 <li>Бесконечные доп. колбы</li>
                 <li>Доступ к эксклюзивным темам</li>
-            </ul>
-            <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
+            <button id="purchase-vip-btn" class="main-menu-button vip-button w-full">20 голосов</button>
+            <button onclick="closeModal('vip-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
         </div>
     </div>
 
@@ -952,12 +977,45 @@
         }
 
         // --- НОВЫЕ ФУНКЦИИ: VIP и Темы ---
-        function activateVip() {
-            gameData.isVip = true;
-            saveGameData();
-            closeModal('vip-modal');
-            applyVipStatus(true);
-            openModal('vip-thanks-modal');
+        async function activateVip() {
+            // Показываем окно обработки, чтобы избежать двойных нажатий
+            openModal('processing-modal');
+            
+            try {
+                // --- Шаг 1: Вызов окна покупки VK ---
+                // 'vip_access_1' - это ID товара (item), который вы должны создать
+                // в настройках вашего приложения VK (Управление -> Приложение -> Платежи -> Товары)
+                const data = await vkBridge.send('VKWebAppShowOrderBox', {
+                    type: 'item',
+                    item: 'vip_access_1' // Убедитесь, что этот товар создан!
+                });
+
+                // --- Шаг 2: Обработка ответа от VK Bridge ---
+                if (data.status === 'ok') {
+                    // ВНИМАНИЕ! НЕБЕЗОПАСНО!
+                    // Это означает только, что пользователь закрыл окно,
+                    // А НЕ то, что он успешно оплатил.
+                    // В реальном приложении здесь НЕЛЬЗЯ выдавать VIP.
+                    // VIP должен выдаваться вашим СЕРВЕРОМ после получения
+                    // и проверки callback-уведомления от VK.
+                    
+                    // --- Шаг 3: Симуляция покупки (ТОЛЬКО ДЛЯ ТЕСТА) ---
+                    // Мы *симулируем* успешную покупку
+                    gameData.isVip = true;
+                    saveGameData();
+                    applyVipStatus(true);
+                    closeModal('processing-modal');
+                    openModal('vip-thanks-modal'); // Показываем окно благодарности
+                } else {
+                    // data.status === 'cancel' или другая ошибка
+                    console.log('Покупка отменена или не удалась (статус окна)');
+                    closeModal('processing-modal');
+                }
+            } catch (error) {
+                // Пользователь закрыл окно или произошла ошибка
+                console.error('Ошибка VKWebAppShowOrderBox:', error);
+                closeModal('processing-modal');
+            }
         }
 
         function applyVipStatus(isVip) {
