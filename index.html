@@ -978,37 +978,82 @@
             saveGameData();
         }
 
-        // --- ИЗМЕНЕНИЕ: Небезопасная покупка (как вы просили) ---
+        // --- ИЗМЕНЕНИЕ: Безопасная покупка (Сервер-сайд) ---
+        let vipPoller = null; // Переменная для хранения таймера опроса
+
         async function activateVip() {
-            openModal('processing-modal');
+            // Сразу показываем модалку "Обработка"
+            openModal('processing-modal'); 
             
             try {
+                // 1. Показываем окно покупки
                 const data = await vkBridge.send('VKWebAppShowOrderBox', {
                     type: 'item',
                     item: 'vip_access_1' // ID товара из настроек VK
                 });
 
+                // 2. Окно было показано и закрыто (неважно, оплатил или нет)
                 if (data.status === 'ok') {
-                    // ВНИМАНИЕ! НЕБЕЗОПАСНО!
-                    // Выдаем VIP сразу, доверяя ответу клиента.
-                    
-                    gameData.isVip = true;
-                    await saveGameData(); // Сохраняем VIP-статус в VK Storage
-                    applyVipStatus(true); // Применяем VIP-эффекты
-                    
-                    closeModal('processing-modal');
-                    openModal('vip-thanks-modal'); // Показываем окно благодарности
-                    
+                    // Начинаем опрашивать сервер, не изменился ли наш VIP-статус
+                    // Сервер узнает об этом от VK через колбэк и обновит VK Storage
+                    console.log('VKWebAppShowOrderBox closed, starting VIP status polling...');
+                    startVipPolling();
                 } else {
-                    // data.status === 'cancel' или другая ошибка
-                    console.log('Покупка отменена или не удалась (статус окна)');
+                    // Пользователь нажал "Отмена" в окне (data.status === 'cancel')
+                    console.log('VKWebAppShowOrderBox cancelled.');
                     closeModal('processing-modal');
+                    if (vipPoller) clearInterval(vipPoller); // Останавливаем опрос, если он был
                 }
             } catch (error) {
+                // Ошибка (например, товар не найден в админке VK)
                 console.error('Ошибка VKWebAppShowOrderBox:', error);
                 closeModal('processing-modal');
+                if (vipPoller) clearInterval(vipPoller);
+                // Тут можно показать модалку с ошибкой, если нужно
             }
         }
+
+        /**
+         * Запускает опрос VK Storage, ожидая, пока сервер обновит isVip.
+         */
+        function startVipPolling() {
+            // Опрашиваем в течение 2 минут (40 * 3000ms = 120s)
+            let pollCount = 0;
+            const maxPolls = 40;
+            
+            if (vipPoller) clearInterval(vipPoller); // Очищаем старый таймер, если есть
+
+            vipPoller = setInterval(async () => {
+                console.log(`Polling for VIP status... (Attempt ${pollCount + 1}/${maxPolls})`);
+                
+                // 3. Перезагружаем все данные из VK Storage
+                await loadGameData(); 
+                
+                pollCount++;
+
+                // 4. Проверяем, появился ли VIP-статус
+                if (gameData.isVip) {
+                    // УСПЕХ! Сервер обновил наши данные.
+                    console.log('VIP status confirmed!');
+                    clearInterval(vipPoller);
+                    vipPoller = null;
+                    
+                    closeModal('processing-modal');
+                    openModal('vip-thanks-modal');
+                    applyVipStatus(true); // Применяем VIP-статус на клиенте
+                } else if (pollCount >= maxPolls) {
+                    // ТАЙМАУТ. Сервер не ответил за 2 минуты.
+                    console.log('VIP polling timed out.');
+                    clearInterval(vipPoller);
+                    vipPoller = null;
+                    closeModal('processing-modal');
+                    // Тут можно показать модалку "Платеж еще обрабатывается,
+                    // попробуйте перезапустить игру через минуту".
+                }
+                // Если не то и не другое - просто ждем следующего опроса
+            }, 3000); // Проверяем каждые 3 секунды
+        }
+
 
         function applyVipStatus(isVip) {
             const vipButton = document.getElementById('vip-mode-btn');
@@ -1566,8 +1611,8 @@
                 localStorage.setItem(storageKey, JSON.stringify(gameData));
             }
         }
-
-        // ИЗМЕНЕНИЕ: Загрузка из VK Storage (небезопасно)
+        
+        // ИЗМЕНЕНИЕ: Загрузка из VK Storage (теперь безопасна, т.к. пишет в нее сервер)
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
