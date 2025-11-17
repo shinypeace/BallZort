@@ -207,7 +207,7 @@
             border-radius: 50%;
             margin-top: 1px; 
             flex-shrink: 0;
-            /* ИСПРАВЛЕНИЕ: ЕЩЕ более глянцевый/объемный шар */
+            /* Глянцевый/объемный шар */
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.2s ease-out; 
             display: flex;
@@ -228,7 +228,6 @@
         
         .ball.selected-ball {
             transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1);
-            /* ИСПРАВЛЕНИЕ: Глянцевый стиль + тень при подпрыгивании */
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow);
             z-index: 100;
         }
@@ -382,7 +381,7 @@
             top: 0;
         }
         
-        /* НОВЫЙ СТИЛЬ: Модальное окно обработки */
+        /* Модальное окно обработки */
         .processing-spinner {
             width: 48px;
             height: 48px;
@@ -480,7 +479,6 @@
     
     <div id="vip-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
-            <!-- ИСПРАВЛЕНИЕ: VIP -->
             <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 VIP Доступ 👑</h2>
             <ul class="vip-list text-left">
                 <li>Без рекламы</li>
@@ -497,7 +495,7 @@
         </div>
     </div>
     
-    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО: Обработка платежа -->
+    <!-- Модальное окно: Обработка платежа -->
     <div id="processing-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-8 rounded-2xl shadow-lg text-center">
             <div class="processing-spinner mb-4"></div>
@@ -506,21 +504,17 @@
         </div>
     </div>
     
-    <!-- УДАЛЕНО: purchase-info-modal -->
-    
     <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
-            <!-- ИСПРАВЛЕНИЕ: VIP -->
             <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 Вы VIP 👑</h2>
             <p class="text-center text-lg mb-4">Спасибо за вашу поддержку!</p>
-            <!-- ИСПРАВЛЕНИЕ: Добавлен список бонусов -->
             <ul class="vip-list text-left text-sm">
                 <li>Без рекламы</li>
                 <li>Все уровни открыты</li>
                 <li>Бесконечные отмены ходов</li>
                 <li>Бесконечные доп. колбы</li>
                 <li>Доступ к эксклюзивным темам</li>
-            </ul> <!-- ИСПРАВЛЕНИЕ: Добавлен недостающий закрывающий тег -->
+            </ul>
             <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
         </div>
     </div>
@@ -566,7 +560,6 @@
             <div id="theme-selector-container" class="hidden">
                 <h3 class="text-lg font-medium text-center mt-6 mb-4">Темы</h3>
                 <div class="theme-selector">
-                    <!-- ИСПРАВЛЕНИЕ: class_name -> class -->
                     <div class="theme-option active" id="theme-blue">
                         <div id="theme-preview-blue" class="theme-preview"></div>
                         <span class="text-sm">Синяя</span>
@@ -692,14 +685,13 @@
         let gameData = {
             isMusicMuted: false, 
             isSfxMuted: false, 
-            isVip: false,
+            isVip: false, // <-- VIP СТАТУС ХРАНИТСЯ ЗДЕСЬ
             currentTheme: 'blue', 
             levelsCompletedSinceAd: 0,
             stats: defaultStats()
         };
 
         // --- Config ---
-        // ИСПРАВЛЕНИЕ: Новые цвета (убраны похожие)
         const COLORS = [
             "#d90429", // Red
             "#f77f00", // Orange
@@ -727,7 +719,7 @@
             impossible: { name: 'Невозможно', tubes: 24, empty: 2, colors: 11, doubleColors: true }
         };
         
-        // --- ИСПРАВЛЕНИЕ: Audio Manager ---
+        // --- Audio Manager ---
         const audioManager = {
             dropSynth: null, 
             winSynth: null,
@@ -736,33 +728,24 @@
             isReady: false,
 
             init() {
-                // Звук "падения" шара
                 this.dropSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.02,
-                    octaves: 3,
-                    oscillator: { type: "sine" },
+                    pitchDecay: 0.02, octaves: 3, oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.3, sustain: 0.01, release: 0.2 }
                 }).toDestination();
                 this.dropSynth.volume.value = -10;
 
-                // Звук "выбора" шара
                 this.selectSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.01,
-                    octaves: 4,
-                    oscillator: { type: "sine" },
+                    pitchDecay: 0.01, octaves: 4, oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 }
                 }).toDestination();
                 this.selectSynth.volume.value = -12;
 
-                // ИСПРАВЛЕНИЕ: Звук "тапа" (короткий "клик")
                 this.tapSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.005,
-                    octaves: 2,
+                    pitchDecay: 0.005, octaves: 2,
                     envelope: { attack: 0.001, decay: 0.1, release: 0.01 }
                 }).toDestination();
                 this.tapSynth.volume.value = -15;
 
-                // Звук "победы"
                 this.winSynth = new Tone.PolySynth(Tone.Synth, {
                      oscillator: { type: 'triangle8' },
                      envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 }
@@ -776,15 +759,9 @@
                 if (!this.isReady || gameData.isSfxMuted) return;
                 try {
                     const now = Tone.now();
-                    if (sound === 'drop') { 
-                        this.dropSynth.triggerAttackRelease("C3", "8n", now);
-                    }
-                    if (sound === 'select') { 
-                        this.selectSynth.triggerAttackRelease("C4", "8n", now);
-                    }
-                     if (sound === 'tap') { 
-                        this.tapSynth.triggerAttackRelease("C3", "8n", now);
-                    }
+                    if (sound === 'drop') { this.dropSynth.triggerAttackRelease("C3", "8n", now); }
+                    if (sound === 'select') { this.selectSynth.triggerAttackRelease("C4", "8n", now); }
+                    if (sound === 'tap') { this.tapSynth.triggerAttackRelease("C3", "8n", now); }
                     if (sound === 'win') {
                         const notes = ['C4', 'E4', 'G4', 'C5', 'E5', 'G5'];
                         notes.forEach((note, i) => {
@@ -804,20 +781,14 @@
                 } else {
                     bgMusic.play().catch(e => {});
                 }
-
-                if(typeof forceState === 'undefined') {
-                    saveGameData();
-                }
+                if(typeof forceState === 'undefined') { saveGameData(); }
             },
             
             toggleSfxMute(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isSfxMuted;
                 gameData.isSfxMuted = newState;
                 sfxToggle.checked = !newState; 
-
-                if(typeof forceState === 'undefined') {
-                    saveGameData();
-                }
+                if(typeof forceState === 'undefined') { saveGameData(); }
             }
         };
 
@@ -827,7 +798,8 @@
             
             bgMusic.volume = 0.3; 
             
-            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button');
+            // --- ДОБАВЛЕНИЕ ЗВУКА НА ВСЕ КНОПКИ ---
+            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button, .theme-option');
             allButtons.forEach(btn => {
                 btn.addEventListener('click', () => audioManager.playSound('tap'));
             });
@@ -837,6 +809,8 @@
             document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
             document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
             document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
+            
+            // --- ИЗМЕНЕНИЕ: ЛОГИКА VIP КНОПКИ ---
             document.getElementById('vip-mode-btn').addEventListener('click', () => {
                 if (gameData.isVip) {
                     openModal('vip-thanks-modal');
@@ -844,7 +818,7 @@
                     openModal('vip-modal');
                 }
             });
-            document.getElementById('purchase-vip-btn').addEventListener('click', activateVip);
+            document.getElementById('purchase-vip-btn').addEventListener('click', activateVip); // <-- ВЫЗОВ ПОКУПКИ
 
             document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
 
@@ -870,6 +844,7 @@
                 if (gameEl) vkBridge.send('VKWebAppOpenApp', { app_id: parseInt(gameEl.dataset.appId) });
             });
             
+            // Табы статистики
             document.querySelector('.stats-tabs').addEventListener('click', e => {
                 if (e.target.classList.contains('stats-tab')) {
                     const tabName = e.target.dataset.tab;
@@ -881,6 +856,7 @@
                 }
             });
             
+            // Запуск аудио
             document.body.addEventListener('click', async () => {
                  if (!audioManager.isReady) {
                     await Tone.start();
@@ -917,12 +893,18 @@
                 console.warn("Could not get VK User ID.", error);
                 vkUserId = 'test_user';
             }
-            await loadGameData(); // Загрузит isVip из VK Storage
+            
+            // --- ИЗМЕНЕНИЕ: ЗАГРУЗКА VIP ИЗ ХРАНИЛИЩА VK ---
+            await loadGameData(); 
+            
             setTheme(gameData.currentTheme, false); 
             renderOtherGames(); 
             audioManager.toggleMusicMute(gameData.isMusicMuted); 
             audioManager.toggleSfxMute(gameData.isSfxMuted); 
+            
+            // --- ПРИМЕНЕНИЕ СТАТУСА ПРИ ЗАГРУЗКЕ ---
             applyVipStatus(gameData.isVip); 
+            
             showScreen('mainMenu');
         }
 
@@ -938,6 +920,7 @@
             if (screenName === 'game') {
                 requestAnimationFrame(() => adjustTubeSize(tubes.length));
             }
+            // Баннеры показываем всегда
             vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e => {});
         }
 
@@ -949,6 +932,7 @@
         }
 
         async function showRewardedAd() {
+            // --- Если VIP, рекламу не показываем ---
             if (gameData.isVip) return true; 
 
             try {
@@ -963,6 +947,7 @@
         }
 
         async function showInterstitialAd() {
+            // --- Если VIP, рекламу не показываем ---
             if (gameData.isVip) return; 
 
             gameData.levelsCompletedSinceAd++;
@@ -978,82 +963,40 @@
             saveGameData();
         }
 
-        // --- ИЗМЕНЕНИЕ: Безопасная покупка (Сервер-сайд) ---
-        let vipPoller = null; // Переменная для хранения таймера опроса
-
+        // --- ИЗМЕНЕНИЕ: Небезопасная покупка (как вы просили) ---
         async function activateVip() {
-            // Сразу показываем модалку "Обработка"
-            openModal('processing-modal'); 
+            openModal('processing-modal');
             
             try {
-                // 1. Показываем окно покупки
+                // --- Шаг 1: Вызов окна покупки VK ---
                 const data = await vkBridge.send('VKWebAppShowOrderBox', {
                     type: 'item',
                     item: 'vip_access_1' // ID товара из настроек VK
                 });
 
-                // 2. Окно было показано и закрыто (неважно, оплатил или нет)
+                // --- Шаг 2: Обработка ответа от VK Bridge (НЕБЕЗОПАСНО) ---
                 if (data.status === 'ok') {
-                    // Начинаем опрашивать сервер, не изменился ли наш VIP-статус
-                    // Сервер узнает об этом от VK через колбэк и обновит VK Storage
-                    console.log('VKWebAppShowOrderBox closed, starting VIP status polling...');
-                    startVipPolling();
-                } else {
-                    // Пользователь нажал "Отмена" в окне (data.status === 'cancel')
-                    console.log('VKWebAppShowOrderBox cancelled.');
-                    closeModal('processing-modal');
-                    if (vipPoller) clearInterval(vipPoller); // Останавливаем опрос, если он был
-                }
-            } catch (error) {
-                // Ошибка (например, товар не найден в админке VK)
-                console.error('Ошибка VKWebAppShowOrderBox:', error);
-                closeModal('processing-modal');
-                if (vipPoller) clearInterval(vipPoller);
-                // Тут можно показать модалку с ошибкой, если нужно
-            }
-        }
-
-        /**
-         * Запускает опрос VK Storage, ожидая, пока сервер обновит isVip.
-         */
-        function startVipPolling() {
-            // Опрашиваем в течение 2 минут (40 * 3000ms = 120s)
-            let pollCount = 0;
-            const maxPolls = 40;
-            
-            if (vipPoller) clearInterval(vipPoller); // Очищаем старый таймер, если есть
-
-            vipPoller = setInterval(async () => {
-                console.log(`Polling for VIP status... (Attempt ${pollCount + 1}/${maxPolls})`);
-                
-                // 3. Перезагружаем все данные из VK Storage
-                await loadGameData(); 
-                
-                pollCount++;
-
-                // 4. Проверяем, появился ли VIP-статус
-                if (gameData.isVip) {
-                    // УСПЕХ! Сервер обновил наши данные.
-                    console.log('VIP status confirmed!');
-                    clearInterval(vipPoller);
-                    vipPoller = null;
+                    // ВНИМАНИЕ! НЕБЕЗОПАСНО!
+                    // Выдаем VIP сразу, доверяя ответу клиента.
+                    
+                    gameData.isVip = true;
+                    await saveGameData(); // Сохраняем VIP-статус в VK Storage
+                    applyVipStatus(true); // Применяем VIP-эффекты
                     
                     closeModal('processing-modal');
-                    openModal('vip-thanks-modal');
-                    applyVipStatus(true); // Применяем VIP-статус на клиенте
-                } else if (pollCount >= maxPolls) {
-                    // ТАЙМАУТ. Сервер не ответил за 2 минуты.
-                    console.log('VIP polling timed out.');
-                    clearInterval(vipPoller);
-                    vipPoller = null;
+                    openModal('vip-thanks-modal'); // Показываем окно благодарности
+                    
+                } else {
+                    // data.status === 'cancel' или другая ошибка
+                    console.log('Покупка отменена или не удалась (статус окна)');
                     closeModal('processing-modal');
-                    // Тут можно показать модалку "Платеж еще обрабатывается,
-                    // попробуйте перезапустить игру через минуту".
                 }
-                // Если не то и не другое - просто ждем следующего опроса
-            }, 3000); // Проверяем каждые 3 секунды
+            } catch (error) {
+                // Пользователь закрыл окно или произошла ошибка
+                console.error('Ошибка VKWebAppShowOrderBox:', error);
+                closeModal('processing-modal');
+            }
         }
-
 
         function applyVipStatus(isVip) {
             const vipButton = document.getElementById('vip-mode-btn');
@@ -1061,21 +1004,25 @@
             
             if (isVip) {
                 if (vipButton) {
-                    // ИСПРАВЛЕНИЕ: VIP
                     vipButton.innerHTML = '👑<span>Вы VIP</span>👑';
+                    // Меняем функцию кнопки, чтобы она показывала окно "Спасибо"
                     vipButton.onclick = () => openModal('vip-thanks-modal');
                 }
+                // Показываем выбор тем в настройках
                 if (themeSelector) {
                     themeSelector.classList.remove('hidden');
                 }
                 updateUndoButtonUI();
+                // Обновляем рендер, если мы в игре (чтобы убрать "AD")
                 if (!screens.game.classList.contains('hidden')) {
                     renderTubes();
                 }
+                // Обновляем рендер, если мы в меню (чтобы открыть уровни)
                 if (!screens.levelSelection.classList.contains('hidden')) {
                     renderMenu();
                 }
             } else {
+                 // Скрываем выбор тем, если не VIP
                  if (themeSelector) {
                     themeSelector.classList.add('hidden');
                 }
@@ -1151,6 +1098,7 @@
                     }
                 }
                 
+                // --- VIP ОТКРЫВАЕТ УРОВНИ ---
                 if (gameData.isVip) {
                     isUnlocked = true;
                 }
@@ -1211,7 +1159,7 @@
             );
         }
 
-        // --- ИСПРАВЛЕНИЕ: Адаптация и Расчет Высоты ---
+        // Адаптация
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
@@ -1225,12 +1173,7 @@
                 
                 const prospectiveTubeWidth = cellWidth * 0.7; // 70% ширины ячейки
                 
-                // ИСПРАВЛЕНИЕ: Точный расчет высоты
-                // BallHeight = (W - 4px padding)
-                // TotalBallHeight = 4 * (W - 4) = 4W - 16
-                // TotalMargin = 4 * 1px = 4 (4 отступа)
-                // TotalPadding = 2 * 2px = 4 (padding T/B)
-                // H = (4W - 16) + 4 + 4 = 4W - 8
+                // H = 4 * (W - 4 (padding)) + 4 * 1 (margin) + 4 (padding T/B)
                 const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 8;
                 
                 if (prospectiveTubeHeight < cellHeight * 0.95) { 
@@ -1244,7 +1187,6 @@
                  bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
             }
             
-            // ИСПРАВЛЕНИЕ: Ограничение колонок для "Невозможного"
             if (tubeCount > 18 && bestLayout.cols > 7) {
                  bestLayout.cols = 7;
                  bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
@@ -1258,7 +1200,6 @@
             document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
             document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
         }
-        // --- КОНЕЦ ФИКСА АДАПТАЦИИ ---
 
         // --- Rendering ---
         function renderTubes() {
@@ -1270,6 +1211,7 @@
                 
                 if (tube.isPlaceholder) {
                     tubeEl.style.borderStyle = 'dashed';
+                    // --- VIP УБИРАЕТ "AD" ---
                     tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span>${gameData.isVip ? '' : '<span class="ad-label">AD</span>'}</div>`;
                     tubeEl.addEventListener('click', () => unlockExtraTube(tube.id));
                 } else {
@@ -1315,11 +1257,8 @@
 
         // --- Game Logic ---
         function onTubeClick(tubeId) {
-            // ИСПРАВЛЕНИЕ: Упрощенная проверка на анимацию
             const clickedTubeData = tubes.find(t => t.id === tubeId);
             if (!clickedTubeData || clickedTubeData.isPlaceholder || clickedTubeData.isAnimating) return;
-
-            // Если кликаем во время паузы
             if (isPaused) return;
 
             const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
@@ -1345,9 +1284,8 @@
                    return; // Отмена выбора
                 }
                 
-                // Проверяем, не анимируется ли *целевая* колба
                 if (clickedTubeData.isAnimating) {
-                    selectedTube = currentSelectedTube; // Возвращаем выбор
+                    selectedTube = currentSelectedTube; 
                     if (selectedBallEl) selectedBallEl.classList.add('selected-ball');
                     return;
                 }
@@ -1375,7 +1313,6 @@
             moveCount++;
             updateMoveCount();
             
-            // ИСПРАВЛЕНИЕ: Считаем до 4 шаров
             let amountToMove = 0;
             const topColor = fromTube.balls[fromTube.balls.length - 1].color;
             for (let i = fromTube.balls.length - 1; i >= 0; i--) {
@@ -1384,7 +1321,7 @@
                 } else {
                     break;
                 }
-                if (amountToMove >= 4) break; // Лимит 4 шара
+                if (amountToMove >= 4) break; 
             }
             
             amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
@@ -1400,7 +1337,6 @@
             animateMove(fromTube, toTube, ballsToMove);
         }
         
-        // --- ИСПРАВЛЕНИЕ: Анимация нескольких шаров ---
         async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
@@ -1412,8 +1348,8 @@
             const flyingBalls = [];
             const fromRect = fromEl.getBoundingClientRect();
             const toRect = toEl.getBoundingClientRect();
-            const ballWidth = fromRect.width - 4; // 4px = padding*2
-            const xTarget = toRect.left + 2; // 2px = padding
+            const ballWidth = fromRect.width - 4; 
+            const xTarget = toRect.left + 2; 
             const yHover = toRect.top - (ballWidth * 0.5); 
 
             // 1. Удаляем шары из DOM донора и создаем летящие
@@ -1428,11 +1364,9 @@
                 ballEl.style.width = `${ballWidth}px`;
                 ballEl.style.boxShadow = 'inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow)';
                 ballEl.style.position = 'absolute';
-                // Складываем их стопкой вверху колбы
                 ballEl.style.left = `${fromRect.left + 2}px`;
-                ballEl.style.top = `${fromRect.top + 2 - (i * (ballWidth * 0.3))}px`; // Слегка смещаем
+                ballEl.style.top = `${fromRect.top + 2 - (i * (ballWidth * 0.3))}px`;
                 ballEl.style.zIndex = 100 - i;
-                // ИСПРАВЛЕНИЕ: Ускоренная анимация
                 ballEl.style.transition = `all 0.25s cubic-bezier(0.5, 0, 0.3, 1.2)`; 
                 document.body.appendChild(ballEl);
                 flyingBalls.push(ballEl);
@@ -1444,11 +1378,10 @@
                     ballEl.style.transform = 'scale(1.05)';
                     ballEl.style.left = `${xTarget}px`;
                     ballEl.style.top = `${yHover - (i * (ballWidth * 0.3))}px`;
-                    ballEl.style.transitionDelay = `${i * 0.05}s`; // Задержка для "лесенки"
+                    ballEl.style.transitionDelay = `${i * 0.05}s`; 
                 });
             });
             
-            // Ждем, пока последний шар долетит
             await wait(250 + (ballsToMove.length * 50)); 
 
             // 3. Анимация *падения*
@@ -1464,7 +1397,6 @@
                 
                 newBalls.forEach((nb, i) => {
                     nb.style.transition = 'none';
-                    // Располагаем их "лесенкой" над колбой
                     const yOffset = (newBalls.length - 1 - i) * (newBallHeight * 0.3);
                     nb.style.transform = `translateY(${startY - yOffset}px)`;
                 });
@@ -1472,14 +1404,13 @@
                 newBalls[0].getBoundingClientRect(); // Force reflow
 
                 newBalls.forEach((nb, i) => {
-                    // ИСПРАВЛЕНИЕ: Ускоренная анимация
                     nb.style.transition = 'transform 0.2s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; 
-                    nb.style.transitionDelay = `${i * 0.05}s`; // Падают "лесенкой"
+                    nb.style.transitionDelay = `${i * 0.05}s`; 
                     nb.style.transform = 'translateY(0)';
                 });
                 
                 audioManager.playSound('drop'); 
-                await wait(200 + (ballsToMove.length * 50)); // Ждем падения
+                await wait(200 + (ballsToMove.length * 50)); 
                 
                 newBalls.forEach(nb => {
                     nb.style.transition = 'transform 0.2s ease-out'; 
@@ -1502,6 +1433,7 @@
             if (tube.isAnimating) return;
             
             let adShown = false;
+            // --- VIP ПОЛУЧАЕТ КОЛБУ БЕСПЛАТНО ---
             if (gameData.isVip) {
                 adShown = true;
             } else {
@@ -1526,7 +1458,7 @@
                 stats.bestTime[currentDifficulty] = seconds;
             }
             
-            showInterstitialAd();
+            showInterstitialAd(); // <-- VIP пропустит это
             saveGameData(); 
             
             document.getElementById('win-time').textContent = formatTime(seconds);
@@ -1549,6 +1481,7 @@
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
             if (history.length > 0 && !isAnyTubeAnimating) {
                 
+                // --- VIP ИМЕЕТ БЕСКОНЕЧНЫЕ ОТМЕНЫ ---
                 if (!gameData.isVip) {
                     if (undosLeft <= 0) return;
                     undosLeft--;
@@ -1575,6 +1508,7 @@
         
         function updateUndoButtonUI() {
             if (gameData.isVip) {
+                // --- VIP ИНТЕРФЕЙС ---
                 undoCountSpan.textContent = '∞';
                 undoCountSpan.style.fontSize = '1.2rem';
                 undoCountSpan.style.lineHeight = '1.2rem';
@@ -1605,14 +1539,14 @@
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
             try {
-                // Сохраняем ВСЕ, включая isVip
+                // --- СОХРАНЕНИЕ VIP В VK STORAGE ---
                 await vkBridge.send('VKWebAppStorageSet', { key: storageKey, value: JSON.stringify(gameData) });
             } catch (error) {
                 localStorage.setItem(storageKey, JSON.stringify(gameData));
             }
         }
-        
-        // ИЗМЕНЕНИЕ: Загрузка из VK Storage (теперь безопасна, т.к. пишет в нее сервер)
+
+        // --- ИЗМЕНЕНИЕ: ЗАГРУЗКА VIP ИЗ VK STORAGE ---
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
@@ -1632,12 +1566,14 @@
             const newStats = defaultStats();
             
             if (loadedData) {
+                // --- ЕСЛИ ДАННЫХ НЕТ, VIP = false ---
                 gameData.isMusicMuted = loadedData.isMusicMuted ?? false;
                 gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
-                gameData.isVip = loadedData.isVip ?? false; // <-- ВОЗВРАЩЕНО
+                gameData.isVip = loadedData.isVip ?? false; // <-- VIP ЗАГРУЖАЕТСЯ ОТСЮДА
                 gameData.currentTheme = loadedData.currentTheme || 'blue';
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
+                // ... (логика загрузки статистики) ...
                 if (loadedData.stats) {
                     if (loadedData.stats.classic || loadedData.stats.mystery) {
                         if (loadedData.stats.classic) {
@@ -1649,13 +1585,10 @@
                             newStats.mystery.gamesPlayed = {...newStats.mystery.gamesPlayed, ...loadedData.stats.mystery.gamesPlayed};
                         }
                     } else {
-                        // Миграция со старой структуры
                         newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.bestTime};
                         newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.gamesPlayed};
                     }
                 }
-                
-                // Исправляем null -> Infinity
                 ['classic', 'mystery'].forEach(mode => {
                     Object.keys(newStats[mode].bestTime).forEach(diff => {
                         if (newStats[mode].bestTime[diff] === null) {
@@ -1663,8 +1596,8 @@
                         }
                     });
                 });
-                
                 gameData.stats = newStats;
+
             }
             // --- КОНЕЦ ЛОГИКИ ЗАГРУЗКИ ---
         }
@@ -1691,7 +1624,7 @@
         }
 
         // --- Helpers ---
-        function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[i], a[j]]; } return a; }
         function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
     </script>
