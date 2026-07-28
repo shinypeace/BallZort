@@ -15,13 +15,12 @@
     <style>
         /* --- Система тем --- */
         :root {
-            /* Переменные по умолчанию (синяя тема) */
-            --bg-gradient-start: #3b82f6; /* blue-500 */
-            --bg-gradient-end: #1d4ed8; /* blue-700 */
+            --bg-gradient-start: #3b82f6; 
+            --bg-gradient-end: #1d4ed8; 
             --text-color: #ffffff;
             --text-color-dark: #e5e7eb;
-            --tube-border-color: #93c5fd; /* blue-300 */
-            --modal-bg-color: #1e40af; /* blue-800 */
+            --tube-border-color: #93c5fd; 
+            --modal-bg-color: #1e40af; 
             --modal-shadow: rgba(0,0,0,0.3);
             --primary-color: #ffffff;
             --primary-text: #3b82f6;
@@ -33,43 +32,40 @@
             --locked-text-color: #93c5fd;
             --mystery-ball-bg: #93c5fd;
             --mystery-ball-text: #1e40af;
-            --toggle-on-color: #34d399; /* emerald-400 */
-            --vip-gold-start: #fde047;
-            --vip-gold-end: #f59e0b;
-            --vip-text: #422006;
-            --vip-shadow: rgba(245, 158, 11, 0.3);
+            --toggle-on-color: #34d399; 
         }
-
-        html[data-theme="neon"] {
-            --bg-gradient-start: #000000;
-            --bg-gradient-end: #1a001a; /* dark purple */
-            --text-color: #ffffff;
-            --text-color-dark: #cccccc;
-            --tube-border-color: #f0f; /* magenta */
-            --modal-bg-color: #111111;
-            --modal-shadow: rgba(255,0,255,0.3);
-            --primary-color: #0f0; /* lime */
-            --primary-text: #000000;
-            --primary-shadow: rgba(0, 255, 0, 0.2);
+        
+        /* Новая тема "Ночь" */
+        html[data-theme="night"] {
+            --bg-gradient-start: #1f2937; /* gray-800 */
+            --bg-gradient-end: #0f172a; /* gray-900 */
+            --text-color: #f9fafb;
+            --text-color-dark: #9ca3af;
+            --tube-border-color: #4b5563; /* gray-600 */
+            --modal-bg-color: #111827; /* gray-900 */
+            --modal-shadow: rgba(0,0,0,0.6);
+            --primary-color: #60a5fa; /* blue-400 */
+            --primary-text: #ffffff;
+            --primary-shadow: rgba(0, 0, 0, 0.4);
             --secondary-color: transparent;
-            --secondary-text: #0f0;
-            --secondary-border: #0f0;
-            --locked-bg-color: #1a001a;
-            --locked-text-color: #f0f;
-            --mystery-ball-bg: #555;
-            --mystery-ball-text: #000;
-            --toggle-on-color: #0f0;
+            --secondary-text: #9ca3af;
+            --secondary-border: #4b5563;
+            --locked-bg-color: #374151; /* gray-700 */
+            --locked-text-color: #6b7280; /* gray-500 */
+            --mystery-ball-bg: #4b5563;
+            --mystery-ball-text: #111827;
+            --toggle-on-color: #60a5fa;
         }
 
         html[data-theme="ocean"] {
-            --bg-gradient-start: #004d40; /* dark teal */
+            --bg-gradient-start: #004d40; 
             --bg-gradient-end: #00695c;
             --text-color: #ffffff;
             --text-color-dark: #b2dfdb;
-            --tube-border-color: #4db6ac; /* light teal */
+            --tube-border-color: #4db6ac; 
             --modal-bg-color: #00392c;
             --modal-shadow: rgba(0,0,0,0.3);
-            --primary-color: #b2dfdb; /* pale teal/white */
+            --primary-color: #b2dfdb; 
             --primary-text: #004d40;
             --primary-shadow: rgba(0, 0, 0, 0.2);
             --secondary-color: transparent;
@@ -90,7 +86,7 @@
             -webkit-tap-highlight-color: transparent;
             height: 100vh;
             width: 100vw;
-            transition: background 0.3s ease; /* Плавный переход */
+            transition: background 0.3s ease; 
         }
         .screen {
             height: 100%;
@@ -133,20 +129,6 @@
             box-shadow: none;
             border-color: var(--locked-bg-color);
             opacity: 0.7;
-        }
-        
-        .vip-button {
-            background: linear-gradient(45deg, var(--vip-gold-start), var(--vip-gold-end));
-            color: var(--vip-text);
-            border: 2px solid var(--vip-gold-start);
-            box-shadow: 0 5px 20px var(--vip-shadow);
-            font-size: 1.1rem; /* Чуть больше */
-        }
-        .vip-button:hover {
-            box-shadow: 0 8px 30px var(--vip-shadow);
-        }
-        .vip-button span {
-            margin: 0 8px;
         }
         
         .icon-menu-button {
@@ -207,7 +189,6 @@
             border-radius: 50%;
             margin-top: 1px; 
             flex-shrink: 0;
-            /* ИСПРАВЛЕНИЕ: ЕЩЕ более глянцевый/объемный шар */
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.2s ease-out; 
             display: flex;
@@ -219,7 +200,6 @@
             box-sizing: border-box; 
         }
         
-        
         .ball.mystery {
             background-color: var(--mystery-ball-bg) !important; 
             color: var(--mystery-ball-text);
@@ -228,12 +208,10 @@
         
         .ball.selected-ball {
             transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1);
-            /* ИСПРАВЛЕНИЕ: Глянцевый стиль + тень при подпрыгивании */
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow);
             z-index: 100;
         }
         /* --- КОНЕЦ СТИЛЕЙ КОЛБ --- */
-
         .modal { background-color: rgba(0, 0, 0, 0.6); }
         .modal-content { 
             background-color: var(--modal-bg-color); 
@@ -275,7 +253,7 @@
             transform: translateX(24px); 
         }
         
-        /* --- Выбор темы (VIP) --- */
+        /* --- Выбор темы --- */
         #theme-selector-container {
             border-top: 1px solid var(--tube-border-color);
             padding-top: 1.25rem;
@@ -308,7 +286,7 @@
         }
         /* Цвета для превью тем */
         #theme-preview-blue { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
-        #theme-preview-neon { background: linear-gradient(45deg, #000, #f0f); }
+        #theme-preview-night { background: linear-gradient(45deg, #1f2937, #0f172a); border-color: #60a5fa;}
         #theme-preview-ocean { background: linear-gradient(45deg, #004d40, #4db6ac); }
 
         .icon-button {
@@ -363,46 +341,27 @@
             border-bottom: 1px solid var(--tube-border-color);
         }
         .stats-table th { color: var(--primary-color); }
-
-        .vip-list {
-            list-style: none;
-            padding-left: 0;
-            margin: 20px 0;
-        }
-        .vip-list li {
-            position: relative;
-            padding-left: 30px; /* Space for checkmark */
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-        }
-        .vip-list li::before {
-            content: '✅'; /* Checkmark emoji */
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
     </style>
 </head>
 <body class="flex items-center justify-center h-screen select-none">
-
     <audio id="bg-music" loop src="music.mp3"></audio>
 
     <!-- Главное меню -->
     <div id="main-menu" class="screen flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
         <h1 id="main-menu-title" class="text-7xl font-black mb-10">Ball Sort</h1>
         
-        <div class="w-full flex flex-col gap-5">
+        <div class="w-full flex flex-col gap-5 items-center">
             <button id="classic-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Классика</span>
             </button>
             <button id="mystery-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Тайный шар</span>
             </button>
-            <button id="vip-mode-btn" class="main-menu-button vip-button w-full py-4">
-                👑<span>VIP Доступ</span>👑
-            </button>
-            <button id="other-games-btn" class="main-menu-button secondary-button w-full py-4 text-lg">
-                Другие игры
+
+            <!-- Кнопка "Словли" шириной 70% и большой иконкой 48x48 -->
+            <button id="slovli-btn" class="main-menu-button secondary-button py-2 text-lg flex items-center justify-center gap-4 w-[70%] mt-2">
+                <span class="font-bold">Словли</span>
+                <img src="icon.png" alt="Словли" class="w-12 h-12 object-cover rounded-xl shadow-md">
             </button>
         </div>
         
@@ -451,53 +410,8 @@
         </div>
     </div>
     
-    <!-- Экран "Другие игры" -->
-    <div id="other-games-screen" class="screen hidden flex flex-col items-center justify-center p-4">
-        <div class="w-full max-w-sm mx-auto text-center">
-            <h1 class="text-3xl font-bold tracking-tight mb-6">Другие игры</h1>
-            <div id="other-games-container" class="grid grid-cols-3 gap-x-4 gap-y-5"></div>
-            <button id="back-to-menu-btn" class="w-full mt-6 py-3 px-4 rounded-xl font-semibold text-lg main-menu-button secondary-button">Назад</button>
-        </div>
-    </div>
-
     <!-- Модальные окна -->
     
-    <div id="vip-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
-            <!-- ИСПРАВЛЕНИЕ: VIP -->
-            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 VIP Доступ 👑</h2>
-            <ul class="vip-list text-left">
-                <li>Без рекламы</li>
-                <li>Моментальное открытие всех уровней</li>
-                <li>Бесконечные отмены ходов</li>
-                <li>Бесконечные доп. колбы</li>
-                <li>Доступ к эксклюзивным темам</li>
-            </ul>
-            <p class="text-center text-sm text-gray-300 mt-6 mb-4">
-                И в целом поддержать молодого разработчика
-            </p>
-            <button id="purchase-vip-btn" class="main-menu-button vip-button w-full">20 голосов</button>
-            <button onclick="closeModal('vip-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
-        </div>
-    </div>
-    
-    <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
-            <!-- ИСПРАВЛЕНИЕ: VIP -->
-            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 Вы VIP 👑</h2>
-            <p class="text-center text-lg mb-4">Спасибо за вашу поддержку!</p>
-            <!-- ИСПРАВЛЕНИЕ: Добавлен список бонусов -->
-            <ul class="vip-list text-left text-sm">
-                <li>Без рекламы</li>
-                <li>Все уровни открыты</li>
-                <li>Бесконечные отмены ходов</li>
-                <li>Бесконечные доп. колбы</li>
-                <li>Доступ к эксклюзивным темам</li>
-            </ul>
-            <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
-        </div>
-    </div>
-
     <!-- Модальное окно: Правила -->
     <div id="rules-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
@@ -536,17 +450,17 @@
                 </div>
             </div>
             
-            <div id="theme-selector-container" class="hidden">
+            <!-- Выбор тем открыт для всех -->
+            <div id="theme-selector-container">
                 <h3 class="text-lg font-medium text-center mt-6 mb-4">Темы</h3>
                 <div class="theme-selector">
-                    <!-- ИСПРАВЛЕНИЕ: class_name -> class -->
                     <div class="theme-option active" id="theme-blue">
                         <div id="theme-preview-blue" class="theme-preview"></div>
                         <span class="text-sm">Синяя</span>
                     </div>
-                    <div class="theme-option" id="theme-neon">
-                        <div id="theme-preview-neon" class="theme-preview"></div>
-                        <span class="text-sm">Неон</span>
+                    <div class="theme-option" id="theme-night">
+                        <div id="theme-preview-night" class="theme-preview"></div>
+                        <span class="text-sm">Ночь</span>
                     </div>
                     <div class="theme-option" id="theme-ocean">
                         <div id="theme-preview-ocean" class="theme-preview"></div>
@@ -558,7 +472,7 @@
             <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
         </div>
     </div>
-
+    
     <!-- Модальное окно: Статистика -->
     <div id="stats-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg text-center">
@@ -568,7 +482,6 @@
                 <button class="stats-tab active" data-tab="classic">Классика</button>
                 <button class="stats-tab" data-tab="mystery">Тайный шар</button>
             </div>
-
             <div id="stats-table-classic" class="stats-table-container active">
                 <table class="stats-table">
                     <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
@@ -596,7 +509,6 @@
                     </tbody>
                 </table>
             </div>
-
             <button onclick="closeModal('stats-modal')" class="main-menu-button secondary-button mt-6 w-full">Закрыть</button>
         </div>
     </div>
@@ -629,8 +541,7 @@
         const screens = {
             mainMenu: document.getElementById('main-menu'),
             levelSelection: document.getElementById('level-selection-screen'),
-            game: document.getElementById('game-screen'),
-            otherGames: document.getElementById('other-games-screen')
+            game: document.getElementById('game-screen')
         };
         const levelSelectionContainer = document.getElementById('level-selection-container');
         const levelSelectionTitle = document.getElementById('level-selection-title');
@@ -650,43 +561,33 @@
         let undosLeft = 3;
         let vkUserId = null;
         let wasMusicPlaying = false;
-
-        const defaultStats = () => ({
-            classic: {
-                gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
-                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
-            },
-            mystery: {
-                gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
-                bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
-            }
-        });
-
+        
+        function defaultStats() {
+            return {
+                classic: {
+                    gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
+                    bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
+                },
+                mystery: {
+                    gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
+                    bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
+                }
+            };
+        }
+        
         let gameData = {
             isMusicMuted: false, 
             isSfxMuted: false, 
-            isVip: false,
             currentTheme: 'blue', 
             levelsCompletedSinceAd: 0,
             stats: defaultStats()
         };
-
+        
         // --- Config ---
-        // ИСПРАВЛЕНИЕ: Новые цвета (убраны похожие)
         const COLORS = [
-            "#d90429", // Red
-            "#f77f00", // Orange
-            "#fcc419", // Yellow
-            "#43a047", // Green
-            "#a3e635", // Lime
-            "#00b4d8", // Light Blue
-            "#03045e", // Navy
-            "#7209b7", // Purple
-            "#f472b6", // Pink
-            "#8d5b4c", // Brown
-            "#8d99ae", // Gray
-            "#FFFFFF", // White
-            "#333333"  // Black
+            "#d90429", "#f77f00", "#fcc419", "#43a047", 
+            "#a3e635", "#00b4d8", "#03045e", "#7209b7", 
+            "#f472b6", "#8d5b4c", "#8d99ae", "#FFFFFF", "#333333"
         ];
         const BALL_LAYERS = 4; 
         const UNDO_LIMIT = 3;
@@ -700,42 +601,25 @@
             impossible: { name: 'Невозможно', tubes: 24, empty: 2, colors: 11, doubleColors: true }
         };
         
-        // --- ИСПРАВЛЕНИЕ: Audio Manager ---
+        // --- Audio Manager ---
         const audioManager = {
-            dropSynth: null, 
-            winSynth: null,
-            selectSynth: null, 
-            tapSynth: null, 
-            isReady: false,
-
-            init() {
-                // Звук "падения" шара
+            dropSynth: null, winSynth: null, selectSynth: null, tapSynth: null, isReady: false,
+            init: function() {
                 this.dropSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.02,
-                    octaves: 3,
-                    oscillator: { type: "sine" },
+                    pitchDecay: 0.02, octaves: 3, oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.3, sustain: 0.01, release: 0.2 }
                 }).toDestination();
                 this.dropSynth.volume.value = -10;
-
-                // Звук "выбора" шара
                 this.selectSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.01,
-                    octaves: 4,
-                    oscillator: { type: "sine" },
+                    pitchDecay: 0.01, octaves: 4, oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 }
                 }).toDestination();
                 this.selectSynth.volume.value = -12;
-
-                // ИСПРАВЛЕНИЕ: Звук "тапа" (короткий "клик")
                 this.tapSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.005,
-                    octaves: 2,
+                    pitchDecay: 0.005, octaves: 2,
                     envelope: { attack: 0.001, decay: 0.1, release: 0.01 }
                 }).toDestination();
                 this.tapSynth.volume.value = -15;
-
-                // Звук "победы"
                 this.winSynth = new Tone.PolySynth(Tone.Synth, {
                      oscillator: { type: 'triangle8' },
                      envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 }
@@ -745,29 +629,22 @@
                 this.isReady = true;
             },
             
-            playSound(sound) {
+            playSound: function(sound) {
                 if (!this.isReady || gameData.isSfxMuted) return;
                 try {
                     const now = Tone.now();
-                    if (sound === 'drop') { 
-                        this.dropSynth.triggerAttackRelease("C3", "8n", now);
-                    }
-                    if (sound === 'select') { 
-                        this.selectSynth.triggerAttackRelease("C4", "8n", now);
-                    }
-                     if (sound === 'tap') { 
-                        this.tapSynth.triggerAttackRelease("C3", "8n", now);
-                    }
+                    if (sound === 'drop') { this.dropSynth.triggerAttackRelease("C3", "8n", now); }
+                    if (sound === 'select') { this.selectSynth.triggerAttackRelease("C4", "8n", now); }
+                    if (sound === 'tap') { this.tapSynth.triggerAttackRelease("C3", "8n", now); }
                     if (sound === 'win') {
                         const notes = ['C4', 'E4', 'G4', 'C5', 'E5', 'G5'];
-                        notes.forEach((note, i) => {
-                            this.winSynth.triggerAttackRelease(note, '16n', now + i * 0.1);
+                        notes.forEach(function(note, i) {
+                            audioManager.winSynth.triggerAttackRelease(note, '16n', now + i * 0.1);
                         });
                     }
-                } catch(e) { console.error("Sound play error", e); }
+                } catch(e) {}
             },
-
-            toggleMusicMute(forceState) {
+            toggleMusicMute: function(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMusicMuted;
                 gameData.isMusicMuted = newState;
                 musicToggle.checked = !newState; 
@@ -775,100 +652,79 @@
                 if (gameData.isMusicMuted) {
                     bgMusic.pause();
                 } else {
-                    bgMusic.play().catch(e => {});
+                    bgMusic.play().catch(function(e) {});
                 }
-
-                if(typeof forceState === 'undefined') {
-                    saveGameData();
-                }
+                if(typeof forceState === 'undefined') { saveGameData(); }
             },
             
-            toggleSfxMute(forceState) {
+            toggleSfxMute: function(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isSfxMuted;
                 gameData.isSfxMuted = newState;
                 sfxToggle.checked = !newState; 
-
-                if(typeof forceState === 'undefined') {
-                    saveGameData();
-                }
+                if(typeof forceState === 'undefined') { saveGameData(); }
             }
         };
 
         // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', async () => {
-            await init();
-            
+        document.addEventListener('DOMContentLoaded', async function() {
             bgMusic.volume = 0.3; 
             
-            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button');
-            allButtons.forEach(btn => {
-                btn.addEventListener('click', () => audioManager.playSound('tap'));
+            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button, .theme-option');
+            allButtons.forEach(function(btn) {
+                btn.addEventListener('click', function() { audioManager.playSound('tap'); });
             });
             
-            // Main Menu listeners
-            document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
-            document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
-            document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
-            document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
-            document.getElementById('vip-mode-btn').addEventListener('click', () => {
-                if (gameData.isVip) {
-                    openModal('vip-thanks-modal');
-                } else {
-                    openModal('vip-modal');
-                }
+            document.getElementById('classic-mode-btn').addEventListener('click', function() { showLevelSelection('classic'); });
+            document.getElementById('mystery-mode-btn').addEventListener('click', function() { showLevelSelection('mystery'); });
+            
+            document.getElementById('slovli-btn').addEventListener('click', function() {
+                vkBridge.send('VKWebAppOpenApp', { app_id: 53861990 });
             });
-            document.getElementById('purchase-vip-btn').addEventListener('click', activateVip);
-
-            document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
-
-            // Game screen listeners
+            
+            document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', function() { showScreen('mainMenu'); });
             undoButton.addEventListener('click', undoMove);
-            window.addEventListener('resize', () => {
+            
+            window.addEventListener('resize', function() {
                 if (!screens.game.classList.contains('hidden')) {
-                     requestAnimationFrame(() => adjustTubeSize(tubes.length));
+                     setTimeout(function() { adjustTubeSize(tubes.length); }, 50);
                 }
             });
             
-            // Settings/Rules Listeners
-            musicToggle.addEventListener('change', () => audioManager.toggleMusicMute(!musicToggle.checked));
-            sfxToggle.addEventListener('change', () => audioManager.toggleSfxMute(!sfxToggle.checked));
+            musicToggle.addEventListener('change', function() { audioManager.toggleMusicMute(!musicToggle.checked); });
+            sfxToggle.addEventListener('change', function() { audioManager.toggleSfxMute(!sfxToggle.checked); });
             
-            // Theme selector listeners
-            document.getElementById('theme-blue').addEventListener('click', () => setTheme('blue'));
-            document.getElementById('theme-neon').addEventListener('click', () => setTheme('neon'));
-            document.getElementById('theme-ocean').addEventListener('click', () => setTheme('ocean'));
+            document.getElementById('theme-blue').addEventListener('click', function() { setTheme('blue'); });
+            document.getElementById('theme-night').addEventListener('click', function() { setTheme('night'); });
+            document.getElementById('theme-ocean').addEventListener('click', function() { setTheme('ocean'); });
             
-            document.getElementById('other-games-container').addEventListener('click', e => {
-                const gameEl = e.target.closest('[data-app-id]');
-                if (gameEl) vkBridge.send('VKWebAppOpenApp', { app_id: parseInt(gameEl.dataset.appId) });
-            });
-            
-            document.querySelector('.stats-tabs').addEventListener('click', e => {
+            document.querySelector('.stats-tabs').addEventListener('click', function(e) {
                 if (e.target.classList.contains('stats-tab')) {
                     const tabName = e.target.dataset.tab;
-                    document.querySelectorAll('.stats-tab').forEach(tab => tab.classList.remove('active'));
+                    document.querySelectorAll('.stats-tab').forEach(function(tab) { tab.classList.remove('active'); });
                     e.target.classList.add('active');
                     
-                    document.querySelectorAll('.stats-table-container').forEach(container => container.classList.remove('active'));
-                    document.getElementById(`stats-table-${tabName}`).classList.add('active');
+                    document.querySelectorAll('.stats-table-container').forEach(function(container) { container.classList.remove('active'); });
+                    document.getElementById('stats-table-' + tabName).classList.add('active');
                 }
             });
             
-            document.body.addEventListener('click', async () => {
+            document.body.addEventListener('click', async function() {
                  if (!audioManager.isReady) {
                     await Tone.start();
                     audioManager.init();
                     if(!gameData.isMusicMuted) { 
-                        bgMusic.play().catch(e => {});
+                        bgMusic.play().catch(function(e){});
                     }
                  }
             }, { once: true });
+
+            await init();
         });
         
         async function init() {
             vkBridge.send('VKWebAppInit');
             
-            vkBridge.subscribe(e => {
+            vkBridge.subscribe(function(e) {
                 if (e.detail.type === 'VKWebAppViewHide') {
                     if (!bgMusic.paused) {
                         wasMusicPlaying = true;
@@ -877,41 +733,44 @@
                 }
                 if (e.detail.type === 'VKWebAppViewRestore') {
                     if (wasMusicPlaying && !gameData.isMusicMuted) { 
-                       bgMusic.play().catch(e => {});
+                       bgMusic.play().catch(function(e){});
                     }
                     wasMusicPlaying = false;
                 }
             });
-
+            
             try {
                 const user = await vkBridge.send('VKWebAppGetUserInfo');
                 vkUserId = user.id;
             } catch (error) {
-                console.warn("Could not get VK User ID.", error);
-                vkUserId = 'test_user';
+                vkUserId = 'test_user_' + Date.now();
             }
-            await loadGameData();
-            setTheme(gameData.currentTheme, false); // Устанавливаем тему без сохранения
-            renderOtherGames(); 
+            
+            await loadGameData(); 
+            
+            setTheme(gameData.currentTheme, false); 
             audioManager.toggleMusicMute(gameData.isMusicMuted); 
             audioManager.toggleSfxMute(gameData.isSfxMuted); 
-            applyVipStatus(gameData.isVip); 
+            
             showScreen('mainMenu');
         }
 
         // --- Screen & Ad Management ---
         function showScreen(screenName) {
-            Object.values(screens).forEach(s => s.classList.add('hidden'));
+            Object.keys(screens).forEach(function(key) { screens[key].classList.add('hidden'); });
             screens[screenName].classList.remove('hidden');
             
             if (!gameData.isMusicMuted) {
-                bgMusic.play().catch(e => {});
+                bgMusic.play().catch(function(e){});
             }
             
             if (screenName === 'game') {
-                requestAnimationFrame(() => adjustTubeSize(tubes.length));
+                setTimeout(function() { adjustTubeSize(tubes.length); }, 50);
             }
-            vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e => {});
+            
+            vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' })
+                .then(function() { console.log('Banner displayed'); })
+                .catch(function(e) { console.log('Banner error', e); });
         }
 
         function showLevelSelection(mode) {
@@ -922,22 +781,17 @@
         }
 
         async function showRewardedAd() {
-            if (gameData.isVip) return true; 
-
             try {
                 const adData = await vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' });
                 await Tone.start();
                 return adData.result === true;
             } catch (e) { 
-                console.error("Rewarded ad error:", e); 
                 await Tone.start(); 
                 return false; 
             }
         }
 
         async function showInterstitialAd() {
-            if (gameData.isVip) return; 
-
             gameData.levelsCompletedSinceAd++;
             if (gameData.levelsCompletedSinceAd >= 3) {
                 try {
@@ -950,57 +804,20 @@
             }
             saveGameData();
         }
-
-        // --- НОВЫЕ ФУНКЦИИ: VIP и Темы ---
-        function activateVip() {
-            gameData.isVip = true;
-            saveGameData();
-            closeModal('vip-modal');
-            applyVipStatus(true);
-            openModal('vip-thanks-modal');
-        }
-
-        function applyVipStatus(isVip) {
-            const vipButton = document.getElementById('vip-mode-btn');
-            const themeSelector = document.getElementById('theme-selector-container');
-            
-            if (isVip) {
-                if (vipButton) {
-                    // ИСПРАВЛЕНИЕ: VIP
-                    vipButton.innerHTML = '👑<span>Вы VIP</span>👑';
-                    vipButton.onclick = () => openModal('vip-thanks-modal');
-                }
-                if (themeSelector) {
-                    themeSelector.classList.remove('hidden');
-                }
-                updateUndoButtonUI();
-                if (!screens.game.classList.contains('hidden')) {
-                    renderTubes();
-                }
-                if (!screens.levelSelection.classList.contains('hidden')) {
-                    renderMenu();
-                }
-            } else {
-                 if (themeSelector) {
-                    themeSelector.classList.add('hidden');
-                }
-            }
-        }
-
-        function setTheme(themeName, doSave = true) {
+        
+        function setTheme(themeName, doSave) {
+            if (typeof doSave === 'undefined') doSave = true;
             document.documentElement.dataset.theme = themeName;
             gameData.currentTheme = themeName;
             
-            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-            const activeOption = document.getElementById(`theme-${themeName}`);
+            document.querySelectorAll('.theme-option').forEach(function(opt) { opt.classList.remove('active'); });
+            const activeOption = document.getElementById('theme-' + themeName);
             if (activeOption) activeOption.classList.add('active');
             
             if (doSave) {
                 saveGameData();
             }
         }
-        // --- КОНЕЦ VIP ФУНКЦИЙ ---
-
 
         // --- Game Flow ---
         function startGame(difficulty) {
@@ -1010,7 +827,10 @@
         }
         
         function resetGame() {
-            isPaused = false; moveCount = 0; seconds = 0; history = [];
+            isPaused = false; 
+            moveCount = 0; 
+            seconds = 0; 
+            history = [];
             undosLeft = UNDO_LIMIT;
             selectedTube = null;
             updateMoveCount(); 
@@ -1018,8 +838,7 @@
             startTimer();
             generateLevel(currentDifficulty);
         }
-
-        function restartGame(fromPause = false) {
+        function restartGame(fromPause) {
             if (fromPause) closeModal('pause-modal');
             resetGame();
         }
@@ -1028,7 +847,6 @@
             closeModal('win-modal');
             resetGame();
         }
-
         function goToMainMenu() {
             closeModal('pause-modal');
             closeModal('win-modal');
@@ -1041,14 +859,15 @@
             levelSelectionContainer.innerHTML = '';
             const difficulties = Object.keys(LEVEL_CONFIG);
             const statsForCurrentMode = gameData.stats[currentGameMode] || defaultStats()[currentGameMode];
-
+            
             for (let i = 0; i < difficulties.length; i++) {
                 const difficulty = difficulties[i];
                 const config = LEVEL_CONFIG[difficulty];
                 const prevDifficulty = i > 0 ? difficulties[i-1] : null;
-
+                
                 let isUnlocked = (difficulty === 'easy');
                 let winsOnPrev = 0;
+                
                 if (prevDifficulty) {
                     winsOnPrev = statsForCurrentMode.gamesPlayed[prevDifficulty] || 0;
                     if (winsOnPrev >= WINS_TO_UNLOCK) {
@@ -1056,27 +875,16 @@
                     }
                 }
                 
-                if (gameData.isVip) {
-                    isUnlocked = true;
-                }
-
-                const isFullWidth = ['insane', 'impossible'].includes(difficulty);
-
+                const isFullWidth = (difficulty === 'insane' || difficulty === 'impossible');
                 const button = document.createElement('button');
-                button.className = `main-menu-button relative overflow-hidden ${isFullWidth ? 'col-span-2' : ''}`;
-                button.onclick = () => startGame(difficulty);
-                button.disabled = !isUnlocked;
-
+                button.className = 'main-menu-button relative overflow-hidden flex items-center justify-center ' + (isFullWidth ? 'col-span-2' : '');
+                
                 if (isUnlocked) {
+                    button.onclick = function() { startGame(difficulty); };
                     button.textContent = config.name;
                 } else {
-                    button.innerHTML = `
-                        <div class="flex items-center justify-center">
-                           <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg>
-                           <span>${config.name}</span>
-                        </div>
-                        <div class="absolute bottom-1 right-2 text-xs font-bold text-white opacity-80">${winsOnPrev}/${WINS_TO_UNLOCK}</div>
-                    `;
+                    button.disabled = true;
+                    button.innerHTML = '<div class="flex items-center justify-center w-full"><svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg><span>' + config.name + '</span></div><div class="absolute bottom-1 right-2 text-xs font-bold text-white opacity-80">' + winsOnPrev + '/' + WINS_TO_UNLOCK + '</div>';
                 }
                 levelSelectionContainer.appendChild(button);
             }
@@ -1085,58 +893,61 @@
         function generateLevel(difficulty) {
             const config = LEVEL_CONFIG[difficulty];
             const tubesWithLiquid = config.tubes - config.empty;
-            const levelColors = shuffleArray([...COLORS]).slice(0, config.colors);
+            const levelColors = shuffleArray(COLORS.slice()).slice(0, config.colors);
             const layersPerColor = config.doubleColors ? BALL_LAYERS * 2 : BALL_LAYERS;
-            let colorPool = levelColors.flatMap(color => Array(layersPerColor).fill(color));
+            
+            let colorPool = [];
+            for (let i = 0; i < levelColors.length; i++) {
+                for (let j = 0; j < layersPerColor; j++) {
+                    colorPool.push(levelColors[i]);
+                }
+            }
             colorPool = shuffleArray(colorPool);
             
             tubes = [];
             for (let i = 0; i < tubesWithLiquid; i++) {
                 const ballsData = colorPool.splice(0, BALL_LAYERS);
-                const balls = ballsData.map((color, index) => ({
-                    color: color,
-                    isVisible: currentGameMode === 'classic' || index === ballsData.length - 1
-                }));
+                const balls = ballsData.map(function(color, index) {
+                    return {
+                        color: color,
+                        isVisible: currentGameMode === 'classic' || index === ballsData.length - 1
+                    };
+                });
                 tubes.push({ id: i, balls: balls, isAnimating: false });
             }
             
             for (let i = 0; i < config.empty; i++) tubes.push({ id: tubes.length, balls: [], isAnimating: false });
             tubes.push({ id: tubes.length, balls: [], isPlaceholder: true, isAnimating: false });
             
-            if (isLevelSolved(tubes.filter(t => !t.isPlaceholder))) {
+            if (isLevelSolved(tubes.filter(function(t) { return !t.isPlaceholder; }))) {
                 return generateLevel(difficulty);
             }
             renderTubes();
         }
 
         function isLevelSolved(currentTubes) {
-            return currentTubes.every(t => 
-                t.balls.length === 0 || 
-                (t.balls.length === BALL_LAYERS && new Set(t.balls.map(b => b.color)).size === 1)
-            );
+            return currentTubes.every(function(t) {
+                if (t.balls.length === 0) return true;
+                if (t.balls.length !== BALL_LAYERS) return false;
+                let firstColor = t.balls[0].color;
+                for (let i = 1; i < t.balls.length; i++) {
+                    if (t.balls[i].color !== firstColor) return false;
+                }
+                return true;
+            });
         }
 
-        // --- ИСПРАВЛЕНИЕ: Адаптация и Расчет Высоты ---
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
             if(!boardHeight || !boardWidth) return;
             let bestLayout = { cols: 0, tubeHeight: 0 };
-
             for (let cols = tubeCount; cols >= 1; cols--) {
                 const rows = Math.ceil(tubeCount / cols);
                 const cellWidth = boardWidth / cols;
                 const cellHeight = boardHeight / rows;
                 
-                const prospectiveTubeWidth = cellWidth * 0.7; // 70% ширины ячейки
-                
-                // ИСПРАВЛЕНИЕ: Точный расчет высоты (H = 4W - 8)
-                // W = prospectiveTubeWidth
-                // BallHeight = W - 4px (padding L/R 2px)
-                // TotalBallHeight = 4 * (W - 4) = 4W - 16
-                // TotalMargin = 4 * 1px = 4 (4 отступа)
-                // TotalPadding = 2 * 2px = 4 (padding T/B)
-                // H = (4W - 16) + 4 + 4 = 4W - 8
+                const prospectiveTubeWidth = cellWidth * 0.7; 
                 const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 8;
                 
                 if (prospectiveTubeHeight < cellHeight * 0.95) { 
@@ -1146,35 +957,36 @@
                 }
             }
             if(bestLayout.cols === 0) {
-                 bestLayout.cols = tubeCount <= 12 ? 4 : 5; // Fallback
+                 bestLayout.cols = tubeCount <= 12 ? 4 : 5; 
                  bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
             }
             
+            if (tubeCount > 18 && bestLayout.cols > 7) {
+                 bestLayout.cols = 7;
+                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
+            }
             const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
             const finalTubeHeight = bestLayout.tubeHeight;
-            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; // 15% margin L/R
-
-            document.documentElement.style.setProperty('--tube-width', `${finalTubeWidth}px`);
-            document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
-            document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
+            const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; 
+            document.documentElement.style.setProperty('--tube-width', finalTubeWidth + 'px');
+            document.documentElement.style.setProperty('--tube-height', finalTubeHeight + 'px');
+            document.documentElement.style.setProperty('--tube-margin', finalTubeMargin + 'px');
         }
-        // --- КОНЕЦ ФИКСА АДАПТАЦИИ ---
 
-        // --- Rendering ---
         function renderTubes() {
             gameBoard.innerHTML = '';
-            tubes.forEach(tube => {
+            tubes.forEach(function(tube) {
                 const tubeEl = document.createElement('div');
                 tubeEl.className = 'tube-container';
                 tubeEl.dataset.id = tube.id;
                 
                 if (tube.isPlaceholder) {
                     tubeEl.style.borderStyle = 'dashed';
-                    tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span>${gameData.isVip ? '' : '<span class="ad-label">AD</span>'}</div>`;
-                    tubeEl.addEventListener('click', () => unlockExtraTube(tube.id));
+                    tubeEl.innerHTML = '<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span><span class="ad-label">AD</span></div>';
+                    tubeEl.addEventListener('click', function() { unlockExtraTube(tube.id); });
                 } else {
-                    tubeEl.addEventListener('click', () => onTubeClick(tube.id));
-                    tube.balls.forEach(ball => {
+                    tubeEl.addEventListener('click', function() { onTubeClick(tube.id); });
+                    tube.balls.forEach(function(ball) {
                         const ballEl = document.createElement('div');
                         ballEl.className = 'ball';
                         if (ball.isVisible) {
@@ -1190,40 +1002,11 @@
             });
         }
         
-        function renderOtherGames() {
-            const container = document.getElementById('other-games-container');
-            container.innerHTML = '';
-            const games = [
-                { name: 'Bubble Shooter', appId: 54051411, icon: 'icon1.png' }, { name: 'Тетрис', appId: 54051413, icon: 'icon2.png' },
-                { name: 'Tower Blocks', appId: 53962513, icon: 'icon3.png' }, { name: 'Блок Про', appId: 53936296, icon: 'icon4.png' },
-                { name: 'Филворды', appId: 53867134, icon: 'icon5.png' }, { name: 'Словли', appId: 53861990, icon: 'icon6.png' },
-                { name: 'Brick Balls', appId: 54023580, icon: 'icon7.png' }, { name: '2048', appId: 53965380, icon: 'icon8.png' },
-                { name: 'Math Matrix', appId: 53970659, icon: 'icon9.png' }
-            ];
-            games.forEach(game => {
-                const gameEl = document.createElement('div');
-                gameEl.className = "flex flex-col items-center cursor-pointer group";
-                gameEl.dataset.appId = game.appId;
-                gameEl.innerHTML = `
-                    <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-3xl mb-2 flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden">
-                       <img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'text-xs text-gray-400\\'>${game.name}</span>'">
-                    </div>
-                    <span class="text-xs font-medium text-center" style="color: var(--text-color-dark);">${game.name}</span>`;
-                container.appendChild(gameEl);
-            });
-        }
-
-        // --- Game Logic ---
         function onTubeClick(tubeId) {
-            // ИСПРАВЛЕНИЕ: Упрощенная проверка на анимацию
-            const clickedTubeData = tubes.find(t => t.id === tubeId);
+            const clickedTubeData = tubes.find(function(t) { return t.id === tubeId; });
             if (!clickedTubeData || clickedTubeData.isPlaceholder || clickedTubeData.isAnimating) return;
-
-            // Если кликаем во время паузы
             if (isPaused) return;
-
-            const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
-
+            const tubeEl = document.querySelector(".tube-container[data-id='" + tubeId + "']");
             if (selectedTube === null) {
                 if (clickedTubeData.balls.length > 0) {
                     const topBall = clickedTubeData.balls[clickedTubeData.balls.length - 1];
@@ -1240,14 +1023,12 @@
                 
                 selectedTube = null;
                 if (selectedBallEl) selectedBallEl.classList.remove('selected-ball');
-
                 if (currentSelectedTube.id === clickedTubeData.id) {
-                   return; // Отмена выбора
+                   return; 
                 }
                 
-                // Проверяем, не анимируется ли *целевая* колба
                 if (clickedTubeData.isAnimating) {
-                    selectedTube = currentSelectedTube; // Возвращаем выбор
+                    selectedTube = currentSelectedTube; 
                     if (selectedBallEl) selectedBallEl.classList.add('selected-ball');
                     return;
                 }
@@ -1265,7 +1046,6 @@
             
             const topBall = from.balls[from.balls.length - 1];
             if (!topBall.isVisible) return false; 
-
             if (to.balls.length === 0) return true; 
             
             return topBall.color === to.balls[to.balls.length - 1].color;
@@ -1275,7 +1055,6 @@
             moveCount++;
             updateMoveCount();
             
-            // ИСПРАВЛЕНИЕ: Считаем до 4 шаров
             let amountToMove = 0;
             const topColor = fromTube.balls[fromTube.balls.length - 1].color;
             for (let i = fromTube.balls.length - 1; i >= 0; i--) {
@@ -1284,39 +1063,35 @@
                 } else {
                     break;
                 }
-                if (amountToMove >= 4) break; // Лимит 4 шара
+                if (amountToMove >= 4) break; 
             }
             
             amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
-            
             const ballsToMove = fromTube.balls.splice(fromTube.balls.length - amountToMove);
             
             if (currentGameMode === 'mystery' && fromTube.balls.length > 0) {
                 fromTube.balls[fromTube.balls.length - 1].isVisible = true;
             }
             
-            toTube.balls.push(...ballsToMove);
-
+            ballsToMove.forEach(function(b) { toTube.balls.push(b); });
             animateMove(fromTube, toTube, ballsToMove);
         }
         
-        // --- ИСПРАВЛЕНИЕ: Анимация нескольких шаров ---
         async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
             updateUndoButtonUI();
-
-            const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
-            const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
+            
+            const fromEl = document.querySelector(".tube-container[data-id='" + fromTube.id + "']");
+            const toEl = document.querySelector(".tube-container[data-id='" + toTube.id + "']");
             
             const flyingBalls = [];
             const fromRect = fromEl.getBoundingClientRect();
             const toRect = toEl.getBoundingClientRect();
-            const ballWidth = fromRect.width - 4; // 4px = padding*2
-            const xTarget = toRect.left + 2; // 2px = padding
+            const ballWidth = fromRect.width - 4; 
+            const xTarget = toRect.left + 2; 
             const yHover = toRect.top - (ballWidth * 0.5); 
-
-            // 1. Удаляем шары из DOM донора и создаем летящие
+            
             for (let i = 0; i < ballsToMove.length; i++) {
                 if (fromEl.querySelector('.ball:last-child')) {
                      fromEl.querySelector('.ball:last-child').remove();
@@ -1325,63 +1100,59 @@
                 const ballEl = document.createElement('div');
                 ballEl.className = 'ball';
                 ballEl.style.backgroundColor = ballsToMove[i].color;
-                ballEl.style.width = `${ballWidth}px`;
+                ballEl.style.width = ballWidth + 'px';
                 ballEl.style.boxShadow = 'inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow)';
                 ballEl.style.position = 'absolute';
-                // Складываем их стопкой вверху колбы
-                ballEl.style.left = `${fromRect.left + 2}px`;
-                ballEl.style.top = `${fromRect.top + 2 - (i * (ballWidth * 0.3))}px`; // Слегка смещаем
+                ballEl.style.left = (fromRect.left + 2) + 'px';
+                ballEl.style.top = (fromRect.top + 2 - (i * (ballWidth * 0.3))) + 'px';
                 ballEl.style.zIndex = 100 - i;
-                // ИСПРАВЛЕНИЕ: Ускоренная анимация
-                ballEl.style.transition = `all 0.25s cubic-bezier(0.5, 0, 0.3, 1.2)`; 
+                ballEl.style.transition = 'all 0.25s cubic-bezier(0.5, 0, 0.3, 1.2)'; 
                 document.body.appendChild(ballEl);
                 flyingBalls.push(ballEl);
             }
-
-            // 2. Анимация *вверх* и *вбок*
-            requestAnimationFrame(() => {
-                flyingBalls.forEach((ballEl, i) => {
+            
+            requestAnimationFrame(function() {
+                flyingBalls.forEach(function(ballEl, i) {
                     ballEl.style.transform = 'scale(1.05)';
-                    ballEl.style.left = `${xTarget}px`;
-                    ballEl.style.top = `${yHover - (i * (ballWidth * 0.3))}px`;
-                    ballEl.style.transitionDelay = `${i * 0.05}s`; // Задержка для "лесенки"
+                    ballEl.style.left = xTarget + 'px';
+                    ballEl.style.top = (yHover - (i * (ballWidth * 0.3))) + 'px';
+                    ballEl.style.transitionDelay = (i * 0.05) + 's'; 
                 });
             });
             
-            // Ждем, пока последний шар долетит
             await wait(250 + (ballsToMove.length * 50)); 
-
-            // 3. Анимация *падения*
-            flyingBalls.forEach(ballEl => ballEl.remove()); 
-            renderTubes(); // Рендерим финальное состояние
-
-            const newToEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
-            const newBalls = Array.from(newToEl.querySelectorAll('.ball')).slice(-ballsToMove.length);
-
+            
+            flyingBalls.forEach(function(ballEl) { ballEl.remove(); }); 
+            renderTubes(); 
+            
+            const newToEl = document.querySelector(".tube-container[data-id='" + toTube.id + "']");
+            const ballsNodeList = newToEl.querySelectorAll('.ball');
+            const newBalls = [];
+            for (let i = Math.max(0, ballsNodeList.length - ballsToMove.length); i < ballsNodeList.length; i++) {
+                newBalls.push(ballsNodeList[i]);
+            }
+            
             if (newBalls.length > 0) {
                 const newBallHeight = newBalls[0].offsetHeight;
                 const startY = yHover - newBalls[0].getBoundingClientRect().top;
                 
-                newBalls.forEach((nb, i) => {
+                newBalls.forEach(function(nb, i) {
                     nb.style.transition = 'none';
-                    // Располагаем их "лесенкой" над колбой
                     const yOffset = (newBalls.length - 1 - i) * (newBallHeight * 0.3);
-                    nb.style.transform = `translateY(${startY - yOffset}px)`;
+                    nb.style.transform = 'translateY(' + (startY - yOffset) + 'px)';
                 });
                 
-                newBalls[0].getBoundingClientRect(); // Force reflow
-
-                newBalls.forEach((nb, i) => {
-                    // ИСПРАВЛЕНИЕ: Ускоренная анимация
+                newBalls[0].getBoundingClientRect(); 
+                newBalls.forEach(function(nb, i) {
                     nb.style.transition = 'transform 0.2s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; 
-                    nb.style.transitionDelay = `${i * 0.05}s`; // Падают "лесенкой"
+                    nb.style.transitionDelay = (i * 0.05) + 's'; 
                     nb.style.transform = 'translateY(0)';
                 });
                 
                 audioManager.playSound('drop'); 
-                await wait(200 + (ballsToMove.length * 50)); // Ждем падения
+                await wait(200 + (ballsToMove.length * 50)); 
                 
-                newBalls.forEach(nb => {
+                newBalls.forEach(function(nb) {
                     nb.style.transition = 'transform 0.2s ease-out'; 
                     nb.style.transform = '';
                 });
@@ -1391,22 +1162,17 @@
             toTube.isAnimating = false;
             updateUndoButtonUI();
             
-            const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
-            if (!isAnyTubeAnimating && isLevelSolved(tubes.filter(t => !t.isPlaceholder))) {
+            const isAnyTubeAnimating = tubes.some(function(t) { return t.isAnimating; });
+            if (!isAnyTubeAnimating && isLevelSolved(tubes.filter(function(t){ return !t.isPlaceholder; }))) {
                 winGame();
             }
         }
 
         async function unlockExtraTube(tubeId) {
-            const tube = tubes.find(t => t.id === tubeId);
+            const tube = tubes.find(function(t) { return t.id === tubeId; });
             if (tube.isAnimating) return;
             
-            let adShown = false;
-            if (gameData.isVip) {
-                adShown = true;
-            } else {
-                adShown = await showRewardedAd();
-            }
+            let adShown = await showRewardedAd();
             
             if (adShown) {
                 if (tube) {
@@ -1426,7 +1192,7 @@
                 stats.bestTime[currentDifficulty] = seconds;
             }
             
-            showInterstitialAd();
+            showInterstitialAd(); 
             saveGameData(); 
             
             document.getElementById('win-time').textContent = formatTime(seconds);
@@ -1435,32 +1201,36 @@
         }
         
         function saveState() {
-            const stateToSave = tubes.map(t => ({
-                id: t.id,
-                balls: t.balls.map(b => ({ ...b })), 
-                isPlaceholder: t.isPlaceholder
-            }));
+            const stateToSave = tubes.map(function(t) {
+                return {
+                    id: t.id,
+                    balls: t.balls.map(function(b) {
+                        return { color: b.color, isVisible: b.isVisible };
+                    }),
+                    isPlaceholder: t.isPlaceholder
+                };
+            });
             history.push({state: stateToSave, moveCount: moveCount}); 
             if (history.length > 20) history.shift();
             updateUndoButtonUI();
         }
 
         function undoMove() {
-            const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
+            const isAnyTubeAnimating = tubes.some(function(t) { return t.isAnimating; });
             if (history.length > 0 && !isAnyTubeAnimating) {
                 
-                if (!gameData.isVip) {
-                    if (undosLeft <= 0) return;
-                    undosLeft--;
-                }
+                if (undosLeft <= 0) return;
+                undosLeft--;
                 
                 const prevStateData = history.pop();
                 const prevState = prevStateData.state;
                 
-                tubes.forEach(tube => {
-                    const prevTube = prevState.find(pt => pt.id === tube.id);
+                tubes.forEach(function(tube) {
+                    const prevTube = prevState.find(function(pt) { return pt.id === tube.id; });
                     if (prevTube) {
-                        tube.balls = prevTube.balls.map(b => ({ ...b }));
+                        tube.balls = prevTube.balls.map(function(b) {
+                            return { color: b.color, isVisible: b.isVisible };
+                        });
                         tube.isPlaceholder = prevTube.isPlaceholder;
                     }
                 });
@@ -1474,26 +1244,38 @@
         }
         
         function updateUndoButtonUI() {
-            if (gameData.isVip) {
-                undoCountSpan.textContent = '∞';
-                undoCountSpan.style.fontSize = '1.2rem';
-                undoCountSpan.style.lineHeight = '1.2rem';
-            } else {
-                undoCountSpan.textContent = undosLeft;
-                undoCountSpan.style.fontSize = '0.75rem';
-                undoCountSpan.style.lineHeight = '1rem';
-            }
+            undoCountSpan.textContent = undosLeft;
+            undoCountSpan.style.fontSize = '0.75rem';
+            undoCountSpan.style.lineHeight = '1rem';
             
-            const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
-            const undoLimitReached = !gameData.isVip && undosLeft <= 0;
+            const isAnyTubeAnimating = tubes.some(function(t) { return t.isAnimating; });
+            const undoLimitReached = undosLeft <= 0;
             const isDisabled = history.length === 0 || undoLimitReached || isAnyTubeAnimating;
-            undoButton.classList.toggle('disabled', isDisabled);
+            if (isDisabled) {
+                undoButton.classList.add('disabled');
+            } else {
+                undoButton.classList.remove('disabled');
+            }
         }
 
         // --- UI & Timer ---
-        function startTimer() { stopTimer(); timerInterval = setInterval(() => { if (!isPaused) { seconds++; timerSpan.textContent = formatTime(seconds); }}, 1000); }
+        function startTimer() { 
+            stopTimer(); 
+            timerInterval = setInterval(function() { 
+                if (!isPaused) { 
+                    seconds++; 
+                    timerSpan.textContent = formatTime(seconds); 
+                }
+            }, 1000); 
+        }
         function stopTimer() { clearInterval(timerInterval); }
-        function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
+        
+        function formatTime(s) { 
+            const mins = Math.floor(s / 60);
+            const secs = s % 60;
+            return (mins < 10 ? '0' + mins : mins) + ':' + (secs < 10 ? '0' + secs : secs);
+        }
+        
         function updateMoveCount() { moveCountSpan.textContent = moveCount; }
         function showPauseMenu() { isPaused = true; openModal('pause-modal'); }
         function resumeGame() { isPaused = false; closeModal('pause-modal'); }
@@ -1503,7 +1285,7 @@
         // --- Data & Theme ---
         async function saveGameData() {
             if (!vkUserId) return;
-            const storageKey = `colorsort_data_${vkUserId}`;
+            const storageKey = 'colorsort_data_' + vkUserId;
             try {
                 await vkBridge.send('VKWebAppStorageSet', { key: storageKey, value: JSON.stringify(gameData) });
             } catch (error) {
@@ -1513,49 +1295,52 @@
 
         async function loadGameData() {
             if (!vkUserId) return;
-            const storageKey = `colorsort_data_${vkUserId}`;
-            let loadedData = null;
+            const storageKey = 'colorsort_data_' + vkUserId;
+            let loadedData = null; 
+            
             try {
                 const response = await vkBridge.send('VKWebAppStorageGet', { keys: [storageKey] });
-                if (response.keys[0]?.value) loadedData = JSON.parse(response.keys[0].value);
+                if (response && response.keys && response.keys.length > 0 && response.keys[0].value) {
+                    loadedData = JSON.parse(response.keys[0].value);
+                }
             } catch (error) {
                 const localData = localStorage.getItem(storageKey);
-                if (localData) loadedData = JSON.parse(localData);
+                if (localData) {
+                    try { loadedData = JSON.parse(localData); } catch(e) {}
+                }
             }
             
             const newStats = defaultStats();
             
             if (loadedData) {
-                gameData.isMusicMuted = loadedData.isMusicMuted ?? false;
-                gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
-                gameData.isVip = loadedData.isVip ?? false;
-                gameData.currentTheme = loadedData.currentTheme || 'blue'; // Загружаем тему
+                gameData.isMusicMuted = loadedData.isMusicMuted !== undefined ? loadedData.isMusicMuted : false;
+                gameData.isSfxMuted = loadedData.isSfxMuted !== undefined ? loadedData.isSfxMuted : false;
+                gameData.currentTheme = loadedData.currentTheme || 'blue';
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
                 if (loadedData.stats) {
                     if (loadedData.stats.classic || loadedData.stats.mystery) {
                         if (loadedData.stats.classic) {
-                            newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.classic.bestTime};
-                            newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.classic.gamesPlayed};
+                            newStats.classic.bestTime = Object.assign({}, newStats.classic.bestTime, loadedData.stats.classic.bestTime);
+                            newStats.classic.gamesPlayed = Object.assign({}, newStats.classic.gamesPlayed, loadedData.stats.classic.gamesPlayed);
                         }
                          if (loadedData.stats.mystery) {
-                            newStats.mystery.bestTime = {...newStats.mystery.bestTime, ...loadedData.stats.mystery.bestTime};
-                            newStats.mystery.gamesPlayed = {...newStats.mystery.gamesPlayed, ...loadedData.stats.mystery.gamesPlayed};
+                            newStats.mystery.bestTime = Object.assign({}, newStats.mystery.bestTime, loadedData.stats.mystery.bestTime);
+                            newStats.mystery.gamesPlayed = Object.assign({}, newStats.mystery.gamesPlayed, loadedData.stats.mystery.gamesPlayed);
                         }
                     } else {
-                        newStats.classic.bestTime = {...newStats.classic.bestTime, ...loadedData.stats.bestTime};
-                        newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.gamesPlayed};
+                        newStats.classic.bestTime = Object.assign({}, newStats.classic.bestTime, loadedData.stats.bestTime);
+                        newStats.classic.gamesPlayed = Object.assign({}, newStats.classic.gamesPlayed, loadedData.stats.gamesPlayed);
                     }
                 }
                 
-                ['classic', 'mystery'].forEach(mode => {
-                    Object.keys(newStats[mode].bestTime).forEach(diff => {
+                ['classic', 'mystery'].forEach(function(mode) {
+                    Object.keys(newStats[mode].bestTime).forEach(function(diff) {
                         if (newStats[mode].bestTime[diff] === null) {
                             newStats[mode].bestTime[diff] = Infinity;
                         }
                     });
                 });
-                
                 gameData.stats = newStats;
             }
         }
@@ -1563,11 +1348,11 @@
         function updateStatsDisplay() {
             if (!gameData.stats) return;
             
-            ['classic', 'mystery'].forEach(mode => {
+            ['classic', 'mystery'].forEach(function(mode) {
                 const stats = gameData.stats[mode];
-                Object.keys(stats.bestTime).forEach(diff => {
-                    const bestTimeEl = document.getElementById(`best-time-${mode}-${diff}`);
-                    const gamesPlayedEl = document.getElementById(`games-played-${mode}-${diff}`);
+                Object.keys(stats.bestTime).forEach(function(diff) {
+                    const bestTimeEl = document.getElementById('best-time-' + mode + '-' + diff);
+                    const gamesPlayedEl = document.getElementById('games-played-' + mode + '-' + diff);
                     
                     if (bestTimeEl) {
                         bestTimeEl.textContent = (stats.bestTime[diff] === Infinity || stats.bestTime[diff] === null) 
@@ -1582,9 +1367,16 @@
         }
 
         // --- Helpers ---
-        function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-        function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
+        function shuffleArray(a) { 
+            for (let i = a.length - 1; i > 0; i--) { 
+                const j = Math.floor(Math.random() * (i + 1)); 
+                const temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            } 
+            return a; 
+        }
+        function wait(ms) { return new Promise(function(resolve) { setTimeout(resolve, ms); }); }
     </script>
 </body>
 </html>
