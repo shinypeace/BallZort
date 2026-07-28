@@ -34,12 +34,7 @@
             --mystery-ball-bg: #93c5fd;
             --mystery-ball-text: #1e40af;
             --toggle-on-color: #34d399; /* emerald-400 */
-            --vip-gold-start: #fde047;
-            --vip-gold-end: #f59e0b;
-            --vip-text: #422006;
-            --vip-shadow: rgba(245, 158, 11, 0.3);
         }
-
         html[data-theme="neon"] {
             --bg-gradient-start: #000000;
             --bg-gradient-end: #1a001a; /* dark purple */
@@ -60,7 +55,6 @@
             --mystery-ball-text: #000;
             --toggle-on-color: #0f0;
         }
-
         html[data-theme="ocean"] {
             --bg-gradient-start: #004d40; /* dark teal */
             --bg-gradient-end: #00695c;
@@ -90,7 +84,7 @@
             -webkit-tap-highlight-color: transparent;
             height: 100vh;
             width: 100vw;
-            transition: background 0.3s ease; /* Плавный переход */
+            transition: background 0.3s ease;
         }
         .screen {
             height: 100%;
@@ -99,7 +93,7 @@
         }
         .screen.hidden { display: none; }
         @keyframes fadeIn { from { opacity: 0; } to: { opacity: 1; } }
-
+        
         /* --- Стили Главного меню --- */
         #main-menu-title {
             color: var(--text-color);
@@ -115,6 +109,9 @@
             box-shadow: 0 5px 20px var(--primary-shadow);
             transition: all 0.2s ease-in-out; 
             border: 2px solid var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .main-menu-button:hover:not(:disabled) {
             transform: translateY(-3px); 
@@ -133,20 +130,6 @@
             box-shadow: none;
             border-color: var(--locked-bg-color);
             opacity: 0.7;
-        }
-        
-        .vip-button {
-            background: linear-gradient(45deg, var(--vip-gold-start), var(--vip-gold-end));
-            color: var(--vip-text);
-            border: 2px solid var(--vip-gold-start);
-            box-shadow: 0 5px 20px var(--vip-shadow);
-            font-size: 1.1rem; /* Чуть больше */
-        }
-        .vip-button:hover {
-            box-shadow: 0 8px 30px var(--vip-shadow);
-        }
-        .vip-button span {
-            margin: 0 8px;
         }
         
         .icon-menu-button {
@@ -170,8 +153,7 @@
             width: 32px; height: 32px;
             stroke-width: 2;
         }
-        /* --- Конец стилей меню --- */
-
+        
         /* --- СТИЛИ КОЛБ И ШАРОВ --- */
         .tube-container {
             position: relative;
@@ -207,7 +189,6 @@
             border-radius: 50%;
             margin-top: 1px; 
             flex-shrink: 0;
-            /* Глянцевый/объемный шар */
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.2s ease-out; 
             display: flex;
@@ -218,7 +199,6 @@
             color: var(--mystery-ball-text);
             box-sizing: border-box; 
         }
-        
         
         .ball.mystery {
             background-color: var(--mystery-ball-bg) !important; 
@@ -231,8 +211,7 @@
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow);
             z-index: 100;
         }
-        /* --- КОНЕЦ СТИЛЕЙ КОЛБ --- */
-
+        
         .modal { background-color: rgba(0, 0, 0, 0.6); }
         .modal-content { 
             background-color: var(--modal-bg-color); 
@@ -274,7 +253,7 @@
             transform: translateX(24px); 
         }
         
-        /* --- Выбор темы (VIP) --- */
+        /* --- Выбор темы --- */
         #theme-selector-container {
             border-top: 1px solid var(--tube-border-color);
             padding-top: 1.25rem;
@@ -309,7 +288,7 @@
         #theme-preview-blue { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
         #theme-preview-neon { background: linear-gradient(45deg, #000, #f0f); }
         #theme-preview-ocean { background: linear-gradient(45deg, #004d40, #4db6ac); }
-
+        
         .icon-button {
             background: none; border: none; padding: 8px;
             cursor: pointer; color: var(--text-color);
@@ -362,46 +341,10 @@
             border-bottom: 1px solid var(--tube-border-color);
         }
         .stats-table th { color: var(--primary-color); }
-
-        .vip-list {
-            list-style: none;
-            padding-left: 0;
-            margin: 20px 0;
-        }
-        .vip-list li {
-            position: relative;
-            padding-left: 30px; /* Space for checkmark */
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-        }
-        .vip-list li::before {
-            content: '✅'; /* Checkmark emoji */
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-        
-        /* Модальное окно обработки */
-        .processing-spinner {
-            width: 48px;
-            height: 48px;
-            border: 5px solid var(--tube-border-color);
-            border-bottom-color: var(--primary-color);
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-        }
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body class="flex items-center justify-center h-screen select-none">
-
     <audio id="bg-music" loop src="music.mp3"></audio>
-
     <!-- Главное меню -->
     <div id="main-menu" class="screen flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
         <h1 id="main-menu-title" class="text-7xl font-black mb-10">Ball Sort</h1>
@@ -413,11 +356,10 @@
             <button id="mystery-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Тайный шар</span>
             </button>
-            <button id="vip-mode-btn" class="main-menu-button vip-button w-full py-4">
-                👑<span>VIP Доступ</span>👑
-            </button>
-            <button id="other-games-btn" class="main-menu-button secondary-button w-full py-4 text-lg">
-                Другие игры
+            <!-- Кнопка Словли -->
+            <button id="slovli-btn" class="main-menu-button secondary-button w-full py-4 text-lg flex items-center justify-center gap-3">
+                <span>Словли</span>
+                <img src="icon.png" alt="Словли" class="w-6 h-6 object-cover rounded-md">
             </button>
         </div>
         
@@ -442,7 +384,6 @@
         </div>
         <button id="back-to-menu-from-levels-btn" class="main-menu-button secondary-button w-full mt-6">Назад</button>
     </div>
-
     <!-- Игровое поле -->
     <div id="game-screen" class="screen hidden">
         <div class="grid grid-rows-[auto_1fr_auto] h-full w-full max-w-lg mx-auto p-4">
@@ -466,59 +407,8 @@
         </div>
     </div>
     
-    <!-- Экран "Другие игры" -->
-    <div id="other-games-screen" class="screen hidden flex flex-col items-center justify-center p-4">
-        <div class="w-full max-w-sm mx-auto text-center">
-            <h1 class="text-3xl font-bold tracking-tight mb-6">Другие игры</h1>
-            <div id="other-games-container" class="grid grid-cols-3 gap-x-4 gap-y-5"></div>
-            <button id="back-to-menu-btn" class="w-full mt-6 py-3 px-4 rounded-xl font-semibold text-lg main-menu-button secondary-button">Назад</button>
-        </div>
-    </div>
-
     <!-- Модальные окна -->
     
-    <div id="vip-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
-            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 VIP Доступ 👑</h2>
-            <ul class="vip-list text-left">
-                <li>Без рекламы</li>
-                <li>Моментальное открытие всех уровней</li>
-                <li>Бесконечные отмены ходов</li>
-                <li>Бесконечные доп. колбы</li>
-                <li>Доступ к эксклюзивным темам</li>
-            </ul>
-            <p class="text-center text-sm text-gray-300 mt-6 mb-4">
-                И в целом поддержать молодого разработчика
-            </p>
-            <button id="purchase-vip-btn" class="main-menu-button vip-button w-full">20 голосов</button>
-            <button onclick="closeModal('vip-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
-        </div>
-    </div>
-    
-    <!-- Модальное окно: Обработка платежа -->
-    <div id="processing-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content w-full max-w-sm p-8 rounded-2xl shadow-lg text-center">
-            <div class="processing-spinner mb-4"></div>
-            <h2 class="text-2xl font-bold" style="color: var(--primary-color);">Обработка...</h2>
-            <p class="text-lg">Пожалуйста, подождите</p>
-        </div>
-    </div>
-    
-    <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
-            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 Вы VIP 👑</h2>
-            <p class="text-center text-lg mb-4">Спасибо за вашу поддержку!</p>
-            <ul class="vip-list text-left text-sm">
-                <li>Без рекламы</li>
-                <li>Все уровни открыты</li>
-                <li>Бесконечные отмены ходов</li>
-                <li>Бесконечные доп. колбы</li>
-                <li>Доступ к эксклюзивным темам</li>
-            </ul>
-            <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
-        </div>
-    </div>
-
     <!-- Модальное окно: Правила -->
     <div id="rules-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
@@ -557,7 +447,8 @@
                 </div>
             </div>
             
-            <div id="theme-selector-container" class="hidden">
+            <!-- Выбор тем теперь всегда доступен -->
+            <div id="theme-selector-container">
                 <h3 class="text-lg font-medium text-center mt-6 mb-4">Темы</h3>
                 <div class="theme-selector">
                     <div class="theme-option active" id="theme-blue">
@@ -578,7 +469,7 @@
             <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
         </div>
     </div>
-
+    
     <!-- Модальное окно: Статистика -->
     <div id="stats-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg text-center">
@@ -588,7 +479,6 @@
                 <button class="stats-tab active" data-tab="classic">Классика</button>
                 <button class="stats-tab" data-tab="mystery">Тайный шар</button>
             </div>
-
             <div id="stats-table-classic" class="stats-table-container active">
                 <table class="stats-table">
                     <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
@@ -616,7 +506,6 @@
                     </tbody>
                 </table>
             </div>
-
             <button onclick="closeModal('stats-modal')" class="main-menu-button secondary-button mt-6 w-full">Закрыть</button>
         </div>
     </div>
@@ -643,14 +532,12 @@
             </div>
         </div>
     </div>
-
     <script>
         // --- DOM Elements ---
         const screens = {
             mainMenu: document.getElementById('main-menu'),
             levelSelection: document.getElementById('level-selection-screen'),
-            game: document.getElementById('game-screen'),
-            otherGames: document.getElementById('other-games-screen')
+            game: document.getElementById('game-screen')
         };
         const levelSelectionContainer = document.getElementById('level-selection-container');
         const levelSelectionTitle = document.getElementById('level-selection-title');
@@ -670,7 +557,6 @@
         let undosLeft = 3;
         let vkUserId = null;
         let wasMusicPlaying = false;
-
         const defaultStats = () => ({
             classic: {
                 gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
@@ -681,16 +567,13 @@
                 bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
             }
         });
-
         let gameData = {
             isMusicMuted: false, 
             isSfxMuted: false, 
-            isVip: false, // <-- VIP СТАТУС ХРАНИТСЯ ЗДЕСЬ
             currentTheme: 'blue', 
             levelsCompletedSinceAd: 0,
             stats: defaultStats()
         };
-
         // --- Config ---
         const COLORS = [
             "#d90429", // Red
@@ -726,26 +609,22 @@
             selectSynth: null, 
             tapSynth: null, 
             isReady: false,
-
             init() {
                 this.dropSynth = new Tone.MembraneSynth({
                     pitchDecay: 0.02, octaves: 3, oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.3, sustain: 0.01, release: 0.2 }
                 }).toDestination();
                 this.dropSynth.volume.value = -10;
-
                 this.selectSynth = new Tone.MembraneSynth({
                     pitchDecay: 0.01, octaves: 4, oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 }
                 }).toDestination();
                 this.selectSynth.volume.value = -12;
-
                 this.tapSynth = new Tone.MembraneSynth({
                     pitchDecay: 0.005, octaves: 2,
                     envelope: { attack: 0.001, decay: 0.1, release: 0.01 }
                 }).toDestination();
                 this.tapSynth.volume.value = -15;
-
                 this.winSynth = new Tone.PolySynth(Tone.Synth, {
                      oscillator: { type: 'triangle8' },
                      envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 }
@@ -770,7 +649,6 @@
                     }
                 } catch(e) { console.error("Sound play error", e); }
             },
-
             toggleMusicMute(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMusicMuted;
                 gameData.isMusicMuted = newState;
@@ -791,7 +669,6 @@
                 if(typeof forceState === 'undefined') { saveGameData(); }
             }
         };
-
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', async () => {
             await init();
@@ -807,21 +684,13 @@
             // Main Menu listeners
             document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
             document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
-            document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
-            document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
             
-            // --- ИЗМЕНЕНИЕ: ЛОГИКА VIP КНОПКИ ---
-            document.getElementById('vip-mode-btn').addEventListener('click', () => {
-                if (gameData.isVip) {
-                    openModal('vip-thanks-modal');
-                } else {
-                    openModal('vip-modal');
-                }
+            // Кнопка перехода в "Словли"
+            document.getElementById('slovli-btn').addEventListener('click', () => {
+                vkBridge.send('VKWebAppOpenApp', { app_id: 53861990 });
             });
-            document.getElementById('purchase-vip-btn').addEventListener('click', activateVip); // <-- ВЫЗОВ ПОКУПКИ
-
+            
             document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
-
             // Game screen listeners
             undoButton.addEventListener('click', undoMove);
             window.addEventListener('resize', () => {
@@ -838,11 +707,6 @@
             document.getElementById('theme-blue').addEventListener('click', () => setTheme('blue'));
             document.getElementById('theme-neon').addEventListener('click', () => setTheme('neon'));
             document.getElementById('theme-ocean').addEventListener('click', () => setTheme('ocean'));
-            
-            document.getElementById('other-games-container').addEventListener('click', e => {
-                const gameEl = e.target.closest('[data-app-id]');
-                if (gameEl) vkBridge.send('VKWebAppOpenApp', { app_id: parseInt(gameEl.dataset.appId) });
-            });
             
             // Табы статистики
             document.querySelector('.stats-tabs').addEventListener('click', e => {
@@ -885,7 +749,6 @@
                     wasMusicPlaying = false;
                 }
             });
-
             try {
                 const user = await vkBridge.send('VKWebAppGetUserInfo');
                 vkUserId = user.id;
@@ -894,20 +757,14 @@
                 vkUserId = 'test_user';
             }
             
-            // --- ИЗМЕНЕНИЕ: ЗАГРУЗКА VIP ИЗ ХРАНИЛИЩА VK ---
             await loadGameData(); 
             
             setTheme(gameData.currentTheme, false); 
-            renderOtherGames(); 
             audioManager.toggleMusicMute(gameData.isMusicMuted); 
             audioManager.toggleSfxMute(gameData.isSfxMuted); 
             
-            // --- ПРИМЕНЕНИЕ СТАТУСА ПРИ ЗАГРУЗКЕ ---
-            applyVipStatus(gameData.isVip); 
-            
             showScreen('mainMenu');
         }
-
         // --- Screen & Ad Management ---
         function showScreen(screenName) {
             Object.values(screens).forEach(s => s.classList.add('hidden'));
@@ -923,18 +780,13 @@
             // Баннеры показываем всегда
             vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e => {});
         }
-
         function showLevelSelection(mode) {
             currentGameMode = mode;
             levelSelectionTitle.textContent = mode === 'classic' ? 'Классика' : 'Тайный шар';
             renderMenu();
             showScreen('levelSelection');
         }
-
         async function showRewardedAd() {
-            // --- Если VIP, рекламу не показываем ---
-            if (gameData.isVip) return true; 
-
             try {
                 const adData = await vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' });
                 await Tone.start();
@@ -945,11 +797,7 @@
                 return false; 
             }
         }
-
         async function showInterstitialAd() {
-            // --- Если VIP, рекламу не показываем ---
-            if (gameData.isVip) return; 
-
             gameData.levelsCompletedSinceAd++;
             if (gameData.levelsCompletedSinceAd >= 3) {
                 try {
@@ -962,73 +810,7 @@
             }
             saveGameData();
         }
-
-        // --- ИЗМЕНЕНИЕ: Небезопасная покупка (как вы просили) ---
-        async function activateVip() {
-            openModal('processing-modal');
-            
-            try {
-                // --- Шаг 1: Вызов окна покупки VK ---
-                const data = await vkBridge.send('VKWebAppShowOrderBox', {
-                    type: 'item',
-                    item: 'vip_access_1' // ID товара из настроек VK
-                });
-
-                // --- Шаг 2: Обработка ответа от VK Bridge (НЕБЕЗОПАСНО) ---
-                if (data.status === 'ok') {
-                    // ВНИМАНИЕ! НЕБЕЗОПАСНО!
-                    // Выдаем VIP сразу, доверяя ответу клиента.
-                    
-                    gameData.isVip = true;
-                    await saveGameData(); // Сохраняем VIP-статус в VK Storage
-                    applyVipStatus(true); // Применяем VIP-эффекты
-                    
-                    closeModal('processing-modal');
-                    openModal('vip-thanks-modal'); // Показываем окно благодарности
-                    
-                } else {
-                    // data.status === 'cancel' или другая ошибка
-                    console.log('Покупка отменена или не удалась (статус окна)');
-                    closeModal('processing-modal');
-                }
-            } catch (error) {
-                // Пользователь закрыл окно или произошла ошибка
-                console.error('Ошибка VKWebAppShowOrderBox:', error);
-                closeModal('processing-modal');
-            }
-        }
-
-        function applyVipStatus(isVip) {
-            const vipButton = document.getElementById('vip-mode-btn');
-            const themeSelector = document.getElementById('theme-selector-container');
-            
-            if (isVip) {
-                if (vipButton) {
-                    vipButton.innerHTML = '👑<span>Вы VIP</span>👑';
-                    // Меняем функцию кнопки, чтобы она показывала окно "Спасибо"
-                    vipButton.onclick = () => openModal('vip-thanks-modal');
-                }
-                // Показываем выбор тем в настройках
-                if (themeSelector) {
-                    themeSelector.classList.remove('hidden');
-                }
-                updateUndoButtonUI();
-                // Обновляем рендер, если мы в игре (чтобы убрать "AD")
-                if (!screens.game.classList.contains('hidden')) {
-                    renderTubes();
-                }
-                // Обновляем рендер, если мы в меню (чтобы открыть уровни)
-                if (!screens.levelSelection.classList.contains('hidden')) {
-                    renderMenu();
-                }
-            } else {
-                 // Скрываем выбор тем, если не VIP
-                 if (themeSelector) {
-                    themeSelector.classList.add('hidden');
-                }
-            }
-        }
-
+        
         function setTheme(themeName, doSave = true) {
             document.documentElement.dataset.theme = themeName;
             gameData.currentTheme = themeName;
@@ -1041,8 +823,6 @@
                 saveGameData();
             }
         }
-        // --- КОНЕЦ VIP ФУНКЦИЙ ---
-
 
         // --- Game Flow ---
         function startGame(difficulty) {
@@ -1060,7 +840,6 @@
             startTimer();
             generateLevel(currentDifficulty);
         }
-
         function restartGame(fromPause = false) {
             if (fromPause) closeModal('pause-modal');
             resetGame();
@@ -1070,25 +849,21 @@
             closeModal('win-modal');
             resetGame();
         }
-
         function goToMainMenu() {
             closeModal('pause-modal');
             closeModal('win-modal');
             stopTimer();
             showScreen('mainMenu');
         }
-
         // --- Level Generation & Rendering ---
         function renderMenu() {
             levelSelectionContainer.innerHTML = '';
             const difficulties = Object.keys(LEVEL_CONFIG);
             const statsForCurrentMode = gameData.stats[currentGameMode] || defaultStats()[currentGameMode];
-
             for (let i = 0; i < difficulties.length; i++) {
                 const difficulty = difficulties[i];
                 const config = LEVEL_CONFIG[difficulty];
                 const prevDifficulty = i > 0 ? difficulties[i-1] : null;
-
                 let isUnlocked = (difficulty === 'easy');
                 let winsOnPrev = 0;
                 if (prevDifficulty) {
@@ -1098,18 +873,11 @@
                     }
                 }
                 
-                // --- VIP ОТКРЫВАЕТ УРОВНИ ---
-                if (gameData.isVip) {
-                    isUnlocked = true;
-                }
-
                 const isFullWidth = ['insane', 'impossible'].includes(difficulty);
-
                 const button = document.createElement('button');
                 button.className = `main-menu-button relative overflow-hidden ${isFullWidth ? 'col-span-2' : ''}`;
                 button.onclick = () => startGame(difficulty);
                 button.disabled = !isUnlocked;
-
                 if (isUnlocked) {
                     button.textContent = config.name;
                 } else {
@@ -1124,7 +892,6 @@
                 levelSelectionContainer.appendChild(button);
             }
         }
-
         function generateLevel(difficulty) {
             const config = LEVEL_CONFIG[difficulty];
             const tubesWithLiquid = config.tubes - config.empty;
@@ -1151,21 +918,18 @@
             }
             renderTubes();
         }
-
         function isLevelSolved(currentTubes) {
             return currentTubes.every(t => 
                 t.balls.length === 0 || 
                 (t.balls.length === BALL_LAYERS && new Set(t.balls.map(b => b.color)).size === 1)
             );
         }
-
         // Адаптация
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
             if(!boardHeight || !boardWidth) return;
             let bestLayout = { cols: 0, tubeHeight: 0 };
-
             for (let cols = tubeCount; cols >= 1; cols--) {
                 const rows = Math.ceil(tubeCount / cols);
                 const cellWidth = boardWidth / cols;
@@ -1191,16 +955,13 @@
                  bestLayout.cols = 7;
                  bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
             }
-
             const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
             const finalTubeHeight = bestLayout.tubeHeight;
             const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; // 15% margin L/R
-
             document.documentElement.style.setProperty('--tube-width', `${finalTubeWidth}px`);
             document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
             document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
         }
-
         // --- Rendering ---
         function renderTubes() {
             gameBoard.innerHTML = '';
@@ -1211,8 +972,7 @@
                 
                 if (tube.isPlaceholder) {
                     tubeEl.style.borderStyle = 'dashed';
-                    // --- VIP УБИРАЕТ "AD" ---
-                    tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span>${gameData.isVip ? '' : '<span class="ad-label">AD</span>'}</div>`;
+                    tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span><span class="ad-label">AD</span></div>`;
                     tubeEl.addEventListener('click', () => unlockExtraTube(tube.id));
                 } else {
                     tubeEl.addEventListener('click', () => onTubeClick(tube.id));
@@ -1232,37 +992,12 @@
             });
         }
         
-        function renderOtherGames() {
-            const container = document.getElementById('other-games-container');
-            container.innerHTML = '';
-            const games = [
-                { name: 'Bubble Shooter', appId: 54051411, icon: 'icon1.png' }, { name: 'Тетрис', appId: 54051413, icon: 'icon2.png' },
-                { name: 'Tower Blocks', appId: 53962513, icon: 'icon3.png' }, { name: 'Блок Про', appId: 53936296, icon: 'icon4.png' },
-                { name: 'Филворды', appId: 53867134, icon: 'icon5.png' }, { name: 'Словли', appId: 53861990, icon: 'icon6.png' },
-                { name: 'Brick Balls', appId: 54023580, icon: 'icon7.png' }, { name: '2048', appId: 53965380, icon: 'icon8.png' },
-                { name: 'Math Matrix', appId: 53970659, icon: 'icon9.png' }
-            ];
-            games.forEach(game => {
-                const gameEl = document.createElement('div');
-                gameEl.className = "flex flex-col items-center cursor-pointer group";
-                gameEl.dataset.appId = game.appId;
-                gameEl.innerHTML = `
-                    <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-3xl mb-2 flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden">
-                       <img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'text-xs text-gray-400\\'>${game.name}</span>'">
-                    </div>
-                    <span class="text-xs font-medium text-center" style="color: var(--text-color-dark);">${game.name}</span>`;
-                container.appendChild(gameEl);
-            });
-        }
-
         // --- Game Logic ---
         function onTubeClick(tubeId) {
             const clickedTubeData = tubes.find(t => t.id === tubeId);
             if (!clickedTubeData || clickedTubeData.isPlaceholder || clickedTubeData.isAnimating) return;
             if (isPaused) return;
-
             const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
-
             if (selectedTube === null) {
                 if (clickedTubeData.balls.length > 0) {
                     const topBall = clickedTubeData.balls[clickedTubeData.balls.length - 1];
@@ -1279,7 +1014,6 @@
                 
                 selectedTube = null;
                 if (selectedBallEl) selectedBallEl.classList.remove('selected-ball');
-
                 if (currentSelectedTube.id === clickedTubeData.id) {
                    return; // Отмена выбора
                 }
@@ -1296,19 +1030,16 @@
                 }
             }
         }
-
         function canMove(from, to) {
             if (!from || !to) return false;
             if (from.balls.length === 0 || to.balls.length === BALL_LAYERS) return false;
             
             const topBall = from.balls[from.balls.length - 1];
             if (!topBall.isVisible) return false; 
-
             if (to.balls.length === 0) return true; 
             
             return topBall.color === to.balls[to.balls.length - 1].color;
         }
-
         function initiateMove(fromTube, toTube) {
             moveCount++;
             updateMoveCount();
@@ -1333,7 +1064,6 @@
             }
             
             toTube.balls.push(...ballsToMove);
-
             animateMove(fromTube, toTube, ballsToMove);
         }
         
@@ -1341,7 +1071,6 @@
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
             updateUndoButtonUI();
-
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             
@@ -1351,7 +1080,6 @@
             const ballWidth = fromRect.width - 4; 
             const xTarget = toRect.left + 2; 
             const yHover = toRect.top - (ballWidth * 0.5); 
-
             // 1. Удаляем шары из DOM донора и создаем летящие
             for (let i = 0; i < ballsToMove.length; i++) {
                 if (fromEl.querySelector('.ball:last-child')) {
@@ -1371,7 +1099,6 @@
                 document.body.appendChild(ballEl);
                 flyingBalls.push(ballEl);
             }
-
             // 2. Анимация *вверх* и *вбок*
             requestAnimationFrame(() => {
                 flyingBalls.forEach((ballEl, i) => {
@@ -1383,14 +1110,11 @@
             });
             
             await wait(250 + (ballsToMove.length * 50)); 
-
             // 3. Анимация *падения*
             flyingBalls.forEach(ballEl => ballEl.remove()); 
             renderTubes(); // Рендерим финальное состояние
-
             const newToEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             const newBalls = Array.from(newToEl.querySelectorAll('.ball')).slice(-ballsToMove.length);
-
             if (newBalls.length > 0) {
                 const newBallHeight = newBalls[0].offsetHeight;
                 const startY = yHover - newBalls[0].getBoundingClientRect().top;
@@ -1402,7 +1126,6 @@
                 });
                 
                 newBalls[0].getBoundingClientRect(); // Force reflow
-
                 newBalls.forEach((nb, i) => {
                     nb.style.transition = 'transform 0.2s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; 
                     nb.style.transitionDelay = `${i * 0.05}s`; 
@@ -1427,18 +1150,11 @@
                 winGame();
             }
         }
-
         async function unlockExtraTube(tubeId) {
             const tube = tubes.find(t => t.id === tubeId);
             if (tube.isAnimating) return;
             
-            let adShown = false;
-            // --- VIP ПОЛУЧАЕТ КОЛБУ БЕСПЛАТНО ---
-            if (gameData.isVip) {
-                adShown = true;
-            } else {
-                adShown = await showRewardedAd();
-            }
+            let adShown = await showRewardedAd();
             
             if (adShown) {
                 if (tube) {
@@ -1458,7 +1174,7 @@
                 stats.bestTime[currentDifficulty] = seconds;
             }
             
-            showInterstitialAd(); // <-- VIP пропустит это
+            showInterstitialAd(); 
             saveGameData(); 
             
             document.getElementById('win-time').textContent = formatTime(seconds);
@@ -1476,16 +1192,12 @@
             if (history.length > 20) history.shift();
             updateUndoButtonUI();
         }
-
         function undoMove() {
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
             if (history.length > 0 && !isAnyTubeAnimating) {
                 
-                // --- VIP ИМЕЕТ БЕСКОНЕЧНЫЕ ОТМЕНЫ ---
-                if (!gameData.isVip) {
-                    if (undosLeft <= 0) return;
-                    undosLeft--;
-                }
+                if (undosLeft <= 0) return;
+                undosLeft--;
                 
                 const prevStateData = history.pop();
                 const prevState = prevStateData.state;
@@ -1507,23 +1219,15 @@
         }
         
         function updateUndoButtonUI() {
-            if (gameData.isVip) {
-                // --- VIP ИНТЕРФЕЙС ---
-                undoCountSpan.textContent = '∞';
-                undoCountSpan.style.fontSize = '1.2rem';
-                undoCountSpan.style.lineHeight = '1.2rem';
-            } else {
-                undoCountSpan.textContent = undosLeft;
-                undoCountSpan.style.fontSize = '0.75rem';
-                undoCountSpan.style.lineHeight = '1rem';
-            }
+            undoCountSpan.textContent = undosLeft;
+            undoCountSpan.style.fontSize = '0.75rem';
+            undoCountSpan.style.lineHeight = '1rem';
             
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
-            const undoLimitReached = !gameData.isVip && undosLeft <= 0;
+            const undoLimitReached = undosLeft <= 0;
             const isDisabled = history.length === 0 || undoLimitReached || isAnyTubeAnimating;
             undoButton.classList.toggle('disabled', isDisabled);
         }
-
         // --- UI & Timer ---
         function startTimer() { stopTimer(); timerInterval = setInterval(() => { if (!isPaused) { seconds++; timerSpan.textContent = formatTime(seconds); }}, 1000); }
         function stopTimer() { clearInterval(timerInterval); }
@@ -1539,22 +1243,17 @@
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
             try {
-                // --- СОХРАНЕНИЕ VIP В VK STORAGE ---
                 await vkBridge.send('VKWebAppStorageSet', { key: storageKey, value: JSON.stringify(gameData) });
             } catch (error) {
                 localStorage.setItem(storageKey, JSON.stringify(gameData));
             }
         }
 
-        // --- ИЗМЕНЕНИЕ: ЗАГРУЗКА VIP ИЗ VK STORAGE ---
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
             let loadedData = null; 
             
-            // --- УБРАНА ПРОВЕРКА С СЕРВЕРА ---
-
-            // --- Загружаем ВСЕ из VK Storage ---
             try {
                 const response = await vkBridge.send('VKWebAppStorageGet', { keys: [storageKey] });
                 if (response.keys[0]?.value) loadedData = JSON.parse(response.keys[0].value);
@@ -1566,14 +1265,11 @@
             const newStats = defaultStats();
             
             if (loadedData) {
-                // --- ЕСЛИ ДАННЫХ НЕТ, VIP = false ---
                 gameData.isMusicMuted = loadedData.isMusicMuted ?? false;
                 gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
-                gameData.isVip = loadedData.isVip ?? false; // <-- VIP ЗАГРУЖАЕТСЯ ОТСЮДА
                 gameData.currentTheme = loadedData.currentTheme || 'blue';
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
-                // ... (логика загрузки статистики) ...
                 if (loadedData.stats) {
                     if (loadedData.stats.classic || loadedData.stats.mystery) {
                         if (loadedData.stats.classic) {
@@ -1597,11 +1293,8 @@
                     });
                 });
                 gameData.stats = newStats;
-
             }
-            // --- КОНЕЦ ЛОГИКИ ЗАГРУЗКИ ---
         }
-
         function updateStatsDisplay() {
             if (!gameData.stats) return;
             
@@ -1622,11 +1315,9 @@
                 });
             });
         }
-
         // --- Helpers ---
         function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[i], a[j]]; } return a; }
         function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
     </script>
 </body>
 </html>
