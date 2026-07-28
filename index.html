@@ -34,7 +34,12 @@
             --mystery-ball-bg: #93c5fd;
             --mystery-ball-text: #1e40af;
             --toggle-on-color: #34d399; /* emerald-400 */
+            --vip-gold-start: #fde047;
+            --vip-gold-end: #f59e0b;
+            --vip-text: #422006;
+            --vip-shadow: rgba(245, 158, 11, 0.3);
         }
+
         html[data-theme="neon"] {
             --bg-gradient-start: #000000;
             --bg-gradient-end: #1a001a; /* dark purple */
@@ -55,6 +60,7 @@
             --mystery-ball-text: #000;
             --toggle-on-color: #0f0;
         }
+
         html[data-theme="ocean"] {
             --bg-gradient-start: #004d40; /* dark teal */
             --bg-gradient-end: #00695c;
@@ -84,7 +90,7 @@
             -webkit-tap-highlight-color: transparent;
             height: 100vh;
             width: 100vw;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease; /* Плавный переход */
         }
         .screen {
             height: 100%;
@@ -93,7 +99,7 @@
         }
         .screen.hidden { display: none; }
         @keyframes fadeIn { from { opacity: 0; } to: { opacity: 1; } }
-        
+
         /* --- Стили Главного меню --- */
         #main-menu-title {
             color: var(--text-color);
@@ -109,9 +115,6 @@
             box-shadow: 0 5px 20px var(--primary-shadow);
             transition: all 0.2s ease-in-out; 
             border: 2px solid var(--primary-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         .main-menu-button:hover:not(:disabled) {
             transform: translateY(-3px); 
@@ -130,6 +133,20 @@
             box-shadow: none;
             border-color: var(--locked-bg-color);
             opacity: 0.7;
+        }
+        
+        .vip-button {
+            background: linear-gradient(45deg, var(--vip-gold-start), var(--vip-gold-end));
+            color: var(--vip-text);
+            border: 2px solid var(--vip-gold-start);
+            box-shadow: 0 5px 20px var(--vip-shadow);
+            font-size: 1.1rem; /* Чуть больше */
+        }
+        .vip-button:hover {
+            box-shadow: 0 8px 30px var(--vip-shadow);
+        }
+        .vip-button span {
+            margin: 0 8px;
         }
         
         .icon-menu-button {
@@ -153,7 +170,8 @@
             width: 32px; height: 32px;
             stroke-width: 2;
         }
-        
+        /* --- Конец стилей меню --- */
+
         /* --- СТИЛИ КОЛБ И ШАРОВ --- */
         .tube-container {
             position: relative;
@@ -189,6 +207,7 @@
             border-radius: 50%;
             margin-top: 1px; 
             flex-shrink: 0;
+            /* ИСПРАВЛЕНИЕ: ЕЩЕ более глянцевый/объемный шар */
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.2s ease-out; 
             display: flex;
@@ -200,6 +219,7 @@
             box-sizing: border-box; 
         }
         
+        
         .ball.mystery {
             background-color: var(--mystery-ball-bg) !important; 
             color: var(--mystery-ball-text);
@@ -208,10 +228,12 @@
         
         .ball.selected-ball {
             transform: translateY(calc(var(--tube-height) * -0.3)) scale(1.1);
+            /* ИСПРАВЛЕНИЕ: Глянцевый стиль + тень при подпрыгивании */
             box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow);
             z-index: 100;
         }
-        
+        /* --- КОНЕЦ СТИЛЕЙ КОЛБ --- */
+
         .modal { background-color: rgba(0, 0, 0, 0.6); }
         .modal-content { 
             background-color: var(--modal-bg-color); 
@@ -253,7 +275,7 @@
             transform: translateX(24px); 
         }
         
-        /* --- Выбор темы --- */
+        /* --- Выбор темы (VIP) --- */
         #theme-selector-container {
             border-top: 1px solid var(--tube-border-color);
             padding-top: 1.25rem;
@@ -288,7 +310,7 @@
         #theme-preview-blue { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
         #theme-preview-neon { background: linear-gradient(45deg, #000, #f0f); }
         #theme-preview-ocean { background: linear-gradient(45deg, #004d40, #4db6ac); }
-        
+
         .icon-button {
             background: none; border: none; padding: 8px;
             cursor: pointer; color: var(--text-color);
@@ -341,25 +363,46 @@
             border-bottom: 1px solid var(--tube-border-color);
         }
         .stats-table th { color: var(--primary-color); }
+
+        .vip-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+        .vip-list li {
+            position: relative;
+            padding-left: 30px; /* Space for checkmark */
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .vip-list li::before {
+            content: '✅'; /* Checkmark emoji */
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center h-screen select-none">
+
     <audio id="bg-music" loop src="music.mp3"></audio>
+
     <!-- Главное меню -->
     <div id="main-menu" class="screen flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
         <h1 id="main-menu-title" class="text-7xl font-black mb-10">Ball Sort</h1>
         
-        <div class="w-full flex flex-col gap-5 items-center">
+        <div class="w-full flex flex-col gap-5">
             <button id="classic-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Классика</span>
             </button>
             <button id="mystery-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Тайный шар</span>
             </button>
-            <!-- Кнопка Словли (сужена и с большой иконкой) -->
-            <button id="slovli-btn" class="main-menu-button secondary-button py-3 text-lg flex items-center justify-center gap-3 w-[70%]">
-                <span class="font-bold">Словли</span>
-                <img src="icon.png" alt="Словли" class="w-12 h-12 object-cover rounded-xl shadow-md">
+            <button id="vip-mode-btn" class="main-menu-button vip-button w-full py-4">
+                👑<span>VIP Доступ</span>👑
+            </button>
+            <button id="other-games-btn" class="main-menu-button secondary-button w-full py-4 text-lg">
+                Другие игры
             </button>
         </div>
         
@@ -384,6 +427,7 @@
         </div>
         <button id="back-to-menu-from-levels-btn" class="main-menu-button secondary-button w-full mt-6">Назад</button>
     </div>
+
     <!-- Игровое поле -->
     <div id="game-screen" class="screen hidden">
         <div class="grid grid-rows-[auto_1fr_auto] h-full w-full max-w-lg mx-auto p-4">
@@ -407,8 +451,53 @@
         </div>
     </div>
     
+    <!-- Экран "Другие игры" -->
+    <div id="other-games-screen" class="screen hidden flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-sm mx-auto text-center">
+            <h1 class="text-3xl font-bold tracking-tight mb-6">Другие игры</h1>
+            <div id="other-games-container" class="grid grid-cols-3 gap-x-4 gap-y-5"></div>
+            <button id="back-to-menu-btn" class="w-full mt-6 py-3 px-4 rounded-xl font-semibold text-lg main-menu-button secondary-button">Назад</button>
+        </div>
+    </div>
+
     <!-- Модальные окна -->
     
+    <div id="vip-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <!-- ИСПРАВЛЕНИЕ: VIP -->
+            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 VIP Доступ 👑</h2>
+            <ul class="vip-list text-left">
+                <li>Без рекламы</li>
+                <li>Моментальное открытие всех уровней</li>
+                <li>Бесконечные отмены ходов</li>
+                <li>Бесконечные доп. колбы</li>
+                <li>Доступ к эксклюзивным темам</li>
+            </ul>
+            <p class="text-center text-sm text-gray-300 mt-6 mb-4">
+                И в целом поддержать молодого разработчика
+            </p>
+            <button id="purchase-vip-btn" class="main-menu-button vip-button w-full">20 голосов</button>
+            <button onclick="closeModal('vip-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
+        </div>
+    </div>
+    
+    <div id="vip-thanks-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
+            <!-- ИСПРАВЛЕНИЕ: VIP -->
+            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--vip-gold-start);">👑 Вы VIP 👑</h2>
+            <p class="text-center text-lg mb-4">Спасибо за вашу поддержку!</p>
+            <!-- ИСПРАВЛЕНИЕ: Добавлен список бонусов -->
+            <ul class="vip-list text-left text-sm">
+                <li>Без рекламы</li>
+                <li>Все уровни открыты</li>
+                <li>Бесконечные отмены ходов</li>
+                <li>Бесконечные доп. колбы</li>
+                <li>Доступ к эксклюзивным темам</li>
+            </ul>
+            <button onclick="closeModal('vip-thanks-modal')" class="main-menu-button secondary-button mt-4 w-full">Закрыть</button>
+        </div>
+    </div>
+
     <!-- Модальное окно: Правила -->
     <div id="rules-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg">
@@ -447,10 +536,10 @@
                 </div>
             </div>
             
-            <!-- Выбор тем теперь всегда доступен -->
-            <div id="theme-selector-container">
+            <div id="theme-selector-container" class="hidden">
                 <h3 class="text-lg font-medium text-center mt-6 mb-4">Темы</h3>
                 <div class="theme-selector">
+                    <!-- ИСПРАВЛЕНИЕ: class_name -> class -->
                     <div class="theme-option active" id="theme-blue">
                         <div id="theme-preview-blue" class="theme-preview"></div>
                         <span class="text-sm">Синяя</span>
@@ -469,7 +558,7 @@
             <button onclick="closeModal('settings-modal')" class="main-menu-button secondary-button mt-8 w-full">Закрыть</button>
         </div>
     </div>
-    
+
     <!-- Модальное окно: Статистика -->
     <div id="stats-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-sm p-6 rounded-2xl shadow-lg text-center">
@@ -479,6 +568,7 @@
                 <button class="stats-tab active" data-tab="classic">Классика</button>
                 <button class="stats-tab" data-tab="mystery">Тайный шар</button>
             </div>
+
             <div id="stats-table-classic" class="stats-table-container active">
                 <table class="stats-table">
                     <thead><tr><th>Уровень</th><th>Побед</th><th>Время</th></tr></thead>
@@ -506,6 +596,7 @@
                     </tbody>
                 </table>
             </div>
+
             <button onclick="closeModal('stats-modal')" class="main-menu-button secondary-button mt-6 w-full">Закрыть</button>
         </div>
     </div>
@@ -532,12 +623,14 @@
             </div>
         </div>
     </div>
+
     <script>
         // --- DOM Elements ---
         const screens = {
             mainMenu: document.getElementById('main-menu'),
             levelSelection: document.getElementById('level-selection-screen'),
-            game: document.getElementById('game-screen')
+            game: document.getElementById('game-screen'),
+            otherGames: document.getElementById('other-games-screen')
         };
         const levelSelectionContainer = document.getElementById('level-selection-container');
         const levelSelectionTitle = document.getElementById('level-selection-title');
@@ -557,6 +650,7 @@
         let undosLeft = 3;
         let vkUserId = null;
         let wasMusicPlaying = false;
+
         const defaultStats = () => ({
             classic: {
                 gamesPlayed: { easy: 0, medium: 0, hard: 0, expert: 0, insane: 0, impossible: 0 },
@@ -567,14 +661,18 @@
                 bestTime: { easy: Infinity, medium: Infinity, hard: Infinity, expert: Infinity, insane: Infinity, impossible: Infinity }
             }
         });
+
         let gameData = {
             isMusicMuted: false, 
             isSfxMuted: false, 
+            isVip: false,
             currentTheme: 'blue', 
             levelsCompletedSinceAd: 0,
             stats: defaultStats()
         };
+
         // --- Config ---
+        // ИСПРАВЛЕНИЕ: Новые цвета (убраны похожие)
         const COLORS = [
             "#d90429", // Red
             "#f77f00", // Orange
@@ -602,29 +700,42 @@
             impossible: { name: 'Невозможно', tubes: 24, empty: 2, colors: 11, doubleColors: true }
         };
         
-        // --- Audio Manager ---
+        // --- ИСПРАВЛЕНИЕ: Audio Manager ---
         const audioManager = {
             dropSynth: null, 
             winSynth: null,
             selectSynth: null, 
             tapSynth: null, 
             isReady: false,
+
             init() {
+                // Звук "падения" шара
                 this.dropSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.02, octaves: 3, oscillator: { type: "sine" },
+                    pitchDecay: 0.02,
+                    octaves: 3,
+                    oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.3, sustain: 0.01, release: 0.2 }
                 }).toDestination();
                 this.dropSynth.volume.value = -10;
+
+                // Звук "выбора" шара
                 this.selectSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.01, octaves: 4, oscillator: { type: "sine" },
+                    pitchDecay: 0.01,
+                    octaves: 4,
+                    oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 }
                 }).toDestination();
                 this.selectSynth.volume.value = -12;
+
+                // ИСПРАВЛЕНИЕ: Звук "тапа" (короткий "клик")
                 this.tapSynth = new Tone.MembraneSynth({
-                    pitchDecay: 0.005, octaves: 2,
+                    pitchDecay: 0.005,
+                    octaves: 2,
                     envelope: { attack: 0.001, decay: 0.1, release: 0.01 }
                 }).toDestination();
                 this.tapSynth.volume.value = -15;
+
+                // Звук "победы"
                 this.winSynth = new Tone.PolySynth(Tone.Synth, {
                      oscillator: { type: 'triangle8' },
                      envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 }
@@ -638,9 +749,15 @@
                 if (!this.isReady || gameData.isSfxMuted) return;
                 try {
                     const now = Tone.now();
-                    if (sound === 'drop') { this.dropSynth.triggerAttackRelease("C3", "8n", now); }
-                    if (sound === 'select') { this.selectSynth.triggerAttackRelease("C4", "8n", now); }
-                    if (sound === 'tap') { this.tapSynth.triggerAttackRelease("C3", "8n", now); }
+                    if (sound === 'drop') { 
+                        this.dropSynth.triggerAttackRelease("C3", "8n", now);
+                    }
+                    if (sound === 'select') { 
+                        this.selectSynth.triggerAttackRelease("C4", "8n", now);
+                    }
+                     if (sound === 'tap') { 
+                        this.tapSynth.triggerAttackRelease("C3", "8n", now);
+                    }
                     if (sound === 'win') {
                         const notes = ['C4', 'E4', 'G4', 'C5', 'E5', 'G5'];
                         notes.forEach((note, i) => {
@@ -649,6 +766,7 @@
                     }
                 } catch(e) { console.error("Sound play error", e); }
             },
+
             toggleMusicMute(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isMusicMuted;
                 gameData.isMusicMuted = newState;
@@ -659,24 +777,30 @@
                 } else {
                     bgMusic.play().catch(e => {});
                 }
-                if(typeof forceState === 'undefined') { saveGameData(); }
+
+                if(typeof forceState === 'undefined') {
+                    saveGameData();
+                }
             },
             
             toggleSfxMute(forceState) {
                 const newState = (typeof forceState === 'boolean') ? forceState : !gameData.isSfxMuted;
                 gameData.isSfxMuted = newState;
                 sfxToggle.checked = !newState; 
-                if(typeof forceState === 'undefined') { saveGameData(); }
+
+                if(typeof forceState === 'undefined') {
+                    saveGameData();
+                }
             }
         };
+
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', async () => {
             await init();
             
             bgMusic.volume = 0.3; 
             
-            // --- ДОБАВЛЕНИЕ ЗВУКА НА ВСЕ КНОПКИ ---
-            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button, .theme-option');
+            const allButtons = document.querySelectorAll('button, .icon-menu-button, .icon-button');
             allButtons.forEach(btn => {
                 btn.addEventListener('click', () => audioManager.playSound('tap'));
             });
@@ -684,13 +808,19 @@
             // Main Menu listeners
             document.getElementById('classic-mode-btn').addEventListener('click', () => showLevelSelection('classic'));
             document.getElementById('mystery-mode-btn').addEventListener('click', () => showLevelSelection('mystery'));
-            
-            // Кнопка перехода в "Словли"
-            document.getElementById('slovli-btn').addEventListener('click', () => {
-                vkBridge.send('VKWebAppOpenApp', { app_id: 53861990 });
+            document.getElementById('other-games-btn').addEventListener('click', () => showScreen('otherGames'));
+            document.getElementById('back-to-menu-btn').addEventListener('click', () => showScreen('mainMenu'));
+            document.getElementById('vip-mode-btn').addEventListener('click', () => {
+                if (gameData.isVip) {
+                    openModal('vip-thanks-modal');
+                } else {
+                    openModal('vip-modal');
+                }
             });
-            
+            document.getElementById('purchase-vip-btn').addEventListener('click', activateVip);
+
             document.getElementById('back-to-menu-from-levels-btn').addEventListener('click', () => showScreen('mainMenu'));
+
             // Game screen listeners
             undoButton.addEventListener('click', undoMove);
             window.addEventListener('resize', () => {
@@ -708,7 +838,11 @@
             document.getElementById('theme-neon').addEventListener('click', () => setTheme('neon'));
             document.getElementById('theme-ocean').addEventListener('click', () => setTheme('ocean'));
             
-            // Табы статистики
+            document.getElementById('other-games-container').addEventListener('click', e => {
+                const gameEl = e.target.closest('[data-app-id]');
+                if (gameEl) vkBridge.send('VKWebAppOpenApp', { app_id: parseInt(gameEl.dataset.appId) });
+            });
+            
             document.querySelector('.stats-tabs').addEventListener('click', e => {
                 if (e.target.classList.contains('stats-tab')) {
                     const tabName = e.target.dataset.tab;
@@ -720,7 +854,6 @@
                 }
             });
             
-            // Запуск аудио
             document.body.addEventListener('click', async () => {
                  if (!audioManager.isReady) {
                     await Tone.start();
@@ -749,6 +882,7 @@
                     wasMusicPlaying = false;
                 }
             });
+
             try {
                 const user = await vkBridge.send('VKWebAppGetUserInfo');
                 vkUserId = user.id;
@@ -756,13 +890,12 @@
                 console.warn("Could not get VK User ID.", error);
                 vkUserId = 'test_user';
             }
-            
-            await loadGameData(); 
-            
-            setTheme(gameData.currentTheme, false); 
+            await loadGameData();
+            setTheme(gameData.currentTheme, false); // Устанавливаем тему без сохранения
+            renderOtherGames(); 
             audioManager.toggleMusicMute(gameData.isMusicMuted); 
             audioManager.toggleSfxMute(gameData.isSfxMuted); 
-            
+            applyVipStatus(gameData.isVip); 
             showScreen('mainMenu');
         }
 
@@ -778,8 +911,6 @@
             if (screenName === 'game') {
                 requestAnimationFrame(() => adjustTubeSize(tubes.length));
             }
-            
-            // Баннеры показываем всегда
             vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e => {});
         }
 
@@ -791,6 +922,8 @@
         }
 
         async function showRewardedAd() {
+            if (gameData.isVip) return true; 
+
             try {
                 const adData = await vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' });
                 await Tone.start();
@@ -803,6 +936,8 @@
         }
 
         async function showInterstitialAd() {
+            if (gameData.isVip) return; 
+
             gameData.levelsCompletedSinceAd++;
             if (gameData.levelsCompletedSinceAd >= 3) {
                 try {
@@ -815,7 +950,43 @@
             }
             saveGameData();
         }
-        
+
+        // --- НОВЫЕ ФУНКЦИИ: VIP и Темы ---
+        function activateVip() {
+            gameData.isVip = true;
+            saveGameData();
+            closeModal('vip-modal');
+            applyVipStatus(true);
+            openModal('vip-thanks-modal');
+        }
+
+        function applyVipStatus(isVip) {
+            const vipButton = document.getElementById('vip-mode-btn');
+            const themeSelector = document.getElementById('theme-selector-container');
+            
+            if (isVip) {
+                if (vipButton) {
+                    // ИСПРАВЛЕНИЕ: VIP
+                    vipButton.innerHTML = '👑<span>Вы VIP</span>👑';
+                    vipButton.onclick = () => openModal('vip-thanks-modal');
+                }
+                if (themeSelector) {
+                    themeSelector.classList.remove('hidden');
+                }
+                updateUndoButtonUI();
+                if (!screens.game.classList.contains('hidden')) {
+                    renderTubes();
+                }
+                if (!screens.levelSelection.classList.contains('hidden')) {
+                    renderMenu();
+                }
+            } else {
+                 if (themeSelector) {
+                    themeSelector.classList.add('hidden');
+                }
+            }
+        }
+
         function setTheme(themeName, doSave = true) {
             document.documentElement.dataset.theme = themeName;
             gameData.currentTheme = themeName;
@@ -828,6 +999,8 @@
                 saveGameData();
             }
         }
+        // --- КОНЕЦ VIP ФУНКЦИЙ ---
+
 
         // --- Game Flow ---
         function startGame(difficulty) {
@@ -845,6 +1018,7 @@
             startTimer();
             generateLevel(currentDifficulty);
         }
+
         function restartGame(fromPause = false) {
             if (fromPause) closeModal('pause-modal');
             resetGame();
@@ -854,6 +1028,7 @@
             closeModal('win-modal');
             resetGame();
         }
+
         function goToMainMenu() {
             closeModal('pause-modal');
             closeModal('win-modal');
@@ -866,16 +1041,14 @@
             levelSelectionContainer.innerHTML = '';
             const difficulties = Object.keys(LEVEL_CONFIG);
             const statsForCurrentMode = gameData.stats[currentGameMode] || defaultStats()[currentGameMode];
-            
+
             for (let i = 0; i < difficulties.length; i++) {
                 const difficulty = difficulties[i];
                 const config = LEVEL_CONFIG[difficulty];
                 const prevDifficulty = i > 0 ? difficulties[i-1] : null;
-                
-                // ВОССТАНОВЛЕННАЯ СИСТЕМА БЛОКИРОВКИ:
+
                 let isUnlocked = (difficulty === 'easy');
                 let winsOnPrev = 0;
-                
                 if (prevDifficulty) {
                     winsOnPrev = statsForCurrentMode.gamesPlayed[prevDifficulty] || 0;
                     if (winsOnPrev >= WINS_TO_UNLOCK) {
@@ -883,17 +1056,22 @@
                     }
                 }
                 
+                if (gameData.isVip) {
+                    isUnlocked = true;
+                }
+
                 const isFullWidth = ['insane', 'impossible'].includes(difficulty);
+
                 const button = document.createElement('button');
-                button.className = `main-menu-button relative overflow-hidden flex items-center justify-center ${isFullWidth ? 'col-span-2' : ''}`;
-                
+                button.className = `main-menu-button relative overflow-hidden ${isFullWidth ? 'col-span-2' : ''}`;
+                button.onclick = () => startGame(difficulty);
+                button.disabled = !isUnlocked;
+
                 if (isUnlocked) {
-                    button.onclick = () => startGame(difficulty);
                     button.textContent = config.name;
                 } else {
-                    button.disabled = true;
                     button.innerHTML = `
-                        <div class="flex items-center justify-center w-full">
+                        <div class="flex items-center justify-center">
                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg>
                            <span>${config.name}</span>
                         </div>
@@ -909,14 +1087,7 @@
             const tubesWithLiquid = config.tubes - config.empty;
             const levelColors = shuffleArray([...COLORS]).slice(0, config.colors);
             const layersPerColor = config.doubleColors ? BALL_LAYERS * 2 : BALL_LAYERS;
-            
-            // ИСПРАВЛЕНИЕ: Заменен flatMap на безопасный цикл, чтобы избежать скрытых ошибок на старых телефонах
-            let colorPool = [];
-            levelColors.forEach(color => {
-                for(let j = 0; j < layersPerColor; j++) {
-                    colorPool.push(color);
-                }
-            });
+            let colorPool = levelColors.flatMap(color => Array(layersPerColor).fill(color));
             colorPool = shuffleArray(colorPool);
             
             tubes = [];
@@ -945,12 +1116,13 @@
             );
         }
 
-        // Адаптация
+        // --- ИСПРАВЛЕНИЕ: Адаптация и Расчет Высоты ---
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
             const boardWidth = gameBoard.clientWidth;
             if(!boardHeight || !boardWidth) return;
             let bestLayout = { cols: 0, tubeHeight: 0 };
+
             for (let cols = tubeCount; cols >= 1; cols--) {
                 const rows = Math.ceil(tubeCount / cols);
                 const cellWidth = boardWidth / cols;
@@ -958,7 +1130,13 @@
                 
                 const prospectiveTubeWidth = cellWidth * 0.7; // 70% ширины ячейки
                 
-                // H = 4 * (W - 4 (padding)) + 4 * 1 (margin) + 4 (padding T/B)
+                // ИСПРАВЛЕНИЕ: Точный расчет высоты (H = 4W - 8)
+                // W = prospectiveTubeWidth
+                // BallHeight = W - 4px (padding L/R 2px)
+                // TotalBallHeight = 4 * (W - 4) = 4W - 16
+                // TotalMargin = 4 * 1px = 4 (4 отступа)
+                // TotalPadding = 2 * 2px = 4 (padding T/B)
+                // H = (4W - 16) + 4 + 4 = 4W - 8
                 const prospectiveTubeHeight = (prospectiveTubeWidth * 4) - 8;
                 
                 if (prospectiveTubeHeight < cellHeight * 0.95) { 
@@ -972,17 +1150,15 @@
                  bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
             }
             
-            if (tubeCount > 18 && bestLayout.cols > 7) {
-                 bestLayout.cols = 7;
-                 bestLayout.tubeHeight = ( (boardWidth / bestLayout.cols) * 0.7 * 4 ) - 8;
-            }
             const finalTubeWidth = (boardWidth / bestLayout.cols) * 0.7;
             const finalTubeHeight = bestLayout.tubeHeight;
             const finalTubeMargin = (boardWidth / bestLayout.cols) * 0.15; // 15% margin L/R
+
             document.documentElement.style.setProperty('--tube-width', `${finalTubeWidth}px`);
             document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
             document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
         }
+        // --- КОНЕЦ ФИКСА АДАПТАЦИИ ---
 
         // --- Rendering ---
         function renderTubes() {
@@ -994,7 +1170,7 @@
                 
                 if (tube.isPlaceholder) {
                     tubeEl.style.borderStyle = 'dashed';
-                    tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span><span class="ad-label">AD</span></div>`;
+                    tubeEl.innerHTML = `<div class="m-auto flex flex-col items-center justify-center h-full"><span class="text-3xl font-bold" style="color: var(--primary-color)">+</span>${gameData.isVip ? '' : '<span class="ad-label">AD</span>'}</div>`;
                     tubeEl.addEventListener('click', () => unlockExtraTube(tube.id));
                 } else {
                     tubeEl.addEventListener('click', () => onTubeClick(tube.id));
@@ -1014,12 +1190,40 @@
             });
         }
         
+        function renderOtherGames() {
+            const container = document.getElementById('other-games-container');
+            container.innerHTML = '';
+            const games = [
+                { name: 'Bubble Shooter', appId: 54051411, icon: 'icon1.png' }, { name: 'Тетрис', appId: 54051413, icon: 'icon2.png' },
+                { name: 'Tower Blocks', appId: 53962513, icon: 'icon3.png' }, { name: 'Блок Про', appId: 53936296, icon: 'icon4.png' },
+                { name: 'Филворды', appId: 53867134, icon: 'icon5.png' }, { name: 'Словли', appId: 53861990, icon: 'icon6.png' },
+                { name: 'Brick Balls', appId: 54023580, icon: 'icon7.png' }, { name: '2048', appId: 53965380, icon: 'icon8.png' },
+                { name: 'Math Matrix', appId: 53970659, icon: 'icon9.png' }
+            ];
+            games.forEach(game => {
+                const gameEl = document.createElement('div');
+                gameEl.className = "flex flex-col items-center cursor-pointer group";
+                gameEl.dataset.appId = game.appId;
+                gameEl.innerHTML = `
+                    <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-3xl mb-2 flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden">
+                       <img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'text-xs text-gray-400\\'>${game.name}</span>'">
+                    </div>
+                    <span class="text-xs font-medium text-center" style="color: var(--text-color-dark);">${game.name}</span>`;
+                container.appendChild(gameEl);
+            });
+        }
+
         // --- Game Logic ---
         function onTubeClick(tubeId) {
+            // ИСПРАВЛЕНИЕ: Упрощенная проверка на анимацию
             const clickedTubeData = tubes.find(t => t.id === tubeId);
             if (!clickedTubeData || clickedTubeData.isPlaceholder || clickedTubeData.isAnimating) return;
+
+            // Если кликаем во время паузы
             if (isPaused) return;
+
             const tubeEl = document.querySelector(`.tube-container[data-id='${tubeId}']`);
+
             if (selectedTube === null) {
                 if (clickedTubeData.balls.length > 0) {
                     const topBall = clickedTubeData.balls[clickedTubeData.balls.length - 1];
@@ -1036,12 +1240,14 @@
                 
                 selectedTube = null;
                 if (selectedBallEl) selectedBallEl.classList.remove('selected-ball');
+
                 if (currentSelectedTube.id === clickedTubeData.id) {
                    return; // Отмена выбора
                 }
                 
+                // Проверяем, не анимируется ли *целевая* колба
                 if (clickedTubeData.isAnimating) {
-                    selectedTube = currentSelectedTube; 
+                    selectedTube = currentSelectedTube; // Возвращаем выбор
                     if (selectedBallEl) selectedBallEl.classList.add('selected-ball');
                     return;
                 }
@@ -1059,6 +1265,7 @@
             
             const topBall = from.balls[from.balls.length - 1];
             if (!topBall.isVisible) return false; 
+
             if (to.balls.length === 0) return true; 
             
             return topBall.color === to.balls[to.balls.length - 1].color;
@@ -1068,6 +1275,7 @@
             moveCount++;
             updateMoveCount();
             
+            // ИСПРАВЛЕНИЕ: Считаем до 4 шаров
             let amountToMove = 0;
             const topColor = fromTube.balls[fromTube.balls.length - 1].color;
             for (let i = fromTube.balls.length - 1; i >= 0; i--) {
@@ -1076,7 +1284,7 @@
                 } else {
                     break;
                 }
-                if (amountToMove >= 4) break; 
+                if (amountToMove >= 4) break; // Лимит 4 шара
             }
             
             amountToMove = Math.min(amountToMove, BALL_LAYERS - toTube.balls.length);
@@ -1088,22 +1296,26 @@
             }
             
             toTube.balls.push(...ballsToMove);
+
             animateMove(fromTube, toTube, ballsToMove);
         }
         
+        // --- ИСПРАВЛЕНИЕ: Анимация нескольких шаров ---
         async function animateMove(fromTube, toTube, ballsToMove) {
             fromTube.isAnimating = true;
             toTube.isAnimating = true;
             updateUndoButtonUI();
+
             const fromEl = document.querySelector(`.tube-container[data-id='${fromTube.id}']`);
             const toEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             
             const flyingBalls = [];
             const fromRect = fromEl.getBoundingClientRect();
             const toRect = toEl.getBoundingClientRect();
-            const ballWidth = fromRect.width - 4; 
-            const xTarget = toRect.left + 2; 
+            const ballWidth = fromRect.width - 4; // 4px = padding*2
+            const xTarget = toRect.left + 2; // 2px = padding
             const yHover = toRect.top - (ballWidth * 0.5); 
+
             // 1. Удаляем шары из DOM донора и создаем летящие
             for (let i = 0; i < ballsToMove.length; i++) {
                 if (fromEl.querySelector('.ball:last-child')) {
@@ -1116,48 +1328,58 @@
                 ballEl.style.width = `${ballWidth}px`;
                 ballEl.style.boxShadow = 'inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 4px 5px rgba(255,255,255,0.5), 0 10px 25px var(--primary-shadow)';
                 ballEl.style.position = 'absolute';
+                // Складываем их стопкой вверху колбы
                 ballEl.style.left = `${fromRect.left + 2}px`;
-                ballEl.style.top = `${fromRect.top + 2 - (i * (ballWidth * 0.3))}px`;
+                ballEl.style.top = `${fromRect.top + 2 - (i * (ballWidth * 0.3))}px`; // Слегка смещаем
                 ballEl.style.zIndex = 100 - i;
+                // ИСПРАВЛЕНИЕ: Ускоренная анимация
                 ballEl.style.transition = `all 0.25s cubic-bezier(0.5, 0, 0.3, 1.2)`; 
                 document.body.appendChild(ballEl);
                 flyingBalls.push(ballEl);
             }
+
             // 2. Анимация *вверх* и *вбок*
             requestAnimationFrame(() => {
                 flyingBalls.forEach((ballEl, i) => {
                     ballEl.style.transform = 'scale(1.05)';
                     ballEl.style.left = `${xTarget}px`;
                     ballEl.style.top = `${yHover - (i * (ballWidth * 0.3))}px`;
-                    ballEl.style.transitionDelay = `${i * 0.05}s`; 
+                    ballEl.style.transitionDelay = `${i * 0.05}s`; // Задержка для "лесенки"
                 });
             });
             
+            // Ждем, пока последний шар долетит
             await wait(250 + (ballsToMove.length * 50)); 
+
             // 3. Анимация *падения*
             flyingBalls.forEach(ballEl => ballEl.remove()); 
             renderTubes(); // Рендерим финальное состояние
+
             const newToEl = document.querySelector(`.tube-container[data-id='${toTube.id}']`);
             const newBalls = Array.from(newToEl.querySelectorAll('.ball')).slice(-ballsToMove.length);
+
             if (newBalls.length > 0) {
                 const newBallHeight = newBalls[0].offsetHeight;
                 const startY = yHover - newBalls[0].getBoundingClientRect().top;
                 
                 newBalls.forEach((nb, i) => {
                     nb.style.transition = 'none';
+                    // Располагаем их "лесенкой" над колбой
                     const yOffset = (newBalls.length - 1 - i) * (newBallHeight * 0.3);
                     nb.style.transform = `translateY(${startY - yOffset}px)`;
                 });
                 
                 newBalls[0].getBoundingClientRect(); // Force reflow
+
                 newBalls.forEach((nb, i) => {
+                    // ИСПРАВЛЕНИЕ: Ускоренная анимация
                     nb.style.transition = 'transform 0.2s cubic-bezier(0.6, -0.28, 0.74, 0.05)'; 
-                    nb.style.transitionDelay = `${i * 0.05}s`; 
+                    nb.style.transitionDelay = `${i * 0.05}s`; // Падают "лесенкой"
                     nb.style.transform = 'translateY(0)';
                 });
                 
                 audioManager.playSound('drop'); 
-                await wait(200 + (ballsToMove.length * 50)); 
+                await wait(200 + (ballsToMove.length * 50)); // Ждем падения
                 
                 newBalls.forEach(nb => {
                     nb.style.transition = 'transform 0.2s ease-out'; 
@@ -1179,7 +1401,12 @@
             const tube = tubes.find(t => t.id === tubeId);
             if (tube.isAnimating) return;
             
-            let adShown = await showRewardedAd();
+            let adShown = false;
+            if (gameData.isVip) {
+                adShown = true;
+            } else {
+                adShown = await showRewardedAd();
+            }
             
             if (adShown) {
                 if (tube) {
@@ -1199,7 +1426,7 @@
                 stats.bestTime[currentDifficulty] = seconds;
             }
             
-            showInterstitialAd(); 
+            showInterstitialAd();
             saveGameData(); 
             
             document.getElementById('win-time').textContent = formatTime(seconds);
@@ -1222,8 +1449,10 @@
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
             if (history.length > 0 && !isAnyTubeAnimating) {
                 
-                if (undosLeft <= 0) return;
-                undosLeft--;
+                if (!gameData.isVip) {
+                    if (undosLeft <= 0) return;
+                    undosLeft--;
+                }
                 
                 const prevStateData = history.pop();
                 const prevState = prevStateData.state;
@@ -1245,12 +1474,18 @@
         }
         
         function updateUndoButtonUI() {
-            undoCountSpan.textContent = undosLeft;
-            undoCountSpan.style.fontSize = '0.75rem';
-            undoCountSpan.style.lineHeight = '1rem';
+            if (gameData.isVip) {
+                undoCountSpan.textContent = '∞';
+                undoCountSpan.style.fontSize = '1.2rem';
+                undoCountSpan.style.lineHeight = '1.2rem';
+            } else {
+                undoCountSpan.textContent = undosLeft;
+                undoCountSpan.style.fontSize = '0.75rem';
+                undoCountSpan.style.lineHeight = '1rem';
+            }
             
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
-            const undoLimitReached = undosLeft <= 0;
+            const undoLimitReached = !gameData.isVip && undosLeft <= 0;
             const isDisabled = history.length === 0 || undoLimitReached || isAnyTubeAnimating;
             undoButton.classList.toggle('disabled', isDisabled);
         }
@@ -1279,14 +1514,10 @@
         async function loadGameData() {
             if (!vkUserId) return;
             const storageKey = `colorsort_data_${vkUserId}`;
-            let loadedData = null; 
-            
+            let loadedData = null;
             try {
                 const response = await vkBridge.send('VKWebAppStorageGet', { keys: [storageKey] });
-                // ИСПРАВЛЕНИЕ: Безопасное извлечение для совместимости со старыми телефонами (без оператора ?.)
-                if (response && response.keys && response.keys[0] && response.keys[0].value) {
-                    loadedData = JSON.parse(response.keys[0].value);
-                }
+                if (response.keys[0]?.value) loadedData = JSON.parse(response.keys[0].value);
             } catch (error) {
                 const localData = localStorage.getItem(storageKey);
                 if (localData) loadedData = JSON.parse(localData);
@@ -1297,7 +1528,8 @@
             if (loadedData) {
                 gameData.isMusicMuted = loadedData.isMusicMuted ?? false;
                 gameData.isSfxMuted = loadedData.isSfxMuted ?? false;
-                gameData.currentTheme = loadedData.currentTheme || 'blue';
+                gameData.isVip = loadedData.isVip ?? false;
+                gameData.currentTheme = loadedData.currentTheme || 'blue'; // Загружаем тему
                 gameData.levelsCompletedSinceAd = loadedData.levelsCompletedSinceAd || 0;
                 
                 if (loadedData.stats) {
@@ -1315,6 +1547,7 @@
                         newStats.classic.gamesPlayed = {...newStats.classic.gamesPlayed, ...loadedData.stats.gamesPlayed};
                     }
                 }
+                
                 ['classic', 'mystery'].forEach(mode => {
                     Object.keys(newStats[mode].bestTime).forEach(diff => {
                         if (newStats[mode].bestTime[diff] === null) {
@@ -1322,6 +1555,7 @@
                         }
                     });
                 });
+                
                 gameData.stats = newStats;
             }
         }
@@ -1348,8 +1582,9 @@
         }
 
         // --- Helpers ---
-        function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[i], a[j]]; } return a; }
+        function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
         function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
     </script>
 </body>
 </html>
