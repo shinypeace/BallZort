@@ -349,17 +349,17 @@
     <div id="main-menu" class="screen flex flex-col items-center justify-center text-center p-8 h-full w-full max-w-md mx-auto">
         <h1 id="main-menu-title" class="text-7xl font-black mb-10">Ball Sort</h1>
         
-        <div class="w-full flex flex-col gap-5">
+        <div class="w-full flex flex-col gap-5 items-center">
             <button id="classic-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Классика</span>
             </button>
             <button id="mystery-mode-btn" class="main-menu-button w-full py-4 text-lg">
                 <span>Тайный шар</span>
             </button>
-            <!-- Кнопка Словли -->
-            <button id="slovli-btn" class="main-menu-button secondary-button w-full py-4 text-lg flex items-center justify-center gap-3">
-                <span>Словли</span>
-                <img src="icon.png" alt="Словли" class="w-6 h-6 object-cover rounded-md">
+            <!-- Кнопка Словли (сужена и с большой иконкой) -->
+            <button id="slovli-btn" class="main-menu-button secondary-button py-3 text-lg flex items-center justify-center gap-3 w-[70%]">
+                <span class="font-bold">Словли</span>
+                <img src="icon.png" alt="Словли" class="w-12 h-12 object-cover rounded-xl shadow-md">
             </button>
         </div>
         
@@ -765,6 +765,7 @@
             
             showScreen('mainMenu');
         }
+
         // --- Screen & Ad Management ---
         function showScreen(screenName) {
             Object.values(screens).forEach(s => s.classList.add('hidden'));
@@ -777,15 +778,18 @@
             if (screenName === 'game') {
                 requestAnimationFrame(() => adjustTubeSize(tubes.length));
             }
+            
             // Баннеры показываем всегда
             vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e => {});
         }
+
         function showLevelSelection(mode) {
             currentGameMode = mode;
             levelSelectionTitle.textContent = mode === 'classic' ? 'Классика' : 'Тайный шар';
             renderMenu();
             showScreen('levelSelection');
         }
+
         async function showRewardedAd() {
             try {
                 const adData = await vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' });
@@ -797,6 +801,7 @@
                 return false; 
             }
         }
+
         async function showInterstitialAd() {
             gameData.levelsCompletedSinceAd++;
             if (gameData.levelsCompletedSinceAd >= 3) {
@@ -855,17 +860,22 @@
             stopTimer();
             showScreen('mainMenu');
         }
+
         // --- Level Generation & Rendering ---
         function renderMenu() {
             levelSelectionContainer.innerHTML = '';
             const difficulties = Object.keys(LEVEL_CONFIG);
             const statsForCurrentMode = gameData.stats[currentGameMode] || defaultStats()[currentGameMode];
+            
             for (let i = 0; i < difficulties.length; i++) {
                 const difficulty = difficulties[i];
                 const config = LEVEL_CONFIG[difficulty];
                 const prevDifficulty = i > 0 ? difficulties[i-1] : null;
+                
+                // ВОССТАНОВЛЕННАЯ СИСТЕМА БЛОКИРОВКИ:
                 let isUnlocked = (difficulty === 'easy');
                 let winsOnPrev = 0;
+                
                 if (prevDifficulty) {
                     winsOnPrev = statsForCurrentMode.gamesPlayed[prevDifficulty] || 0;
                     if (winsOnPrev >= WINS_TO_UNLOCK) {
@@ -875,14 +885,15 @@
                 
                 const isFullWidth = ['insane', 'impossible'].includes(difficulty);
                 const button = document.createElement('button');
-                button.className = `main-menu-button relative overflow-hidden ${isFullWidth ? 'col-span-2' : ''}`;
-                button.onclick = () => startGame(difficulty);
-                button.disabled = !isUnlocked;
+                button.className = `main-menu-button relative overflow-hidden flex items-center justify-center ${isFullWidth ? 'col-span-2' : ''}`;
+                
                 if (isUnlocked) {
+                    button.onclick = () => startGame(difficulty);
                     button.textContent = config.name;
                 } else {
+                    button.disabled = true;
                     button.innerHTML = `
-                        <div class="flex items-center justify-center">
+                        <div class="flex items-center justify-center w-full">
                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg>
                            <span>${config.name}</span>
                         </div>
@@ -892,12 +903,20 @@
                 levelSelectionContainer.appendChild(button);
             }
         }
+
         function generateLevel(difficulty) {
             const config = LEVEL_CONFIG[difficulty];
             const tubesWithLiquid = config.tubes - config.empty;
             const levelColors = shuffleArray([...COLORS]).slice(0, config.colors);
             const layersPerColor = config.doubleColors ? BALL_LAYERS * 2 : BALL_LAYERS;
-            let colorPool = levelColors.flatMap(color => Array(layersPerColor).fill(color));
+            
+            // ИСПРАВЛЕНИЕ: Заменен flatMap на безопасный цикл, чтобы избежать скрытых ошибок на старых телефонах
+            let colorPool = [];
+            levelColors.forEach(color => {
+                for(let j = 0; j < layersPerColor; j++) {
+                    colorPool.push(color);
+                }
+            });
             colorPool = shuffleArray(colorPool);
             
             tubes = [];
@@ -918,12 +937,14 @@
             }
             renderTubes();
         }
+
         function isLevelSolved(currentTubes) {
             return currentTubes.every(t => 
                 t.balls.length === 0 || 
                 (t.balls.length === BALL_LAYERS && new Set(t.balls.map(b => b.color)).size === 1)
             );
         }
+
         // Адаптация
         function adjustTubeSize(tubeCount) {
             const boardHeight = gameBoard.clientHeight;
@@ -962,6 +983,7 @@
             document.documentElement.style.setProperty('--tube-height', `${finalTubeHeight}px`);
             document.documentElement.style.setProperty('--tube-margin', `${finalTubeMargin}px`);
         }
+
         // --- Rendering ---
         function renderTubes() {
             gameBoard.innerHTML = '';
@@ -1030,6 +1052,7 @@
                 }
             }
         }
+
         function canMove(from, to) {
             if (!from || !to) return false;
             if (from.balls.length === 0 || to.balls.length === BALL_LAYERS) return false;
@@ -1040,6 +1063,7 @@
             
             return topBall.color === to.balls[to.balls.length - 1].color;
         }
+
         function initiateMove(fromTube, toTube) {
             moveCount++;
             updateMoveCount();
@@ -1150,6 +1174,7 @@
                 winGame();
             }
         }
+
         async function unlockExtraTube(tubeId) {
             const tube = tubes.find(t => t.id === tubeId);
             if (tube.isAnimating) return;
@@ -1192,6 +1217,7 @@
             if (history.length > 20) history.shift();
             updateUndoButtonUI();
         }
+
         function undoMove() {
             const isAnyTubeAnimating = tubes.some(t => t.isAnimating);
             if (history.length > 0 && !isAnyTubeAnimating) {
@@ -1228,6 +1254,7 @@
             const isDisabled = history.length === 0 || undoLimitReached || isAnyTubeAnimating;
             undoButton.classList.toggle('disabled', isDisabled);
         }
+
         // --- UI & Timer ---
         function startTimer() { stopTimer(); timerInterval = setInterval(() => { if (!isPaused) { seconds++; timerSpan.textContent = formatTime(seconds); }}, 1000); }
         function stopTimer() { clearInterval(timerInterval); }
@@ -1256,7 +1283,10 @@
             
             try {
                 const response = await vkBridge.send('VKWebAppStorageGet', { keys: [storageKey] });
-                if (response.keys[0]?.value) loadedData = JSON.parse(response.keys[0].value);
+                // ИСПРАВЛЕНИЕ: Безопасное извлечение для совместимости со старыми телефонами (без оператора ?.)
+                if (response && response.keys && response.keys[0] && response.keys[0].value) {
+                    loadedData = JSON.parse(response.keys[0].value);
+                }
             } catch (error) {
                 const localData = localStorage.getItem(storageKey);
                 if (localData) loadedData = JSON.parse(localData);
@@ -1295,6 +1325,7 @@
                 gameData.stats = newStats;
             }
         }
+
         function updateStatsDisplay() {
             if (!gameData.stats) return;
             
@@ -1315,6 +1346,7 @@
                 });
             });
         }
+
         // --- Helpers ---
         function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[i], a[j]]; } return a; }
         function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
